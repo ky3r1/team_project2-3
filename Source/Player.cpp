@@ -9,6 +9,14 @@
 #include "ProjectileHoming.h"
 #include "MouseManager.h"
 
+static Player* instance = nullptr;
+
+// インスタンス取得
+Player& Player::Instance()
+{
+    return *instance;
+}
+
 //TODO:弾のDelayTime
 #define DELAYAUTOTIME 40
 int a = 0;
@@ -32,7 +40,7 @@ extern float total_score;
 Player::Player()
 {
     //TODO:プレイヤーのステータス設定
-    model = new Model("Data/Model/Player/Player.mdl");
+    model = new Model("Data/Model/Jammo/Jammo.mdl");
 
     HPbar = new Sprite("Data/Sprite/UI/HPbar.png");
     HP = new Sprite("Data/Sprite/UI/HP.png");
@@ -55,7 +63,7 @@ Player::Player()
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
-    player_category = WHITE;
+    category = WHITE;
     projectile_shot = 0;
 }
 
@@ -76,10 +84,18 @@ Player::~Player()
     Way3Arrow = nullptr;
 }
 
+
 void Player::Update(float elapsedTime)
 {
+    //すべての敵と総当たりで衝突判定
+    int enemyCount = EnemyManager::Instance().GetEnemyCount();
+    for (int i = 0; i < enemyCount; i++)
+    {
+        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+        enemy->SetPlayerPosition(position);
+    }
     //色変え
-    ChangeColor(color, player_category);
+    ChangeColor(color, category);
 
     //移動入力処理
     InputMove(elapsedTime);
@@ -155,7 +171,7 @@ void Player::Update(float elapsedTime)
 
     if (color_count == 0)
     {
-        player_category = WHITE;
+        category = WHITE;
     }
 }
 
@@ -220,7 +236,7 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
     sp_endpos = { 100,100 };
     sp_size = { 0,0 };
     sp_endsize = { 100,100 };
-    switch (player_category)
+    switch (category)
     {
     case RED:
         sp_color = { 1, 0, 0, 1 };
@@ -337,13 +353,13 @@ void Player::CollisionPlayerVsEnemies()
                     velocity.z += power * vec.z;
                 }
 
-                if (player_category == WHITE)
+                if (category == WHITE)
                 {
-                    player_category = enemy->GetEnemyCategory();
+                    category = enemy->GetEnemyCategory();
                     color_count = 5;
                 }
 
-                if (player_category == enemy->GetEnemyCategory())
+                if (category == enemy->GetEnemyCategory())
                 {
                 }
                 else
@@ -456,7 +472,7 @@ void Player::CollisionProjectilesVsEnemies()
                 }
                 else if (projectile->GetProectileCategory() == WHITE)
                 {
-                    player_category = enemy->GetEnemyCategory();
+                    category = enemy->GetEnemyCategory();
                     color_count = 5;
                     projectile->Destroy();
                 }
@@ -478,7 +494,7 @@ void Player::DrawDebugPrimitive()
     ////衝突判定用のデバッグ球を描画
     //debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
     //衝突判定用のデバッグ円柱を描画
-    switch (player_category)
+    switch (category)
     {
     case RED:
         debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
@@ -586,7 +602,7 @@ void Player::InputProjectile()
             projectile_auto.checker = false;
         }
     }
-    if(player_category!=WHITE)
+    if(category!=WHITE)
     {
         if (mouse.GetButton() & Mouse::BTN_LEFT)
         {
@@ -599,13 +615,13 @@ void Player::InputProjectile()
                         switch (index)
                         {
                         case 0:
-                            ProjectileStraightFront(player_category, 0.0f);
+                            ProjectileStraightFront(category, 0.0f);
                             break;
                         case 1:
-                            ProjectileStraightFront(player_category, 0.3f);
+                            ProjectileStraightFront(category, 0.3f);
                             break;
                         case 2:
-                            ProjectileStraightFront(player_category, -0.3f);
+                            ProjectileStraightFront(category, -0.3f);
                             break;
                         default:
                             break;
@@ -625,34 +641,34 @@ void Player::InputProjectile()
                     switch (index)
                     {
                     case 0:
-                        ProjectileStraightFront(player_category, 0.0f);
+                        ProjectileStraightFront(category, 0.0f);
                         break;
                     case 1:
-                        ProjectileStraightFront(player_category, 0.9);
+                        ProjectileStraightFront(category, 0.9);
                         break;
                     case 2:
-                        ProjectileStraightFront(player_category, 3.0);
+                        ProjectileStraightFront(category, 3.0);
                         break;
                     case 3:
-                        ProjectileStraightFront(player_category, -0.9);
+                        ProjectileStraightFront(category, -0.9);
                         break;
                     case 4:
-                        ProjectileStraightFront(player_category, -3.0);
+                        ProjectileStraightFront(category, -3.0);
                         break;
                     case 5:
-                        ProjectileStraightBack(player_category, 0.0f);
+                        ProjectileStraightBack(category, 0.0f);
                         break;
                     case 6:
-                        ProjectileStraightBack(player_category, 0.9f);
+                        ProjectileStraightBack(category, 0.9f);
                         break;
                     case 7:
-                        ProjectileStraightBack(player_category, 3.0f);
+                        ProjectileStraightBack(category, 3.0f);
                         break;
                     case 8:
-                        ProjectileStraightBack(player_category, -0.9f);
+                        ProjectileStraightBack(category, -0.9f);
                         break;
                     case 9:
-                        ProjectileStraightBack(player_category, -3.0f);
+                        ProjectileStraightBack(category, -3.0f);
                         break;
                     default:
                         break;

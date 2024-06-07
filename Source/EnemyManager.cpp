@@ -22,10 +22,7 @@ void EnemyManager::Update(float elapsedTime)
 
         delete enemy;
     }
-
     removes.clear();
-
-
     //敵同士の衝突処理
     CollisionEnemyVsEnemies();
 }
@@ -42,6 +39,8 @@ void EnemyManager::Render(ID3D11DeviceContext* context, Shader* shader)
 //エネミー登録
 void EnemyManager::Register(Enemy* enemy)
 {
+    //エネミーにIDを付与
+    enemy->SetId(enemies.size() + 1);
     enemies.emplace_back(enemy);
 }
 
@@ -52,18 +51,26 @@ void EnemyManager::Remove(Enemy* enemy)
     removes.insert(enemy);
 }
 
+//エネミー全削除
+void EnemyManager::clear()
+{
+    for (Enemy* enemy : enemies)
+    {
+        delete enemy;
+    }
+    enemies.clear();
+}
+
 //デバッグプリミティブ描画
 void EnemyManager::DrawDebugPrimitive()
 {
-    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
-
-    //衝突判定用のデバッグ球を描画
     for (Enemy* enemy : enemies)
     {
         enemy->DrewDebugPrimitive();
     }
 }
 
+//デバッグGUI表示
 void EnemyManager::DrawDebugGUI()
 {
     ImGui::Begin("Enemy");
@@ -75,14 +82,6 @@ void EnemyManager::DrawDebugGUI()
     ImGui::End();
 }
 
-void EnemyManager::EnemyMove(Player* player)
-{
-    for (Enemy* enemy : enemies)
-    {
-        enemy->MoveEnemy(player);
-    }
-}
-
 DirectX::XMFLOAT3 EnemyManager::GetPosition()
 {
     DirectX::XMFLOAT3 reposition;
@@ -91,16 +90,6 @@ DirectX::XMFLOAT3 EnemyManager::GetPosition()
         reposition=enemy->GetPosition();
     }
     return reposition;
-}
-
-//エネミー全削除
-void EnemyManager::clear()
-{
-    for (Enemy* enemy : enemies)
-    {
-        delete enemy;
-    }
-    enemies.clear();
 }
 
 void EnemyManager::CollisionEnemyVsEnemies()
@@ -125,4 +114,15 @@ void EnemyManager::CollisionEnemyVsEnemies()
             }
         }
     }
+}
+
+// IDからエネミーを取得する
+Enemy* EnemyManager::GetEnemyFromId(int id)
+{
+    for (Enemy* enemy : enemies)
+    {
+        if (enemy->GetId() == id)
+            return enemy;
+    }
+    return nullptr;
 }

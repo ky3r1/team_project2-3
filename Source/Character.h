@@ -138,4 +138,5 @@ protected:
     float       airControl = 0.3f;
     float       stepOffset = 1.0f;
     float       slopeRate = 1.0f;
+    int         category = 0.0f;
 };

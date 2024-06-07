@@ -1,10 +1,11 @@
 #include "EnemySlime.h"
+#include "StateDerived.h"
 
 //コンストラクタ
-EnemySlime::EnemySlime(int category,int index)
+EnemySlime::EnemySlime(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Enemy/enemy.mdl");
+    model = new Model("Data/Model/Slime/Slime.mdl");
 
     //表示サイズを調整
     scale.x = scale.y = scale.z = 0.006f;
@@ -12,31 +13,24 @@ EnemySlime::EnemySlime(int category,int index)
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
     health = 1.0f;
-    //color = { 1,0,0,1 };
 
-    enemy_num = index;
-    switch (index)
-    {
-    case 0:
-        position = (DirectX::XMFLOAT3(2.0f, 0, 5));
-        break;
-    case 1:
-        position = (DirectX::XMFLOAT3(4.0f, 0, 5));
-        break;
-    case 2:
-        position = (DirectX::XMFLOAT3(-2.0f, 0, 5));
-        break;
-    case 3:
-        position = (DirectX::XMFLOAT3(-4.0f, 0, 5));
-        break;
-    case 4:
-        position = (DirectX::XMFLOAT3(0.0f, 0, 5));
-        break;
-    }
+    this->category = category;
+    ChangeColor(color, category);
 
-    enemy_speed = { 5.0f,2.0f };//X:エネミーのスピード、Y:エネミーのターンスピード
-    enemy_category = category;
-    ChangeColor(color, enemy_category);
+#ifdef ENEMYSTATEMACHINE
+    // StateMachineを生成し、階層型ステートマシンに対応するように登録ステートを変更していく。
+    stateMachine = new StateMachine();
+    // ステートマシンにステート登録
+    stateMachine->RegisterState(new SearchState(this));
+    stateMachine->RegisterState(new BattleState(this));
+    // 各親ステートにサブステートを登録
+    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Search), new WanderState(this));
+    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Search), new IdleState(this));
+    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Battle), new PursuitState(this));
+    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Battle), new AttackState(this));
+    // デフォルトステートをセット
+    stateMachine->SetState(static_cast<int>(State::Search));
+#endif // ENEMYSTATEMACHINE
 }
 
 //デストラクタ
@@ -48,16 +42,20 @@ EnemySlime::~EnemySlime()
 //更新処理
 void EnemySlime::Update(float elapsedTime)
 {
-    elapestime = elapsedTime;
+#ifdef ENEMYSTATEMACHINE
+    //ステート更新
+    stateMachine->Update(elapsedTime);
+#endif // ENEMYSTATEMACHINE
+
     //速力処理更新
     UpdateVelocity(elapsedTime);
 
     //無敵時間更新
     UpdateInvincibleTime(elapsedTime);
 
+
     //オブジェクト行列を更新
     UpdateTransform();
-
     //モデル行列更新
     model->UpdateTransform(transform);
 }
@@ -68,21 +66,6 @@ void EnemySlime::Render(ID3D11DeviceContext* dc, Shader* shader)
     shader->Draw(dc, model, color);
 }
 
-void EnemySlime::MoveEnemy(Player* player)
-{
-    // ターゲット方向への進行ベクトルを算出
-    DirectX::XMFLOAT3 targetPosition = player->GetPosition();
-    float vx = targetPosition.x - position.x;
-    float vz = targetPosition.z - position.z;
-    float dist = sqrtf(vx * vx + vz * vz);
-    vx /= dist;
-    vz /= dist;
-
-    // 移動処理
-    Move(vx, vz, enemy_speed.x * 0.5f);
-    Turn(elapestime, vx, vz, enemy_speed.y * 0.5f);
-}
-
 //死亡したときに呼ばれる
 void EnemySlime::OnDead()
 {
@@ -91,11 +74,26 @@ void EnemySlime::OnDead()
 
 void EnemySlime::DrawDebugGUI()
 {
-    if (enemy_num != 0)    ImGui::Separator();
-    std::string p = std::string("position") + std::to_string(enemy_num);
+    Enemy::DrawDebugGUI();
+    if (id != 0)    ImGui::Separator();
+    std::string p = std::string("position") + std::to_string(id);
     ImGui::SliderFloat3(p.c_str(), &position.x, -5, 5);
-    std::string s = std::string("scale") + std::to_string(enemy_num);
+    std::string s = std::string("scale") + std::to_string(id);
     ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
-    std::string a = std::string("angle") + std::to_string(enemy_num);
+    std::string a = std::string("angle") + std::to_string(id);
     ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
+}
+
+void EnemySlime::DrewDebugPrimitive()
+{
+    // 基底クラスのデバッグプリミティブ描画
+    Enemy::DrewDebugPrimitive();
+
+    DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
+    // 縄張り範囲をデバッグ円柱描画
+    debugRenderer->DrawCylinder(territoryOrigin, territoryRange, 1.0f, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+    // ターゲット位置をデバッグ球描画
+    debugRenderer->DrawSphere(targetPosition, 1.3f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+    // 索敵範囲をデバッグ円柱描画
+    debugRenderer->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
 }

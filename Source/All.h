@@ -42,6 +42,8 @@
 #define ALLENEMY
 //ƒXƒ‰ƒCƒ€
 #define ENEMYSLIME
+#define ENEMYSTATEMACHINE
+//#define ENEMYANIMATION
 
 ///////////////////UI////////////////////////
 

@@ -92,7 +92,7 @@ void SceneTutorial::Initialize()
 		EnemyManager::Instance().Register(slime);
 	}*/
 #endif // ENEMYSLIME
-	slime = new EnemySlime(RED, 0);
+	slime = new EnemySlime(RED);
 
 #endif // ALLENEMY
 }
@@ -177,10 +177,10 @@ void SceneTutorial::Update(float elapsedTime)
 		if (enemyAdd == true)
 		{
 			EnemyManager& enemyManager = EnemyManager::Instance();
-			slime = new EnemySlime(RED, 0);
+			slime = new EnemySlime(RED);
 			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
 			enemyManager.Register(slime);
-			slime = new EnemySlime(BLUE, 0);
+			slime = new EnemySlime(BLUE);
 			slime->SetPosition(DirectX::XMFLOAT3(0, 1, 2));
 			enemyManager.Register(slime);
 		}
@@ -195,7 +195,7 @@ void SceneTutorial::Update(float elapsedTime)
 		if (enemyAdd == true)
 		{
 			EnemyManager& enemyManager = EnemyManager::Instance();
-		    slime = new EnemySlime(GREEN, 0);
+		    slime = new EnemySlime(GREEN);
 			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
 			enemyManager.Register(slime);
 		}
@@ -210,7 +210,7 @@ void SceneTutorial::Update(float elapsedTime)
 		if (enemyAdd == true)
 		{
 			EnemyManager& enemyManager = EnemyManager::Instance();
-			slime = new EnemySlime(BLUE, 0);
+			slime = new EnemySlime(BLUE);
 			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
 			enemyManager.Register(slime);
 		}
@@ -478,7 +478,7 @@ void SceneTutorial::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOA
 		//if (stage_main.RayCast(world_position_start, world_position_end, hit))
 		//{
 		EnemyManager& enemyManager = EnemyManager::Instance();
-		EnemySlime* slime = new EnemySlime(GREEN, 0);
+		EnemySlime* slime = new EnemySlime(GREEN);
 		slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
 		enemyManager.Register(slime);
 		//}

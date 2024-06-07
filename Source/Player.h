@@ -14,11 +14,7 @@ public:
     Player();
     ~Player() override;
 
-    static Player& Instance()
-    {
-        static Player instance;
-        return instance;
-    }
+    static Player& Instance();
 
     //更新処理
     void Update(float olapsedTime);
@@ -36,8 +32,7 @@ public:
     bool PlayerDead();
 
     // プレイヤーの種類
-    int GetPlayerCategory() { return player_category; }
-
+    int GetPlayerCategory() { return category; }
 private:
     //スティック入力値から移動ベクトルを取得
     DirectX::XMFLOAT3 GetMoveVec() const;
@@ -78,7 +73,6 @@ private:
     float       jumpSpeed = 20.0f;
     /*float       gravity = -1.0f;
     DirectX::XMFLOAT3 velocity = { 0,0,0 };*/
-    int player_category;
     int color_count = 0;
     int projectile_shot;
 

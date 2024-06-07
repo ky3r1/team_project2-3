@@ -65,7 +65,7 @@ void SceneGame::Initialize()
 	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
-		DirectX::XMFLOAT3(0, 10, -10),
+		DirectX::XMFLOAT3(0, 3, 0),
 		DirectX::XMFLOAT3(0, 0, 0),
 		DirectX::XMFLOAT3(0, 1, 0)
 	);
@@ -73,25 +73,42 @@ void SceneGame::Initialize()
 		DirectX::XMConvertToRadians(90),
 		graphics.GetScreenWidth() / graphics.GetScreenHeight(),
 		0.1f,
-		1000.0f
+		100.0f
 	);
 	//カメラコントローラー初期化
 	cameraController = new CameraController();
 #ifdef ALLENEMY
 #ifdef ENEMYSLIME
 	int index = 0;
-	while (index < 3)
-	{
-		//Blue
-		EnemySlime* slime = new EnemySlime(BLUE, index);
-		EnemyManager::Instance().Register(slime);
-		index++;
-	}
-	//Red
 	while (index < 5)
 	{
+		int color = 0;
+		//if (index < 3)color = 1;
 		//Blue
-		EnemySlime* slime = new EnemySlime(RED, index);
+		EnemySlime* slime = new EnemySlime(color);
+		switch (index)
+		{
+		case 0:
+			slime->SetPosition(DirectX::XMFLOAT3(5.0f, 0, 5));
+			slime->SetTerritory(DirectX::XMFLOAT3(5.0f, 0, 5), 10.0f);
+			break;
+		case 1:
+			slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 5));
+			slime->SetTerritory(DirectX::XMFLOAT3(10.0f, 0, 5), 10.0f);
+			break;
+		case 2:
+			slime->SetPosition(DirectX::XMFLOAT3(-5.0f, 0, 5));
+			slime->SetTerritory(DirectX::XMFLOAT3(-5.0f, 0, 5), 10.0f);
+			break;
+		case 3:
+			slime->SetPosition(DirectX::XMFLOAT3(-10.0f, 0, 5));
+			slime->SetTerritory(DirectX::XMFLOAT3(-10.0f, 0, 5), 10.0f);
+			break;
+		case 4:
+			slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));
+			slime->SetTerritory(DirectX::XMFLOAT3(0, 0, 5), 10.0f);
+			break;
+		}
 		EnemyManager::Instance().Register(slime);
 		index++;
 	}
@@ -151,7 +168,6 @@ void SceneGame::Update(float elapsedTime)
 
 	//エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
-	EnemyManager::Instance().EnemyMove(player);
 
 	//エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
@@ -380,7 +396,7 @@ void SceneGame::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4
 		//if (stage_main.RayCast(world_position_start, world_position_end, hit))
 		//{
 			EnemyManager& enemyManager = EnemyManager::Instance();
-			EnemySlime* slime = new EnemySlime(GREEN, 0);
+			EnemySlime* slime = new EnemySlime(GREEN);
 			slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
 			enemyManager.Register(slime);
 		//}
