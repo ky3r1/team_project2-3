@@ -119,11 +119,5 @@ void ProjectileHoming::Launch(const DirectX::XMFLOAT3& direction,
 
 void ProjectileHoming::DrawDebugGUI()
 {
-    if (ImGui::TreeNode("ProjectileHoming"))
-    {
-        ImGui::SliderFloat3("position", &position.x, -5, 5);
-        ImGui::SliderFloat3("scale", &scale.x, 0.001f, 4.0f);
-        ImGui::SliderFloat3("direction", &direction.x, -3.14f, 3.14f);
-        ImGui::TreePop();
-    }
+
 }

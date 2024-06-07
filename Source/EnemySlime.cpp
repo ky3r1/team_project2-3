@@ -12,8 +12,10 @@ EnemySlime::EnemySlime(int category)
 
     radius = 0.5f;//“–‚½‚è”»’è‚Ì•A”¼Œa
     height = 1.0f;//“–‚½‚è”»’è‚Ì‚‚³
-    health = 1.0f;
+    health = 10.0f;
 
+    searchRange = 5.0f;
+    attackRange = 3.0f;
     this->category = category;
     ChangeColor(color, category);
 
@@ -74,14 +76,26 @@ void EnemySlime::OnDead()
 
 void EnemySlime::DrawDebugGUI()
 {
-    Enemy::DrawDebugGUI();
-    if (id != 0)    ImGui::Separator();
-    std::string p = std::string("position") + std::to_string(id);
-    ImGui::SliderFloat3(p.c_str(), &position.x, -5, 5);
-    std::string s = std::string("scale") + std::to_string(id);
-    ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
-    std::string a = std::string("angle") + std::to_string(id);
-    ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
+    std::string name = std::string("slime") + std::to_string(id);
+    if (ImGui::TreeNode(name.c_str()))
+    {
+        Enemy::DrawDebugGUI();
+        std::string p = std::string("position") + std::to_string(id);
+        ImGui::SliderFloat3(p.c_str(), &position.x, -5, 5);
+        std::string s = std::string("scale") + std::to_string(id);
+        ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
+        std::string a = std::string("angle") + std::to_string(id);
+        ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
+        if (ImGui::BeginMenu("color", true))
+        {
+            std::string c = std::string("color") + std::to_string(id);
+            ImGui::ColorPicker3(c.c_str(), &color.x);
+            a = std::string("alpha") + std::to_string(id);
+            ImGui::SliderFloat(a.c_str(), &color.w, 0.0f, 1.0f);
+            ImGui::EndMenu();
+        }
+        ImGui::TreePop();
+    }
 }
 
 void EnemySlime::DrewDebugPrimitive()
@@ -96,4 +110,6 @@ void EnemySlime::DrewDebugPrimitive()
     debugRenderer->DrawSphere(targetPosition, 1.3f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
     // õ“G”ÍˆÍ‚ðƒfƒoƒbƒO‰~’Œ•`‰æ
     debugRenderer->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+    // UŒ‚”ÍˆÍ‚ðƒfƒoƒbƒO‰~’Œ•`‰æ
+    debugRenderer->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f));
 }

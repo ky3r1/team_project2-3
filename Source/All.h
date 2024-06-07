@@ -29,7 +29,7 @@
 //壁当たり判定
 //#define WallCollision
 //Jump
-#define JUMPFRAG
+//#define JUMPFRAG
 //Player->Enemy 弾のダメージ
 #define PROJECTILEDAMAGE
 //Player->Enemy 踏みつけダメージ
@@ -42,7 +42,9 @@
 #define ALLENEMY
 //スライム
 #define ENEMYSLIME
+//ステートマシン
 #define ENEMYSTATEMACHINE
+//アニメーション
 //#define ENEMYANIMATION
 
 ///////////////////UI////////////////////////

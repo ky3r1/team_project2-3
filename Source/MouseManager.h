@@ -22,6 +22,6 @@ public:
 private:
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
-    DirectX::XMFLOAT3 world_mouse_position;
-    DirectX::XMFLOAT3 screen_mouse_position;
+    DirectX::XMFLOAT3 world_mouse_position = { 0.0f,0.0f,0.0f };
+    DirectX::XMFLOAT3 screen_mouse_position = { 0.0f,0.0f,0.0f };
 };

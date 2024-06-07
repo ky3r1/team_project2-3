@@ -40,7 +40,7 @@ void EnemyManager::Render(ID3D11DeviceContext* context, Shader* shader)
 void EnemyManager::Register(Enemy* enemy)
 {
     //エネミーにIDを付与
-    enemy->SetId(enemies.size() + 1);
+    enemy->SetId(static_cast<int>(enemies.size()) + 1);
     enemies.emplace_back(enemy);
 }
 
@@ -84,7 +84,7 @@ void EnemyManager::DrawDebugGUI()
 
 DirectX::XMFLOAT3 EnemyManager::GetPosition()
 {
-    DirectX::XMFLOAT3 reposition;
+    DirectX::XMFLOAT3 reposition = { 0.0f,0.0f,0.0f };
     for (Enemy* enemy : enemies)
     {
         reposition=enemy->GetPosition();

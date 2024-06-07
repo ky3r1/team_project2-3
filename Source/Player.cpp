@@ -9,17 +9,8 @@
 #include "ProjectileHoming.h"
 #include "MouseManager.h"
 
-static Player* instance = nullptr;
-
-// インスタンス取得
-Player& Player::Instance()
-{
-    return *instance;
-}
-
 //TODO:弾のDelayTime
 #define DELAYAUTOTIME 40
-int a = 0;
 #define DELAYALLANGLETIME 60
 #define DELAYFRONTTIME 60
 

@@ -67,6 +67,8 @@ void Enemy::DrawDebugGUI()
         }
         break;
     }
+    ImGui::Text(u8"State　%s", str.c_str());
+    ImGui::Text(u8"SubState　%s", subStr.c_str());
 #endif // ENEMYSTATEMACHINE
 }
 
@@ -108,13 +110,20 @@ void Enemy::MoveToTarget(float elapsedTime, float speedRate)
 bool Enemy::SearchPlayer()
 {
     // プレイヤーとの高低差を考慮して3Dで距離判定をする
-    //const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-    float vx = player_position.x - position.x;
-    float vy = player_position.y - position.y;
-    float vz = player_position.z - position.z;
+    const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+    //float vx = player_position.x - position.x;
+    //float vy = player_position.y - position.y;
+    //float vz = player_position.z - position.z;
+    float vx = playerPosition.x - position.x;
+    float vy = playerPosition.y - position.y;
+    if (playerPosition.x<-3)
+    {
+        vx = playerPosition.x - position.x;
+    }
+    float vz = playerPosition.z - position.z;
     float dist = sqrtf(vx * vx + vy * vy + vz * vz);
 
-    if (dist < searchRange)
+    if (dist < attackRange)
     {
         float distXZ = sqrtf(vx * vx + vz * vz);
         // 単位ベクトル化

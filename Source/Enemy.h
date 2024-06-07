@@ -77,7 +77,8 @@ public:
 	float GetAttackRange() { return attackRange; }
 	StateMachine* GetStateMachine() { return stateMachine; }
 
-	// プレイヤーのセッター
+	// プレイヤーのゲッター・セッター
+	DirectX::XMFLOAT3 GetPlayerPosition() { return player_position; }
 	void SetPlayerPosition(DirectX::XMFLOAT3 position) { player_position = position; }
 
 	// IDゲッター・セッター

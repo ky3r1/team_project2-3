@@ -155,14 +155,14 @@ void PursuitState::Execute(float elapsedTime)
 {
 	// 目的地点までのXZ平面での距離判定
 	DirectX::XMFLOAT3 position = owner->GetPosition();
-	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
+	DirectX::XMFLOAT3 player_position = owner->GetPlayerPosition();
 	owner->SetTargetPosition(player_position);
 	float vx = player_position.x - position.x;
 	float vz = player_position.z - position.z;
 	float distSq = vx * vx + vz * vz;
 
 	// 攻撃範囲内までプレイヤーに近づいた
-	float radius = owner->GetRadius() + 0.5f;
+	float radius = owner->GetAttackRange();
 	if (distSq < radius * radius)
 	{
 		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Battle::Attack));
@@ -201,7 +201,7 @@ void AttackState::Execute(float elapsedTime)
 	float vz = player_position.z - position.z;
 	float distSq = vx * vx + vz * vz;
 	// 攻撃範囲内までプレイヤーに近づいた
-	float radius = owner->GetRadius() + 0.4f;
+	float radius = owner->GetAttackRange();
 	if (distSq > radius * radius)
 	{
 		//if (!owner->GetModel()->IsPlayAnimation())
