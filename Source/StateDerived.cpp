@@ -76,10 +76,10 @@ void IdleState::Execute(float elapsedTime)
 		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Search::Death));
 	}
 	// プレイヤー索敵
-	if (owner->SearchPlayer())
-	{
+	//if (owner->SearchPlayer())
+	//{
 		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Battle));
-	}
+	//}
 }
 //出ていくとき
 void IdleState::Exit()
@@ -164,7 +164,12 @@ void AttackState::Enter()
 //実行中
 void AttackState::Execute(float elapsedTime)
 {
-	if (!owner->InAttackRange())
+	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
+	DirectX::XMFLOAT3 enemy_position = owner->GetPosition();
+	float vx = player_position.x - enemy_position.x;
+	float vz = player_position.z - enemy_position.z;
+	float distSq = vx * vx + vz * vz;
+	if (distSq > owner->GetAttackRange() * owner->GetAttackRange())
 	{
 		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Battle::Pursuit));
 	}

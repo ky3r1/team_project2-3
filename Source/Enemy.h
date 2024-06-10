@@ -82,6 +82,7 @@ public:
 	// IDゲッター・セッター
 	virtual int GetId() { return id; }
 	virtual void	SetId(int id) { this->id = id; }
+protected:
 	Model* model = nullptr;
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };

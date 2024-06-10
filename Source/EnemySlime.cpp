@@ -48,15 +48,11 @@ void EnemySlime::Update(float elapsedTime)
     stateMachine->Update(elapsedTime);
 #endif // ENEMYSTATEMACHINE
 
-    targetPosition = Player::Instance().GetPosition();
-
     //速力処理更新
     UpdateVelocity(elapsedTime);
 
     //無敵時間更新
     UpdateInvincibleTime(elapsedTime);
-
-    targetPosition = Player::Instance().GetPosition();
 
     //オブジェクト行列を更新
     UpdateTransform();
