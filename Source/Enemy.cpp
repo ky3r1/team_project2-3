@@ -46,8 +46,8 @@ void Enemy::DrawDebugGUI()
         str = "Search";
         switch (stateMachine->GetState()->GetSubStateIndex())
         {
-        case static_cast<int>(Enemy::Search::Wander):
-            subStr = "Wander";
+        case static_cast<int>(Enemy::Search::Death):
+            subStr = "Death";
             break;
         case static_cast<int>(Enemy::Search::Idle):
             subStr = "Idle";
@@ -78,21 +78,6 @@ void Enemy::Destroy()
     EnemyManager::Instance().Remove(this);
 }
 
-void Enemy::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
-{
-    territoryOrigin = origin;
-    territoryRange = range;
-}
-
-void Enemy::SetRandomTargetPosition()
-{
-    float theta = Mathf::RandomRange(-DirectX::XM_PI, DirectX::XM_PI);
-    float range = Mathf::RandomRange(0.0f, territoryRange);
-    targetPosition.x = territoryOrigin.x + sinf(theta) * range;
-    targetPosition.y = territoryOrigin.y;
-    targetPosition.z = territoryOrigin.z + cosf(theta) * range;
-}
-
 void Enemy::MoveToTarget(float elapsedTime, float speedRate)
 {
     // ターゲット方向への進行ベクトルを算出
@@ -101,44 +86,23 @@ void Enemy::MoveToTarget(float elapsedTime, float speedRate)
     float dist = sqrtf(vx * vx + vz * vz);
     vx /= dist;
     vz /= dist;
-
     // 移動処理
     Move(vx, vz, moveSpeed * speedRate);
     Turn(elapsedTime, vx, vz, turnSpeed * speedRate);
 }
 
-bool Enemy::SearchPlayer()
+//攻撃範囲内に入ったか
+bool Enemy::InAttackRange()
 {
-    // プレイヤーとの高低差を考慮して3Dで距離判定をする
-    const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-    //float vx = player_position.x - position.x;
-    //float vy = player_position.y - position.y;
-    //float vz = player_position.z - position.z;
-    float vx = playerPosition.x - position.x;
-    float vy = playerPosition.y - position.y;
-    if (playerPosition.x<-3)
+    // 目的地点までのXZ平面での距離判定
+    DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
+    float vx = player_position.x - position.x;
+    float vz = player_position.z - position.z;
+    float distSq = vx * vx + vz * vz;
+    // 攻撃範囲内までプレイヤーに近づいた
+    if (distSq < attackRange * attackRange)
     {
-        vx = playerPosition.x - position.x;
+        return true;
     }
-    float vz = playerPosition.z - position.z;
-    float dist = sqrtf(vx * vx + vy * vy + vz * vz);
-
-    if (dist < attackRange)
-    {
-        float distXZ = sqrtf(vx * vx + vz * vz);
-        // 単位ベクトル化
-        vx /= distXZ;
-        vz /= distXZ;
-
-        // 方向ベクトル化
-        float frontX = sinf(angle.y);
-        float frontZ = cosf(angle.y);
-        // 2つのベクトルの内積値で前後判定
-        float dot = (frontX * vx) + (frontZ * vz);
-        if (dot > 0.0f)
-        {
-            return true;
-        }
-    }
-    return false;
+    false;
 }

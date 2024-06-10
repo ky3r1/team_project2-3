@@ -40,14 +40,14 @@ public:
 };
 
 #ifdef SEARCHSTATE
-// 徘徊ステートオブジェクト
-class WanderState : public State
+// 死亡ステートオブジェクト
+class DeathState : public State
 {
 public:
 	// コンストラクタ
-	WanderState(EnemySlime* enemy) :State(enemy) {};
+	DeathState(EnemySlime* enemy) :State(enemy) {};
 	// デストラクタ
-	~WanderState() {}
+	~DeathState() {}
 	// ステートに入った時のメソッド
 	void Enter()override;
 	// ステートで実行するメソッド

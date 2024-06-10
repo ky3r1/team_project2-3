@@ -12,10 +12,9 @@ EnemySlime::EnemySlime(int category)
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
-    health = 10.0f;
+    health = 10.0f;//体力
 
-    searchRange = 5.0f;
-    attackRange = 3.0f;
+    attackRange = 10.0f;//攻撃範囲
     this->category = category;
     ChangeColor(color, category);
 
@@ -26,7 +25,7 @@ EnemySlime::EnemySlime(int category)
     stateMachine->RegisterState(new SearchState(this));
     stateMachine->RegisterState(new BattleState(this));
     // 各親ステートにサブステートを登録
-    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Search), new WanderState(this));
+    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Search), new DeathState(this));
     stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Search), new IdleState(this));
     stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Battle), new PursuitState(this));
     stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Battle), new AttackState(this));
@@ -49,12 +48,13 @@ void EnemySlime::Update(float elapsedTime)
     stateMachine->Update(elapsedTime);
 #endif // ENEMYSTATEMACHINE
 
+    targetPosition = Player::Instance().GetPosition();
+
     //速力処理更新
     UpdateVelocity(elapsedTime);
 
     //無敵時間更新
     UpdateInvincibleTime(elapsedTime);
-
 
     //オブジェクト行列を更新
     UpdateTransform();
@@ -86,14 +86,6 @@ void EnemySlime::DrawDebugGUI()
         ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
         std::string a = std::string("angle") + std::to_string(id);
         ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
-        if (ImGui::BeginMenu("color", true))
-        {
-            std::string c = std::string("color") + std::to_string(id);
-            ImGui::ColorPicker3(c.c_str(), &color.x);
-            a = std::string("alpha") + std::to_string(id);
-            ImGui::SliderFloat(a.c_str(), &color.w, 0.0f, 1.0f);
-            ImGui::EndMenu();
-        }
         ImGui::TreePop();
     }
 }
@@ -104,12 +96,10 @@ void EnemySlime::DrewDebugPrimitive()
     Enemy::DrewDebugPrimitive();
 
     DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
-    // 縄張り範囲をデバッグ円柱描画
-    debugRenderer->DrawCylinder(territoryOrigin, territoryRange, 1.0f, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+ 
     // ターゲット位置をデバッグ球描画
-    debugRenderer->DrawSphere(targetPosition, 1.3f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-    // 索敵範囲をデバッグ円柱描画
-    debugRenderer->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+    debugRenderer->DrawSphere(targetPosition, 0.5f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+  
     // 攻撃範囲をデバッグ円柱描画
     debugRenderer->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f));
 }

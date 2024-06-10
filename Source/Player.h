@@ -14,11 +14,11 @@ public:
     Player();
     ~Player() override;
 
-    static Player& Instance()
-    {
-        static Player instance;
-        return instance;
-    }
+    static Player& Instance();
+    //{
+    //    static Player instance;
+    //    return instance;
+    //}
 
     //çXêVèàóù
     void Update(float olapsedTime);
@@ -89,11 +89,6 @@ private:
     ProjectileManager projectileManager;
 
     Effect*     hitEffect = nullptr;
-
-    Sprite*  HPbar = nullptr;
-    Sprite*  HP = nullptr;
-    Sprite*  Arrow = nullptr;
-    Sprite*  Way3Arrow = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 };
