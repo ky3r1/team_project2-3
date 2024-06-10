@@ -26,11 +26,18 @@ public:
 	void Destroy();
 
 
+	void SetTerritory(const DirectX::XMFLOAT3& origin, float range);
+
+	// ターゲット位置をランダム設定
+	void SetRandomTargetPosition();
+
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
 
-	// プレイヤー索敵
-	bool SearchPlayer();
+	//// プレイヤー索敵
+	//bool SearchPlayer();
+
+	bool InAttackRange();
 
 	//行動State
 	enum class State
@@ -75,14 +82,15 @@ public:
 	// IDゲッター・セッター
 	virtual int GetId() { return id; }
 	virtual void	SetId(int id) { this->id = id; }
-protected:
-
 	Model* model = nullptr;
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
+	DirectX::XMFLOAT3	player_position = { 0.0f,0.0f,0.0f };
+	float				territoryRange = 10.0f;
 	float				moveSpeed = 3.0f;
 	float				turnSpeed = DirectX::XMConvertToRadians(360);
 	float				stateTimer = 0.0f;
+	float				searchRange = 3.0f;
 	float				attackRange = 1.5f;
 	StateMachine* stateMachine = nullptr;
 	int id = 0;

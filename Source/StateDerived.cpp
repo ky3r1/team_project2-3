@@ -21,8 +21,7 @@ void SearchState::Enter()
 void SearchState::Execute(float elapsedTime)
 {
 	subState->Execute(elapsedTime);
-	// 
-	if (owner->SearchPlayer())
+	if (Player::Instance().GetHealth() > 0)
 	{
 		// Battleステートへ遷移
 		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy::State::Battle));
@@ -34,44 +33,26 @@ void SearchState::Exit()
 }
 
 #ifdef SEARCHSTATE
-////////////////////////徘徊ステート//////////////////////////
+////////////////////////死亡ステート//////////////////////////
 // 入った時
-void WanderState::Enter()
+void DeathState::Enter()
 {
 #ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::WalkFWD), true);
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Death), false);
 #endif // ENEMYANIMATION
 }
 // 実行中
-void WanderState::Execute(float elapsedTime)
+void DeathState::Execute(float elapsedTime)
 {
-	// 目的地点までのXZ平面での距離判定
-	DirectX::XMFLOAT3 position = owner->GetPosition();
-	DirectX::XMFLOAT3 targetPosition = owner->GetTargetPosition();
-	float vx = targetPosition.x - position.x;
-	float vz = targetPosition.z - position.z;
-	float distSq = vx * vx + vz * vz;
-
-	// 目的地へ着いた
-	float radius = owner->GetRadius();
-	if (distSq < radius * radius)
+#ifdef ENEMYANIMATION
+	if (!owner->GetModel()->IsPlayAnimation())
 	{
-		// 待機ステートへ遷移
-		// ChangeStateクラスでStateを切り替える
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Search::Idle));
+		owner->Destroy();
 	}
-	// 目的地点へ移動
-	owner->MoveToTarget(elapsedTime, 0.5f);
-	// プレイヤー索敵
-	if (owner->SearchPlayer())
-	{
-		// 見つかったら追跡ステートへ遷移
-		// ChangeStateクラスでStateを切り替える
-		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy::State::Battle));
-	}
+#endif // ENEMYANIMATION
 }
 //出ていくとき
-void WanderState::Exit()
+void DeathState::Exit()
 {
 }
 
@@ -97,8 +78,6 @@ void IdleState::Execute(float elapsedTime)
 	// プレイヤー索敵
 	if (owner->SearchPlayer())
 	{
-		// 見つかったら追跡ステートへ遷移
-		// ChangeStateクラスでStateを切り替える
 		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Battle));
 	}
 }
@@ -123,11 +102,6 @@ BattleState::~BattleState()
 void BattleState::Enter()
 {
 	SetSubState(static_cast<int>(EnemySlime::Battle::Pursuit));
-	if (!owner->SearchPlayer())
-	{
-		// SearchStateステートへ遷移
-		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Search));
-	}
 }
 //実行中
 void BattleState::Execute(float elapsedTime)
@@ -166,14 +140,12 @@ void PursuitState::Execute(float elapsedTime)
 	{
 		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Battle::Attack));
 	}
-	// 目的地点へ移動
-	owner->MoveToTarget(elapsedTime, 0.5f);
-
-	// プレイヤーを見失った
-	if (!owner->SearchPlayer())
+	if (Player::Instance().GetHealth() <= 0)
 	{
 		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Search));
 	}
+	// 目的地点へ移動
+	owner->MoveToTarget(elapsedTime, 0.5f);
 }
 //出ていくとき
 void PursuitState::Exit()
@@ -192,24 +164,11 @@ void AttackState::Enter()
 //実行中
 void AttackState::Execute(float elapsedTime)
 {
-	// 目的地点までのXZ平面での距離判定
-	DirectX::XMFLOAT3 position = owner->GetPosition();
-	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
-	owner->SetTargetPosition(player_position);
-	float vx = player_position.x - position.x;
-	float vz = player_position.z - position.z;
-	float distSq = vx * vx + vz * vz;
-	// 攻撃範囲内までプレイヤーに近づいた
-	float radius = owner->GetAttackRange();
-	if (distSq > radius * radius)
+	if (!owner->InAttackRange())
 	{
-		//if (!owner->GetModel()->IsPlayAnimation())
-		//{
-			owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Battle::Pursuit));
-		//}
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Battle::Pursuit));
 	}
-
-	if (!owner->SearchPlayer())
+	if (Player::Instance().GetHealth() <= 0)
 	{
 		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Search));
 	}

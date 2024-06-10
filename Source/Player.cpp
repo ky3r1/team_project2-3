@@ -24,29 +24,13 @@ Player& Player::Instance()
 //TODO:PlayerDamageÇÃìñÇΩÇËîªíËÇÃDelayTime
 #define DELAYPLAYERVSENEMY 60
 
-//TODO:EnemyÇÃÉXÉRÉA
-#define ENEMY01_SCORE 10
-#define ENEMY02_SCORE 20
-#define ENEMY03_SCORE 30
-#define ENEMY04_SCORE 40
-#define ENEMY05_SCORE 50
-
-
-extern float enemy_score[5];
-extern float total_score;
-
 Player::Player()
 {
     instance = this;
     //TODO:ÉvÉåÉCÉÑÅ[ÇÃÉXÉeÅ[É^ÉXê›íË
     model = new Model("Data/Model/Jammo/Jammo.mdl");
 
-    HPbar = new Sprite("Data/Sprite/UI/HPbar.png");
-    HP = new Sprite("Data/Sprite/UI/HP.png");
-    Arrow = new Sprite("Data/Sprite/UI/sign.png");
-    //Way3Arrow = new Sprite("Data/Sprite/UI/sign.png");
-
-    scale.x = scale.y = scale.z = 0.005f;
+    scale.x = scale.y = scale.z = 0.013f;
 
     color = { 1,0,0,1 };
 
@@ -56,9 +40,6 @@ Player::Player()
 
     hit_delay.time = DELAYPLAYERVSENEMY;
     moveSpeed = 5.0f;
-
-    for (int i = 0; i < 5; i++)enemy_score[i] = 0;
-    total_score   = 0;
 
     //ÉqÉbÉgÉGÉtÉFÉNÉgì«Ç›çûÇ›
     hitEffect = new Effect("Data/Effect/Hit.efk");
@@ -72,15 +53,6 @@ Player::~Player()
     hitEffect = nullptr;
     delete model;
     model = nullptr;
-
-    delete HP;
-    HP = nullptr;
-    delete HPbar;
-    HPbar = nullptr;
-    delete Arrow;
-    Arrow = nullptr;
-    delete Way3Arrow;
-    Way3Arrow = nullptr;
 }
 
 
@@ -191,84 +163,6 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 
     //íeä€ï`âÊèàóù
     projectileManager.Render(dc, shader);
-
-    //HP
-    DirectX::XMFLOAT2 sp_pos = { 0,0 };
-    DirectX::XMFLOAT2 sp_endpos = { 100,100 };
-    DirectX::XMFLOAT2 sp_size = { 0,0 };
-    DirectX::XMFLOAT2 sp_endsize = { 200,100 };
-    DirectX::XMFLOAT4 sp_color = { 1,1,1,1 };
-    HP->Render(dc, sp_pos, sp_endpos, sp_size, sp_endsize, 0, sp_color);
-
-    //HPbar
-    sp_pos = { 100,0 };
-    sp_endpos = { 100,100 };
-    sp_size = { 0,0 };
-    sp_endsize = { 100,100 };
-    if (health < 3)
-    {
-        sp_color = { 1,0,0,1 };
-    }
-    for (int i = 0; i < health; i++)
-    {
-        float x = sp_pos.x;
-        sp_pos.x += i * 100;
-        HPbar->Render(dc, sp_pos, sp_endpos, sp_size, sp_endsize, 0, sp_color);
-        sp_pos.x = x;
-    }
-
-    //Arrow
-    sp_pos = { 50,550 };
-    sp_endpos = { 100,100 };
-    sp_size = { 0,0 };
-    sp_endsize = { 100,100 };
-    sp_color = { 1,1,1,1 };
-    if (!projectile_auto.checker)
-    {
-        sp_color = { 1,1,1,0.5 };
-    }
-    Arrow->Render(dc, sp_pos, sp_endpos, sp_size, sp_endsize, 0, sp_color);
-
-    //Arrow
-    sp_pos = { 150,550 };
-    sp_endpos = { 100,100 };
-    sp_size = { 0,0 };
-    sp_endsize = { 100,100 };
-    switch (category)
-    {
-    case RED:
-        sp_color = { 1, 0, 0, 1 };
-        break;
-    case GREEN:
-        sp_color = { 0, 1, 0, 1 };
-        break;
-    case BLUE:
-        sp_color = { 0, 0, 1, 1 };
-        break;
-    case YELLOW:
-        sp_color = { 1, 1, 0, 1 };
-        break;
-    case PURPLE:
-        sp_color = { 1, 0, 1, 1 };
-        break;
-    case WHITE:
-        sp_color = { 1, 1, 1, 1 };
-        break;
-    default:
-        break;
-    }
-    if (!projectile_front.checker)
-    {
-        sp_color.w = 0.5;
-    }
-    //if (projectile_shot == 0)
-    //{
-    //    Arrow->Render(dc, sp_pos, sp_endpos, sp_size, sp_endsize, 0, sp_color);
-    //}
-    //if (projectile_shot == 1)
-    //{
-    //    Arrow->Render(dc, sp_pos, sp_endpos, sp_size, sp_endsize, 180, sp_color);
-    //}
 }
 
 void Player::DrawDebugGUI()
@@ -285,14 +179,11 @@ void Player::DrawDebugGUI()
             ImGui::SliderFloat3("scale", &scale.x, 0.01f, 4.0f);
             ImGui::SliderFloat3("angle", &angle.x, -3.14f, 3.14f);
             ImGui::SliderInt("health", &health, 0.0f, 10.0f);
-            ImGui::SliderFloat("movespeed", &moveSpeed, 0.0f, 10.0f);
+            ImGui::SliderFloat("movespeed", &moveSpeed, 0.0f, 20.0f);
 
             ImGui::SliderInt("delay_auto_time", &projectile_auto.time, 0.0f, DELAYAUTOTIME);
             ImGui::SliderInt("delay_front_time", &projectile_front.time, 0.0f, DELAYFRONTTIME);
             ImGui::SliderInt("delay_allangle_time", &projectile_allangle.time, 0.0f, DELAYALLANGLETIME);
-
-            ImGui::SliderFloat("enemy_score_red", &enemy_score[0], 0.0f, 10.0f);
-            ImGui::SliderFloat("totoal_socre", &total_score, 0.0f, 10.0f);
 
             ImGui::TreePop();
         }
@@ -407,27 +298,6 @@ void Player::CollisionProjectilesVsEnemies()
                 if (projectile->GetProectileCategory() == enemy->GetEnemyCategory())
                 {
                     color_count--;
-                    enemy_score[enemy->GetEnemyCategory()] += 1;
-                    switch (enemy->GetEnemyCategory())
-                    {
-                    case RED:
-                        total_score += ENEMY01_SCORE;
-                        break;
-                    case GREEN:
-                        total_score += ENEMY02_SCORE;
-                        break;
-                    case BLUE:
-                        total_score += ENEMY03_SCORE;
-                        break;
-                    case YELLOW:
-                        total_score += ENEMY04_SCORE;
-                        break;
-                    case PURPLE:
-                        total_score += ENEMY05_SCORE;
-                        break;
-                    default:
-                        break;
-                    }
                     //íeä€îjä¸
                     projectile->Destroy();
 #ifdef PROJECTILEDAMAGE
@@ -678,7 +548,7 @@ void Player::InputProjectile()
     }
 }
 
-void Player::ProjectileStraightFront(int category,float angle)//category:íeÇÃÉ^ÉCÉvÅAangle:íeÇÃäpìx
+void Player::ProjectileStraightFront(int category, float angle)//category:íeÇÃÉ^ÉCÉvÅAangle:íeÇÃäpìx
 {
     //î≠éÀ
     ProjectileStraight* projectile{};
@@ -691,24 +561,43 @@ void Player::ProjectileStraightFront(int category,float angle)//category:íeÇÃÉ^É
     DirectX::XMFLOAT3 axis = { 0,1,0 };
     DirectX::XMVECTOR Axis;
 
-    Axis = DirectX::XMLoadFloat3(&axis);
-    dis_pos.x = (MouseManager::GetInstance().GetScreenMousePos().x - screen_pos.x);
-    dis_pos.y = 0;
-    dis_pos.z = (MouseManager::GetInstance().GetScreenMousePos().z - screen_pos.y);
-    Dis_pos = DirectX::XMLoadFloat3(&dis_pos);
-    Dis_pos = DirectX::XMVector3Normalize(Dis_pos);
-    DirectX::XMStoreFloat3(&dis_pos, Dis_pos);
-    Right_ = DirectX::XMMatrixRotationAxis(Axis, DirectX::XMConvertToRadians(90));
-    Dis_pos = DirectX::XMVector3Transform(Dis_pos, Right_);
-    DirectX::XMStoreFloat3(&r, Dis_pos);
+    float dist = FLT_MAX;
+    DirectX::XMFLOAT3 enemy_position = {};
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    int enemyCount = enemyManager.GetEnemyCount();
+    for (int index = 0; index < enemyCount; index++)
+    {
+        Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
+        DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
+        DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
+        DirectX::XMVECTOR V = DirectX::XMVectorSubtract(E, P);
+        DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(V);
+        float d;
+        DirectX::XMStoreFloat(&d, D);
+        if (d < dist)
+        {
+            enemy_position = enemy->GetPosition();
+        }
+    }
 
-    dir.x = /*transform._31 * 100.0f;*/ -dis_pos.x;
+    //Axis = DirectX::XMLoadFloat3(&axis);
+    //dis_pos.x = enemy_position.x;
+    //dis_pos.y = enemy_position.y;
+    //dis_pos.z = enemy_position.z;
+    //Dis_pos = DirectX::XMLoadFloat3(&dis_pos);
+    //Dis_pos = DirectX::XMVector3Normalize(Dis_pos);
+    //DirectX::XMStoreFloat3(&dis_pos, Dis_pos);
+    //Right_ = DirectX::XMMatrixRotationAxis(Axis, DirectX::XMConvertToRadians(90));
+    //Dis_pos = DirectX::XMVector3Transform(Dis_pos, Right_);
+    //DirectX::XMStoreFloat3(&r, Dis_pos);
+
+    dir.x = transform._31 * 100.0f;
     dir.y = 0.0f;
-    dir.z = /*transform._33 * 100.0f;*/ dis_pos.z;
+    dir.z = transform._33 * 100.0f; 
     DirectX::XMFLOAT3 right;
-    right.x = /*transform._11 * 100.0f;*/ -r.x;
+    right.x = transform._11 * 100.0f; 
     right.y = 0.0f;
-    right.z = /*transform._13 * 100.0f;*/ r.z;
+    right.z = transform._13 * 100.0f; 
     //î≠éÀà íuÅiÉvÉåÉCÉÑÅ[ÇÃçòìñÇΩÇËÅj
     DirectX::XMFLOAT3 pos;
     pos.x = position.x;

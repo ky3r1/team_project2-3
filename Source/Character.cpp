@@ -24,10 +24,6 @@ void Character::Jump(float speed)
 
 void Character::Move(float vx, float vz, float speed)
 {
-    /*speed *= elapsedTime;
-    position.x += vx * speed;
-    position.z += vz * speed;*/
-
     //ˆÚ“®•ûŒüƒxƒNƒgƒ‹
     moveVecX = vx;
     moveVecZ = vz;

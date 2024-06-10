@@ -257,7 +257,9 @@ void SceneGame::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT
 	for (int i = 0; i < enemyCount; ++i)
 	{
 		Enemy* enemy = enemyManager.GetEnemy(i);
-		CharacterGauge(dc, view, projection, enemy->GetPosition(), enemy->GetHealth(), color);
+		DirectX::XMFLOAT3 enemy_position = enemy->GetPosition();
+		enemy_position.y += 3.0f;
+		CharacterGauge(dc, view, projection, enemy_position, enemy->GetHealth(), color);
 	}
 }
 
@@ -266,13 +268,13 @@ void SceneGame::RenderPlayerGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOA
 {
 
 	DirectX::XMFLOAT3 player_position = player->GetPosition();
-	player_position.y = 1.0f;
+	player_position.y = 1.0f + 3.0f;
 	DirectX::XMVECTOR PlayerPosition = DirectX::XMLoadFloat3(&player_position);
 	DirectX::XMFLOAT4 color = { 1,0.5,0,1 };//ゲージの色
 	CharacterGauge(dc, view, projection, player_position, player->GetHealth(), color);
 }
 
-void SceneGame::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, DirectX::XMFLOAT3 position,float health, DirectX::XMFLOAT4 gaugecolor)
+void SceneGame::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, DirectX::XMFLOAT3 position,int health, DirectX::XMFLOAT4 gaugecolor)
 {
 	//ビューポート
 	D3D11_VIEWPORT viewport;
@@ -306,25 +308,25 @@ void SceneGame::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X
 
 	player->SetScreenPos(position);
 
-	//for (int i = 0; i < health; ++i)
-	//{
-	//	gauge->Render(
-	//		dc,
-	//		position.x - 25 + i * 10, position.y - 70,
-	//		9, 10,
-	//		100, 100,
-	//		25, 10,
-	//		0,
-	//		gaugecolor.x, gaugecolor.y, gaugecolor.z, gaugecolor.w);
-	//	gauge->Render(
-	//		dc,
-	//		position.x - 25 + i * 10, position.y - 70,
-	//		1, 10,
-	//		100, 100,
-	//		25, 10,
-	//		0,
-	//		0, 0, 0, 1);
-	//}
+	for (int i = 0; i < health; ++i)
+	{
+		gauge->Render(
+			dc,
+			position.x - 25 + i * 10, position.y,
+			9, 10,
+			100, 100,
+			25, 10,
+			0,
+			gaugecolor.x, gaugecolor.y, gaugecolor.z, gaugecolor.w);
+		gauge->Render(
+			dc,
+			position.x - 25 + i * 10, position.y,
+			1, 10,
+			100, 100,
+			25, 10,
+			0,
+			0, 0, 0, 1);
+	}
 }
 
 void SceneGame::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
