@@ -155,7 +155,7 @@ void PursuitState::Execute(float elapsedTime)
 {
 	// –Ú“I’n“_‚Ü‚Å‚ÌXZ•½–Ê‚Å‚Ì‹——£”»’è
 	DirectX::XMFLOAT3 position = owner->GetPosition();
-	DirectX::XMFLOAT3 player_position = owner->GetPlayerPosition();
+	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
 	owner->SetTargetPosition(player_position);
 	float vx = player_position.x - position.x;
 	float vz = player_position.z - position.z;

@@ -77,10 +77,6 @@ public:
 	float GetAttackRange() { return attackRange; }
 	StateMachine* GetStateMachine() { return stateMachine; }
 
-	// プレイヤーのゲッター・セッター
-	DirectX::XMFLOAT3 GetPlayerPosition() { return player_position; }
-	void SetPlayerPosition(DirectX::XMFLOAT3 position) { player_position = position; }
-
 	// IDゲッター・セッター
 	virtual int GetId() { return id; }
 	virtual void	SetId(int id) { this->id = id; }
@@ -90,7 +86,6 @@ protected:
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3	territoryOrigin = { 0.0f,0.0f,0.0f };
-	DirectX::XMFLOAT3	player_position = { 0.0f,0.0f,0.0f };
 	float				territoryRange = 10.0f;
 	float				moveSpeed = 3.0f;
 	float				turnSpeed = DirectX::XMConvertToRadians(360);

@@ -9,6 +9,13 @@
 #include "ProjectileHoming.h"
 #include "MouseManager.h"
 
+static Player* instance = nullptr;
+
+Player& Player::Instance()
+{
+    return *instance;
+}
+
 //TODO:弾のDelayTime
 #define DELAYAUTOTIME 40
 #define DELAYALLANGLETIME 60
@@ -30,6 +37,7 @@ extern float total_score;
 
 Player::Player()
 {
+    instance = this;
     //TODO:プレイヤーのステータス設定
     model = new Model("Data/Model/Jammo/Jammo.mdl");
 
@@ -83,7 +91,6 @@ void Player::Update(float elapsedTime)
     for (int i = 0; i < enemyCount; i++)
     {
         Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-        enemy->SetPlayerPosition(position);
     }
     //色変え
     ChangeColor(color, category);

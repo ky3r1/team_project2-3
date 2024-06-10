@@ -14,11 +14,7 @@ public:
     Player();
     ~Player() override;
 
-    static Player& Instance()
-    {
-        static Player instance;
-        return instance;
-    }
+    static Player& Instance();
 
     //XVˆ—
     void Update(float olapsedTime);
