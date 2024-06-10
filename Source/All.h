@@ -19,8 +19,6 @@
 #define ALLSTAGE
 //ìÆÇ≠è∞
 //#define STAGEMOVE
-//ï«
-//#define STAGEWALL
 
 ///////////////////Character////////////////////////
 

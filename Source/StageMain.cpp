@@ -1,13 +1,10 @@
 #include"StageMain.h"
 
-//static Stage* instance = nullptr;
-
 //コンストラクタ
 StageMain::StageMain()
 {
-    //instance = this;
     //ステージモデルの読み込み
-    model = new Model("Data/Model/Stage/Stage.mdl");
+    model = new Model("Data/Model/Cube/Cube.mdl");
     scale = { 2.0f,2.0f,2.0f };
     color = { 1,1,1,1 };
     UpdateTransform();
@@ -18,13 +15,18 @@ StageMain::StageMain()
 StageMain::~StageMain()
 {
     //ステージモデルの破棄
-    delete model;
+    if (model)
+    {
+        delete model;
+        model = nullptr;
+    }
 }
 
 //更新処理
 void StageMain::Update(float elapsedTime)
 {
-    //特にやることなし
+    UpdateTransform();
+    model->UpdateTransform(transform);
 }
 
 //描画処理

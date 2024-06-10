@@ -25,12 +25,6 @@ public:
     //破棄
 	void Destroy();
 
-
-	void SetTerritory(const DirectX::XMFLOAT3& origin, float range);
-
-	// ターゲット位置をランダム設定
-	void SetRandomTargetPosition();
-
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
 

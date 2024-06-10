@@ -17,8 +17,7 @@
 //StageIncldue
 #include "StageManager.h"
 #include "StageMain.h"
-//#include "StageMoveFloor.h"
-//#include "StageWall.h"
+#include "StageMapChip.h"
 
 #include "Input/Input.h"
 
@@ -26,12 +25,36 @@
 // 初期化
 void SceneGame::Initialize()
 {
+	mapcategory = 0;
+
 	//ステージ初期化
 #ifdef ALLSTAGE
 	//Main
 	StageManager& stageManager = StageManager::Instance();
-	StageMain* stageMain = new StageMain();
-	stageManager.Register(stageMain);
+	StageMapChip& mapchip = StageMapChip::Instance();
+	mapchip.SetCategory(mapcategory);
+	for (int z = 0; z< MAPMAX_Z; z++)
+	{
+		for (int x = 0; x < MAPMAX_X; x++)
+		{
+			StageMain* stageMain = new StageMain();
+			stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 0.0f, z * 2.0f - 2.0f));
+			//壁ならY軸方向に2.0f上げる
+			if (mapchip.GetMapChipData(mapcategory, x, z) == WALL)
+			{
+				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 2.0f, z * 2.0f - 2.0f));
+			}
+			//StageMapChipクラスにマップチップのグローバル座標を記憶
+			mapchip.SetMapChipPosition(stageMain->GetPosition(), x, z);
+			//StageManagerにHORE(１)以外のマップチップを配置
+			if (mapchip.GetMapChipData(mapcategory, x, z) == HOLE)
+			{
+				delete stageMain;
+				continue;
+			}
+			stageManager.Register(stageMain);
+		}
+	}
 
 #ifdef STAGEMOVE
 	for (int index = 0; index < 1; ++index)
@@ -118,7 +141,6 @@ void SceneGame::Finalize()
 {
 	//エネミー終了化
 	EnemyManager::Instance().clear();
-
 	if (cameraController != nullptr)
 	{
 		delete cameraController;

@@ -98,6 +98,10 @@ void Character::UpdateInvincibleTime(float elapsedTime)
     {
         invincibleTimer -= elapsedTime;
     }
+    if (position.y < -10)
+    {
+        health = 0;
+    }
 }
 
 void Character::ChangeColor(DirectX::XMFLOAT4& color, int category)
@@ -347,16 +351,11 @@ void Character::UpdateHorizontalMove(float elapsedTime)
             collectPosition.x = o.x;
             collectPosition.z = o.z;
             HitResult hit2;
-#ifdef WallCollision
             if (!StageManager::Instance().RayCast(hit.position, collectPosition, hit2))
             {
                 position.x = o.x;
                 position.z = o.z;
             }
-#else
-            position.x = o.x;
-            position.z = o.z;
-#endif // WallCollision
         }
         else
         {

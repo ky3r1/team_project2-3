@@ -71,8 +71,6 @@ private:
     float       moveSpeed = 5.0f;
     float       turnSpeed = DirectX::XMConvertToRadians(720);
     float       jumpSpeed = 20.0f;
-    /*float       gravity = -1.0f;
-    DirectX::XMFLOAT3 velocity = { 0,0,0 };*/
     int color_count = 0;
     int projectile_shot;
 
