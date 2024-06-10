@@ -90,23 +90,18 @@ void SceneGame::Initialize()
 		{
 		case 0:
 			slime->SetPosition(DirectX::XMFLOAT3(5.0f, 0, 5));
-			slime->SetTerritory(DirectX::XMFLOAT3(5.0f, 0, 5), 10.0f);
 			break;
 		case 1:
 			slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 5));
-			slime->SetTerritory(DirectX::XMFLOAT3(10.0f, 0, 5), 10.0f);
 			break;
 		case 2:
 			slime->SetPosition(DirectX::XMFLOAT3(-5.0f, 0, 5));
-			slime->SetTerritory(DirectX::XMFLOAT3(-5.0f, 0, 5), 10.0f);
 			break;
 		case 3:
 			slime->SetPosition(DirectX::XMFLOAT3(-10.0f, 0, 5));
-			slime->SetTerritory(DirectX::XMFLOAT3(-10.0f, 0, 5), 10.0f);
 			break;
 		case 4:
 			slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));
-			slime->SetTerritory(DirectX::XMFLOAT3(0, 0, 5), 10.0f);
 			break;
 		}
 		EnemyManager::Instance().Register(slime);

@@ -46,8 +46,8 @@ void Enemy::DrawDebugGUI()
         str = "Search";
         switch (stateMachine->GetState()->GetSubStateIndex())
         {
-        case static_cast<int>(Enemy::Search::Wander):
-            subStr = "Wander";
+        case static_cast<int>(Enemy::Search::Death):
+            subStr = "Death";
             break;
         case static_cast<int>(Enemy::Search::Idle):
             subStr = "Idle";
@@ -78,20 +78,6 @@ void Enemy::Destroy()
     EnemyManager::Instance().Remove(this);
 }
 
-void Enemy::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
-{
-    territoryOrigin = origin;
-    territoryRange = range;
-}
-
-void Enemy::SetRandomTargetPosition()
-{
-    float theta = Mathf::RandomRange(-DirectX::XM_PI, DirectX::XM_PI);
-    float range = Mathf::RandomRange(0.0f, territoryRange);
-    targetPosition.x = territoryOrigin.x + sinf(theta) * range;
-    targetPosition.y = territoryOrigin.y;
-    targetPosition.z = territoryOrigin.z + cosf(theta) * range;
-}
 
 void Enemy::MoveToTarget(float elapsedTime, float speedRate)
 {

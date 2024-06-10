@@ -38,7 +38,6 @@ void SearchState::Exit()
 // “ü‚Á‚½Žž
 void WanderState::Enter()
 {
-	owner->SetRandomTargetPosition();
 #ifdef ENEMYANIMATION
 	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::WalkFWD), true);
 #endif // ENEMYANIMATION
@@ -93,7 +92,7 @@ void IdleState::Execute(float elapsedTime)
 	if (idle_timer > 60)
 	{
 		idle_timer = 0;
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Search::Wander));
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Search::Death));
 	}
 	// ƒvƒŒƒCƒ„[õ“G
 	if (owner->SearchPlayer())

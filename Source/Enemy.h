@@ -23,13 +23,8 @@ public:
 	virtual void DrawDebugGUI();
 
     //破棄
-    void Destroy();
+	void Destroy();
 
-	// 縄張り設定
-	void SetTerritory(const DirectX::XMFLOAT3& origin, float range);
-
-	// ターゲット位置をランダム設定
-	void SetRandomTargetPosition();
 
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
@@ -45,7 +40,7 @@ public:
 	};
 	enum class Search
 	{
-		Wander,
+		Death,
 		Idle,
 	};
 	enum class Battle
@@ -85,12 +80,9 @@ protected:
 	Model* model = nullptr;
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
-	DirectX::XMFLOAT3	territoryOrigin = { 0.0f,0.0f,0.0f };
-	float				territoryRange = 10.0f;
 	float				moveSpeed = 3.0f;
 	float				turnSpeed = DirectX::XMConvertToRadians(360);
 	float				stateTimer = 0.0f;
-	float				searchRange = 3.0f;
 	float				attackRange = 1.5f;
 	StateMachine* stateMachine = nullptr;
 	int id = 0;
