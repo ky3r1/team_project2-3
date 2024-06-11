@@ -28,9 +28,10 @@ public:
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
 
-	//// プレイヤー索敵
-	//bool SearchPlayer();
+	//垂直移動更新処理
+	void UpdateVerticalMove(float elapsedTime)override;
 
+	//攻撃範囲に入ったらtrueを返す
 	bool InAttackRange();
 
 	//行動State
@@ -39,11 +40,13 @@ public:
 		Search,
 		Battle,
 	};
+	//探索State
 	enum class Search
 	{
 		Death,
 		Idle,
 	};
+	//戦闘State
 	enum class Battle
 	{
 		Pursuit,
@@ -77,7 +80,7 @@ public:
 	virtual int GetId() { return id; }
 	virtual void	SetId(int id) { this->id = id; }
 protected:
-	Model* model = nullptr;
+	//Model* model = nullptr;
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3	player_position = { 0.0f,0.0f,0.0f };

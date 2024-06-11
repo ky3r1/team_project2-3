@@ -92,6 +92,15 @@ void Enemy::MoveToTarget(float elapsedTime, float speedRate)
     Turn(elapsedTime, vx, vz, turnSpeed * speedRate);
 }
 
+void Enemy::UpdateVerticalMove(float elapsedTime)
+{
+    Character::UpdateVerticalMove(elapsedTime);
+    if (position.y < -5)
+    {
+        OnDead();
+    }
+}
+
 //UŒ‚”ÍˆÍ“à‚É“ü‚Á‚½‚©
 bool Enemy::InAttackRange()
 {

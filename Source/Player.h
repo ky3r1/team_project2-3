@@ -34,6 +34,9 @@ public:
     // プレイヤーの種類
     int GetPlayerCategory() { return category; }
 private:
+    //垂直移動更新処理
+    void UpdateVerticalMove(float elapsedTime)override;
+
     //スティック入力値から移動ベクトルを取得
     DirectX::XMFLOAT3 GetMoveVec() const;
 

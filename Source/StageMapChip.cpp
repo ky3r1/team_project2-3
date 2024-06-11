@@ -6,7 +6,7 @@ StageMapChip::StageMapChip()
 }
 
 
-int StageMapChip::GetMapChipData(int num, int x, int z)
+int StageMapChip::GetMapChipCategory(int num, int x, int z)
 {
     return map_chip_category[num][z][x];
 }
@@ -20,14 +20,31 @@ int StageMapChip::GetMapChipPosition(DirectX::XMFLOAT3 p)
 			DirectX::XMFLOAT3 map_position = position[z][x];
 			if (p.x<map_position.x && p.x>map_position.x + 2 && p.z<map_position.z && p.z>map_position.z + 2)
 			{
-				return map_chip_category[category][z][x];
+				return map_chip_category[stagenum][z][x];
 			}
 		}
 	}
 	return -1;
 }
 
-void StageMapChip::SetMapChipPosition(DirectX::XMFLOAT3 p, int x, int z)
+void StageMapChip::SetMapChipData(DirectX::XMFLOAT3 p, int x, int z)
 {
     position[z][x] = p;
+	switch (map_chip_category[stagenum][z][x])
+	{
+	case WALL:
+		cost[z][x] = 100;
+		break;
+	case FLOOR:
+		cost[z][x] = 0;
+		break;
+	case HOLE:
+		cost[z][x] = 100;
+		break;
+	case SPIKE:
+		cost[z][x] = 50;
+		break;
+	default:
+		break;
+	}
 }

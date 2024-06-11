@@ -47,6 +47,6 @@ protected:
 	void DrewDebugPrimitive()override;
 
 private:
-    Model* model = nullptr;
+    //Model* model = nullptr;
     int elapestime;
 };

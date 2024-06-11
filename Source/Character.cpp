@@ -1,6 +1,7 @@
 #include "Character.h"
 #include "StageManager.h"
 
+
 //s—ñXVˆ—
 void Character::UpdateTransform()
 {
@@ -97,10 +98,6 @@ void Character::UpdateInvincibleTime(float elapsedTime)
     if (invincibleTimer > 0.0f)
     {
         invincibleTimer -= elapsedTime;
-    }
-    if (position.y < -10)
-    {
-        health = 0;
     }
 }
 
@@ -223,10 +220,6 @@ void Character::UpdateVerticalMove(float elapsedTime)
     {
         position.y += my;
         isGround = false;
-    }
-    if (position.y < -10)
-    {
-        health = 0;
     }
 }
 

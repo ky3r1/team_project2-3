@@ -9,6 +9,8 @@
 #include "ProjectileHoming.h"
 #include "MouseManager.h"
 
+#include "StageMapChip.h"
+
 static Player* instance = nullptr;
 
 Player& Player::Instance()
@@ -389,6 +391,15 @@ void Player::DrawDebugPrimitive()
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();
 
+}
+
+void Player::UpdateVerticalMove(float elapsedTime)
+{
+    Character::UpdateVerticalMove(elapsedTime);
+    if (position.y < -10)
+    {
+        StageMapChip::Instance().SetStageNum(StageMapChip::Instance().GetStageNum() + 1);
+    }
 }
 
 DirectX::XMFLOAT3 Player::GetMoveVec() const

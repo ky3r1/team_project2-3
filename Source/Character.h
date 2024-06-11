@@ -55,12 +55,12 @@ public:
 
     DirectX::XMFLOAT3 GetScreenPos() { return screen_pos; }
 
-private:
+protected:
     //垂直速力処理
     void UpdateVerticalVelocity(float elapsedFrame);
 
     //垂直移動更新処理
-    void UpdateVerticalMove(float elapsedTime);
+    virtual void UpdateVerticalMove(float elapsedTime);
 
     //水平速力更新処理
     void UpdateHorizontalVelocity(float elapsedFrame);
@@ -104,6 +104,7 @@ public:
     int GetMaxHealth()const { return maxHealth; }
 
 protected:
+    Model* model = nullptr;
     DirectX::XMFLOAT3   position = { 0,0,0 };
     DirectX::XMFLOAT3   screen_pos = { 0,0,0 };
     DirectX::XMFLOAT3   angle = { 0,0,0 };

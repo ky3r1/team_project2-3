@@ -18,6 +18,7 @@
 #include "StageManager.h"
 #include "StageMain.h"
 #include "StageMapChip.h"
+#include "StageMapChip.h"
 
 #include "Input/Input.h"
 
@@ -25,14 +26,12 @@
 // 初期化
 void SceneGame::Initialize()
 {
-	mapcategory = 0;
-
 	//ステージ初期化
 #ifdef ALLSTAGE
 	//Main
 	StageManager& stageManager = StageManager::Instance();
 	StageMapChip& mapchip = StageMapChip::Instance();
-	mapchip.SetCategory(mapcategory);
+	mapcategory = StageMapChip::Instance().GetStageNum();
 	for (int z = 0; z< MAPMAX_Z; z++)
 	{
 		for (int x = 0; x < MAPMAX_X; x++)
@@ -40,14 +39,14 @@ void SceneGame::Initialize()
 			StageMain* stageMain = new StageMain();
 			stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 0.0f, z * 2.0f - 2.0f));
 			//壁ならY軸方向に2.0f上げる
-			if (mapchip.GetMapChipData(mapcategory, x, z) == WALL)
+			if (mapchip.GetMapChipCategory(mapcategory, x, z) == WALL)
 			{
 				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 2.0f, z * 2.0f - 2.0f));
 			}
 			//StageMapChipクラスにマップチップのグローバル座標を記憶
-			mapchip.SetMapChipPosition(stageMain->GetPosition(), x, z);
+			mapchip.SetMapChipData(stageMain->GetPosition(), x, z);
 			//StageManagerにHORE(１)以外のマップチップを配置
-			if (mapchip.GetMapChipData(mapcategory, x, z) == HOLE)
+			if (mapchip.GetMapChipCategory(mapcategory, x, z) == HOLE)
 			{
 				delete stageMain;
 				continue;
@@ -107,7 +106,6 @@ void SceneGame::Initialize()
 	{
 		int color = 0;
 		//if (index < 3)color = 1;
-		//Blue
 		EnemySlime* slime = new EnemySlime(color);
 		switch (index)
 		{
@@ -188,6 +186,13 @@ void SceneGame::Update(float elapsedTime)
 
 	//エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+
+	if (StageMapChip::Instance().GetStageNum() != mapcategory)
+	{
+		Finalize();
+		Initialize();
+	}
 }
 
 // 描画処理
