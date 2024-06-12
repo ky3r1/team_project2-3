@@ -39,19 +39,29 @@ void SceneGame::Initialize()
 		{
 			StageMain* stageMain = new StageMain();
 			stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 0.0f, z * 2.0f - 2.0f));
-			//壁ならY軸方向に2.0f上げる
-			if (mapchip.GetMapChipCategory(mapcategory, x, z) == WALL)
+
+			switch (mapchip.GetMapChipCategory(x, z))
 			{
+			case WALL:
+				//壁ならY軸方向に2.0f上げる
 				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 2.0f, z * 2.0f - 2.0f));
-			}
-			//StageMapChipクラスにマップチップのグローバル座標を記憶
-			mapchip.SetMapChipData(stageMain->GetPosition(), x, z);
-			//StageManagerにHORE(１)以外のマップチップを配置
-			if (mapchip.GetMapChipCategory(mapcategory, x, z) == HOLE)
-			{
+				break;
+			case FLOOR:
+				
+				break;
+			case HOLE:
+				//HORE(１)は配置しない
 				delete stageMain;
 				continue;
+				break;
+			case SPIKE:
+				stageMain->SetColor(DirectX::XMFLOAT4(1, 0, 0, 1));
+				break;
 			}
+
+			//StageMapChipクラスにマップチップのグローバル座標を記憶
+			mapchip.SetMapChipData(stageMain->GetPosition(), x, z);
+
 			stageManager.Register(stageMain);
 		}
 	}

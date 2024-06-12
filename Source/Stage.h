@@ -37,6 +37,10 @@ public:
     void SetTransform(DirectX::XMFLOAT4X4 t) { transform = t; }
     const DirectX::XMFLOAT4X4 GetTransform() const { return transform; }
 
+    //color
+    void SetColor(DirectX::XMFLOAT4 c) { color = c; }
+    const DirectX::XMFLOAT4 GetColor() const { return color; }
+
     //s—ñXVˆ—
     void UpdateTransform();
 protected:

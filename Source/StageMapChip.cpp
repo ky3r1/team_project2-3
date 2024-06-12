@@ -6,9 +6,9 @@ StageMapChip::StageMapChip()
 }
 
 
-int StageMapChip::GetMapChipCategory(int num, int x, int z)
+int StageMapChip::GetMapChipCategory( int x, int z)
 {
-    return map_chip_category[num][z][x];
+    return map_chip_category[stagenum][z][x];
 }
 
 int StageMapChip::GetMapChipPosition(DirectX::XMFLOAT3 p)
@@ -18,13 +18,13 @@ int StageMapChip::GetMapChipPosition(DirectX::XMFLOAT3 p)
 		for (int x = 0; x < MAPMAX_X; x++)
 		{
 			DirectX::XMFLOAT3 map_position = position[z][x];
-			if (p.x<map_position.x && p.x>map_position.x + 2 && p.z<map_position.z && p.z>map_position.z + 2)
+			if (p.x > map_position.x && p.x<map_position.x + 2.5f && p.z>map_position.z && p.z < map_position.z + 2.5f)
 			{
 				return map_chip_category[stagenum][z][x];
 			}
 		}
 	}
-	return -1;
+	return -2;
 }
 
 void StageMapChip::SetMapChipData(DirectX::XMFLOAT3 p, int x, int z)

@@ -3,6 +3,7 @@
 #include "EnemyManager.h"
 #include "Mathf.h"
 #include "Player.h"
+#include "StageMapChip.h"
 
 //デバッグプリミティブ描画
 void Enemy::DrewDebugPrimitive()
@@ -67,8 +68,30 @@ void Enemy::DrawDebugGUI()
         }
         break;
     }
+
+    // デバッグ文字列表示の変更
+    std::string mapstr = "";
+    // 現在のステート番号に合わせてデバッグ文字列をstrに格納
+    switch (StageMapChip::Instance().GetMapChipPosition(position)) {
+    case WALL:
+        str = "Wall";
+        break;
+    case FLOOR:
+        str = "Floor";
+        break;
+    case HOLE:
+        str = "Hole";
+        break;
+    case SPIKE:
+        str = "Spike";
+        break;
+    default:
+        str = "None";
+        break;
+    }
     ImGui::Text(u8"State　%s", str.c_str());
     ImGui::Text(u8"SubState　%s", subStr.c_str());
+    ImGui::Text(u8"MapChip　%s", mapstr.c_str());
 #endif // ENEMYSTATEMACHINE
 }
 

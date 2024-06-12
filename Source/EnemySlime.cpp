@@ -75,6 +75,7 @@ void EnemySlime::OnDead()
 void EnemySlime::DrawDebugGUI()
 {
     std::string name = std::string("slime") + std::to_string(id);
+
     if (ImGui::TreeNode(name.c_str()))
     {
         Enemy::DrawDebugGUI();
