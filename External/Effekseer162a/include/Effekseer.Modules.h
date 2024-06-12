@@ -1310,7 +1310,7 @@ public:
 
 		for (int i = 1; i < mControllPointCount; i++)
 		{
-			dVector4 p0 = mControllPoint[static_cast<std::vector<Effekseer::dVector4, std::allocator<Effekseer::dVector4>>::size_type>(i) - 1];
+			dVector4 p0 = mControllPoint[i - 1];
 			dVector4 p1 = mControllPoint[i];
 
 			float len = Vector3D::Length(Vector3D((float)p1.X, (float)p1.Y, (float)p1.Z) - Vector3D((float)p0.X, (float)p0.Y, (float)p0.Z));
