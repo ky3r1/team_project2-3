@@ -280,6 +280,9 @@
     <ClCompile Include="Src\DirectXHelpers.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="Audio\SoundStreamInstance.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\CompileShaders.cmd">
