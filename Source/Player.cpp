@@ -246,11 +246,11 @@ void Player::CollisionPlayerVsEnemies()
 
                 if (category == WHITE)
                 {
-                    category = enemy->GetEnemyCategory();
+                    category = enemy->GetCategory();
                     color_count = 5;
                 }
 
-                if (category == enemy->GetEnemyCategory())
+                if (category == enemy->GetCategory())
                 {
                 }
                 else
@@ -297,7 +297,7 @@ void Player::CollisionProjectilesVsEnemies()
                 enemy->GetHeight(),
                 outPosition))
             {
-                if (projectile->GetProectileCategory() == enemy->GetEnemyCategory())
+                if (projectile->GetProectileCategory() == enemy->GetCategory())
                 {
                     color_count--;
                     //’eŠÛ”jŠü
@@ -342,7 +342,7 @@ void Player::CollisionProjectilesVsEnemies()
                 }
                 else if (projectile->GetProectileCategory() == WHITE)
                 {
-                    category = enemy->GetEnemyCategory();
+                    category = enemy->GetCategory();
                     color_count = 5;
                     projectile->Destroy();
                 }

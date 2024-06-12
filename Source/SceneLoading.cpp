@@ -6,7 +6,8 @@
 void SceneLoading::Initialize()
 {
     //スプライト初期化
-    sprite = new Sprite("Data/Sprite/LoadingIcon.png");
+    //sprite = new Sprite("Data/Sprite/LoadingIcon.png");
+    sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/LoadingIcon.png"));
 
     //スレッド開始
     thread = new std::thread(LoadingThread, this);
@@ -20,13 +21,6 @@ void SceneLoading::Finalize()
         thread->join();
         delete thread;
         thread = nullptr;
-    }
-
-    //スプライト終了化
-    if (sprite != nullptr)
-    {
-        delete sprite;
-        sprite = nullptr;
     }
 }
 

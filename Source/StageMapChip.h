@@ -15,14 +15,6 @@
 #define COST_MAX 100
 #define COST_MIN 0
 
-struct StageData
-{
-	DirectX::XMFLOAT3 position = {};
-	DirectX::XMFLOAT4 color = {};
-	int cost = 100;
-	int category = -1;
-};
-
 class StageMapChip
 {
 public:

@@ -14,17 +14,11 @@ float total_score;
 void SceneResult::Initialize()
 {
     //スプライト初期化
-    sprite = new Sprite("Data/Sprite/Title.png");
+    sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/Title.png"));
 }
 
 void SceneResult::Finalize()
 {
-    //スプライト終了化
-    if (sprite != nullptr)
-    {
-        delete sprite;
-        sprite = nullptr;
-    }
 }
 
 void SceneResult::Update(float elapsedTime)

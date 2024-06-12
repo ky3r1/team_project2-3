@@ -15,33 +15,6 @@ public:
     //行列更新処理
     void UpdateTransform();
 
-    //位置取得
-    const DirectX::XMFLOAT3& GetPosition() const { return position; }
-
-    //位置設定
-    void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
-
-    //回転取得
-    const DirectX::XMFLOAT3& GetAngle() const { return angle; }
-
-    //回転設定
-    void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
-
-    //スケール取得
-    const DirectX::XMFLOAT3& GetScale() const { return scale; }
-
-    //スケール設定
-    void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
-
-    //半径取得
-    float GetRadius() const { return radius; }
-
-    //地面に接地してるか
-    bool IsGround()const { return isGround; }
-
-    //高さ取得
-    float GetHeight() const { return height; }
-
     //ダメージを与える
     bool ApplyDamage(int damage, float invincibleTime);
 
@@ -99,10 +72,41 @@ protected:
 
     virtual void ChangeColor(DirectX::XMFLOAT4& color, int category);
 public:
+    /////////////////////ゲッター・セッター//////////////////////////
+
+    //モデルのゲッター・セッター
+    Model* GetModel() { return model; }
+    void SetModel(Model* m) { model = m; }
+
+    //positionのゲッター・セッター
+    const DirectX::XMFLOAT3& GetPosition() const { return position; }
+    void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
+
+    //angleのゲッター・セッター
+    const DirectX::XMFLOAT3& GetAngle() const { return angle; }
+    void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
+
+    //scaleのゲッター・セッター
+    const DirectX::XMFLOAT3& GetScale() const { return scale; }
+    void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
+
+    //radiusのゲッター
+    float GetRadius() const { return radius; }
+
+    //isGroundのゲッター
+    bool IsGround()const { return isGround; }
+
+    //heightのゲッター
+    float GetHeight() const { return height; }
+
+    //healthのゲッター
     int GetHealth()const { return health; }
 
+    //maxHealthゲッター
     int GetMaxHealth()const { return maxHealth; }
 
+    //categoryのゲッター
+    int GetCategory()const { return category; }
 protected:
     Model* model = nullptr;
     DirectX::XMFLOAT3   position = { 0,0,0 };

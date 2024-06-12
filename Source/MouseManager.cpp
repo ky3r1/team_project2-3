@@ -68,7 +68,7 @@ void MouseManager::MouseTransform(ID3D11DeviceContext* dc, const DirectX::XMFLOA
     //StageMain stage_main;
     //if (stage_main.RayCast(world_position_start, world_position_end, hit))
     //{
-    ///*EnemyManager& enemyManager = EnemyManager::Instance();
+    //EnemyManager& enemyManager = EnemyManager::Instance();
     //EnemySlime* slime = new EnemySlime(GREEN, 0);
     //slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
     //enemyManager.Register(slime);*/
