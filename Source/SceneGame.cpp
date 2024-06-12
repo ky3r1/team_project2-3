@@ -31,6 +31,7 @@ void SceneGame::Initialize()
 	//Main
 	StageManager& stageManager = StageManager::Instance();
 	StageMapChip& mapchip = StageMapChip::Instance();
+	//ステージのナンバーをSceneGame内に記憶
 	mapcategory = StageMapChip::Instance().GetStageNum();
 	for (int z = 0; z< MAPMAX_Z; z++)
 	{
@@ -74,11 +75,11 @@ void SceneGame::Initialize()
 #endif // ALLSTAGE
 
 #ifdef HPGAUGE
-	gauge = new Sprite;
+	gauge = std::unique_ptr<Sprite>(new Sprite);
 #endif // HPGAUGE
 
 #ifdef  ALLPLAYER
-	player = new Player();
+	player = std::unique_ptr<Player>(new Player());
 #endif //  ALLPLAYER
 
 
@@ -98,7 +99,7 @@ void SceneGame::Initialize()
 		100.0f
 	);
 	//カメラコントローラー初期化
-	cameraController = new CameraController();
+	cameraController = std::unique_ptr<CameraController>(new CameraController());
 #ifdef ALLENEMY
 #ifdef ENEMYSLIME
 	int index = 0;
@@ -139,22 +140,22 @@ void SceneGame::Finalize()
 {
 	//エネミー終了化
 	EnemyManager::Instance().clear();
-	if (cameraController != nullptr)
-	{
-		delete cameraController;
-		cameraController = nullptr;
-	}
-	if (player != nullptr)
-	{
-		delete player;
-		player = nullptr;
-	}
+	//if (cameraController != nullptr)
+	//{
+	//	delete cameraController;
+	//	cameraController = nullptr;
+	//}
+	//if (player != nullptr)
+	//{
+	//	delete player;
+	//	player = nullptr;
+	//}
 
-	if (gauge != nullptr)
-	{
-		delete gauge;
-		gauge = nullptr;
-	}
+	//if (gauge != nullptr)
+	//{
+	//	delete gauge;
+	//	gauge = nullptr;
+	//}
 
 	StageManager::Instance().Clear();
 }
@@ -187,11 +188,10 @@ void SceneGame::Update(float elapsedTime)
 	//エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
-
+	//マップのナンバーが変わったらSceneGameを読み込み直してマップを変える
 	if (StageMapChip::Instance().GetStageNum() != mapcategory)
 	{
-		Finalize();
-		Initialize();
+		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 	}
 }
 

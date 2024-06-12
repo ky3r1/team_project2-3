@@ -139,6 +139,7 @@
     <ClInclude Include="Source\Graphics\Model.h" />
     <ClInclude Include="Source\Graphics\ModelResource.h" />
     <ClInclude Include="Source\Graphics\RenderContext.h" />
+    <ClInclude Include="Source\Graphics\ResourceManager.h" />
     <ClInclude Include="Source\Graphics\Shader.h" />
     <ClInclude Include="Source\Graphics\Sprite.h" />
     <ClInclude Include="Source\Graphics\sprite_bach.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Source\Graphics\LineRenderer.cpp" />
     <ClCompile Include="Source\Graphics\Model.cpp" />
     <ClCompile Include="Source\Graphics\ModelResource.cpp" />
+    <ClCompile Include="Source\Graphics\ResourceManager.cpp" />
     <ClCompile Include="Source\Graphics\shader.cpp" />
     <ClCompile Include="Source\Graphics\Sprite.cpp" />
     <ClCompile Include="Source\Graphics\sprite_bach.cpp" />
