@@ -51,6 +51,9 @@
     <Filter Include="Character\Projectile">
       <UniqueIdentifier>{3a4daa95-d8ff-4d37-8758-65b321fa7eb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ClassDiagram">
+      <UniqueIdentifier>{cd684424-64ac-47eb-8246-e92123ea7eea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -419,6 +422,18 @@
     </None>
     <None Include="HLSL\Sprite.hlsli">
       <Filter>HLSL</Filter>
+    </None>
+    <None Include="ClassDiagram.cd">
+      <Filter>ClassDiagram</Filter>
+    </None>
+    <None Include="CharacterClassDiagram.cd">
+      <Filter>ClassDiagram</Filter>
+    </None>
+    <None Include="StateClassDiagram.cd">
+      <Filter>ClassDiagram</Filter>
+    </None>
+    <None Include="StageClassDiagram.cd">
+      <Filter>ClassDiagram</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
