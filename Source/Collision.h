@@ -45,8 +45,16 @@ public:
         HitResult& result
     );
 
+    //HPbar‚ÌˆÊ’u
     static bool HPbarPoint(
         DirectX::XMFLOAT3 player_position,
         DirectX::XMFLOAT3 enemy_position
+    );
+
+    //bottom_left_front`top_right_back“à‚Émove_pos‚ª“ü‚é‚Ætrue‚ğ•Ô‚·
+    static bool InPoint(
+        DirectX::XMFLOAT3 bottom_left_front,
+        DirectX::XMFLOAT3 top_right_back,
+        DirectX::XMFLOAT3 move_pos
     );
 };

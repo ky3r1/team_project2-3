@@ -176,28 +176,6 @@ void Player::DrawDebugGUI()
     ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
-    //// デバッグ文字列表示の変更
-    //std::string str = "";
-    //// 現在のステート番号に合わせてデバッグ文字列をstrに格納
-    //switch (StageMapChip::Instance().GetOnCategory(position)) 
-    //{
-    //case NONE:
-    //    str="None";
-    //    break;
-    //case WALL:
-    //    str = "Wall";
-    //    break;
-    //case FLOOR:
-    //    str = "Floor";
-    //    break;
-    //case HOLE:
-    //    str = "Hole";
-    //    break;
-    //case SPIKE:
-    //    str = "Spike";
-    //    break;
-    //}
-
     if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
     {
         Character::DrawDebugGUI();
@@ -413,7 +391,7 @@ void Player::DrawDebugPrimitive()
     default:
         break;
     }
-    debugRenderer->DrawCube({ -1,2,-1 }, { 9, 10, 9 }, { 1,0,0,1 });;
+    debugRenderer->DrawCube({-12,-10,29}, {12,-5,31}, { 1,0,0,1 });
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();
 
@@ -422,7 +400,11 @@ void Player::DrawDebugPrimitive()
 void Player::UpdateVerticalMove(float elapsedTime)
 {
     Character::UpdateVerticalMove(elapsedTime);
-    if (position.y < -10)
+    if (position.y < -15)
+    {
+        health = 0;
+    }
+    if (Collision::InPoint({ -12,-10,29 }, { 12,-5,31 }, position))
     {
         StageMapChip::Instance().SetStageNum(StageMapChip::Instance().GetStageNum() + 1);
     }
