@@ -413,9 +413,7 @@ void Player::DrawDebugPrimitive()
     default:
         break;
     }
-
-    //debugRenderer->DrawSphere(StageMapChip::Instance().GetMapChipPosition(3,3), 1, DirectX::XMFLOAT4(1, 0, 0, 1));
-
+    debugRenderer->DrawCube({ -1,2,-1 }, { 9, 10, 9 }, { 1,0,0,1 });;
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();
 
