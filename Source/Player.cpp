@@ -387,7 +387,7 @@ void Player::DrawDebugPrimitive()
     default:
         break;
     }
-
+    debugRenderer->DrawCube({ -1,2,-1 }, { 9, 10, 9 }, { 1,0,0,1 });;
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();
 
