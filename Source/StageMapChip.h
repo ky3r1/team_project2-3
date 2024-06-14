@@ -7,6 +7,7 @@
 //ステージ種類の最大値
 #define CATEGORYMAX 3
 //ステージの種類
+#define NONE -2
 #define WALL -1
 #define FLOOR 0
 #define HOLE 1
@@ -26,11 +27,14 @@ public:
 		static StageMapChip instance;
 		return instance;
 	}
-
+	void Clear();
 
 	int GetMapChipCategory(int x, int z);
 
-	int GetMapChipPositionCategory(DirectX::XMFLOAT3 p);
+	bool GetOnMapChip(DirectX::XMFLOAT3 p, DirectX::XMINT2& i);
+	int GetOnCategory(DirectX::XMFLOAT3 p);
+	int GetOnId(DirectX::XMFLOAT3 p);
+
 	void SetMapChipData(DirectX::XMFLOAT3 p,int x,int z);
 	DirectX::XMFLOAT3 GetMapChipPosition(int x, int z){ return position[z][x]; }
 
@@ -110,5 +114,7 @@ private:
 	};
 	DirectX::XMFLOAT3 position[MAPMAX_Z][MAPMAX_X] = {};
 	int cost[MAPMAX_Z][MAPMAX_X] = {};
+	int id[MAPMAX_Z][MAPMAX_X] = {};
+	int id_count = 0;
 	int stagenum = 0;
 };

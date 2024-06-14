@@ -75,7 +75,6 @@ public:
 protected:
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
-	DirectX::XMFLOAT3	player_position = { 0.0f,0.0f,0.0f };
 	float				moveSpeed = 3.0f;
 	float				stateTimer = 0.0f;
 	float				attackRange = 1.5f;

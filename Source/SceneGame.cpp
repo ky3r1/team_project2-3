@@ -135,6 +135,9 @@ void SceneGame::Initialize()
 		case 4:
 			slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));
 			break;
+		//default:
+		//	slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));
+  //          break;
 		}
 		EnemyManager::Instance().Register(slime);
 		index++;

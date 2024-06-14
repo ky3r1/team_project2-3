@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "StageManager.h"
+#include "StageMapChip.h"
 
 
 //行列更新処理
@@ -159,6 +160,33 @@ void Character::AddImpulse(const DirectX::XMFLOAT3& impulse)
     velocity.x += impulse.x;
     velocity.y += impulse.y;
     velocity.z += impulse.z;
+}
+
+void Character::DrawDebugGUI()
+{
+    // デバッグ文字列表示の変更
+    std::string str = "";
+    // 現在のステート番号に合わせてデバッグ文字列をstrに格納
+    switch (StageMapChip::Instance().GetOnCategory(position))
+    {
+    case NONE:
+        str = "None";
+        break;
+    case WALL:
+        str = "Wall";
+        break;
+    case FLOOR:
+        str = "Floor";
+        break;
+    case HOLE:
+        str = "Hole";
+        break;
+    case SPIKE:
+        str = "Spike";
+        break;
+    }
+    ImGui::Text(u8"MapChip　%s", str.c_str());
+    ImGui::Text(u8"ID　%s", std::to_string(StageMapChip::Instance().GetOnId(position)).c_str());
 }
 
 //垂直速力処理

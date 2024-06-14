@@ -22,7 +22,7 @@ public:
     void AddImpulse(const DirectX::XMFLOAT3& impulse);
 
     //デバッグ用GUI
-    virtual void DrawDebugGUI() {};
+    virtual void DrawDebugGUI();
 
     void SetScreenPos(DirectX::XMFLOAT3 sp) { screen_pos = sp; }
 
