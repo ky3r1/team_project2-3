@@ -1,4 +1,4 @@
-#include "SceneGame.h"
+ï»¿#include "SceneGame.h"
 
 //CameraInclude
 #include "Camera.h"
@@ -23,15 +23,15 @@
 #include "Input/Input.h"
 
 
-// ‰Šú‰»
+// åˆæœŸåŒ–
 void SceneGame::Initialize()
 {
-	//ƒXƒe[ƒW‰Šú‰»
+	//ã‚¹ãƒ†ãƒ¼ã‚¸åˆæœŸåŒ–
 #ifdef ALLSTAGE
 	//Main
 	StageManager& stageManager = StageManager::Instance();
 	StageMapChip& mapchip = StageMapChip::Instance();
-	//ƒXƒe[ƒW‚Ìƒiƒ“ƒo[‚ğSceneGame“à‚É‹L‰¯
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã®ãƒŠãƒ³ãƒãƒ¼ã‚’SceneGameå†…ã«è¨˜æ†¶
 	mapcategory = StageMapChip::Instance().GetStageNum();
 	for (int z = 0; z< MAPMAX_Z; z++)
 	{
@@ -43,14 +43,14 @@ void SceneGame::Initialize()
 			switch (mapchip.GetMapChipCategory(x, z))
 			{
 			case WALL:
-				//•Ç‚È‚çY²•ûŒü‚É2.0fã‚°‚é
+				//å£ãªã‚‰Yè»¸æ–¹å‘ã«2.0fä¸Šã’ã‚‹
 				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 2.0f, z * 2.0f - 2.0f));
 				break;
 			case FLOOR:
 				
 				break;
 			case HOLE:
-				//HORE(‚P)‚Í”z’u‚µ‚È‚¢
+				//HORE(ï¼‘)ã¯é…ç½®ã—ãªã„
 				delete stageMain;
 				continue;
 				break;
@@ -59,7 +59,7 @@ void SceneGame::Initialize()
 				break;
 			}
 
-			//StageMapChipƒNƒ‰ƒX‚Éƒ}ƒbƒvƒ`ƒbƒv‚ÌƒOƒ[ƒoƒ‹À•W‚ğ‹L‰¯
+			//StageMapChipã‚¯ãƒ©ã‚¹ã«ãƒãƒƒãƒ—ãƒãƒƒãƒ—ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«åº§æ¨™ã‚’è¨˜æ†¶
 			mapchip.SetMapChipData(stageMain->GetPosition(), x, z);
 
 			stageManager.Register(stageMain);
@@ -84,17 +84,18 @@ void SceneGame::Initialize()
 
 #endif // ALLSTAGE
 
+
+#ifdef ALLPLAYER
+    player = std::unique_ptr<Player>(new Player);
+#endif // PLAYER
+
 #ifdef HPGAUGE
 	gauge = std::unique_ptr<Sprite>(new Sprite);
 #endif // HPGAUGE
 
-#ifdef  ALLPLAYER
-	player = std::unique_ptr<Player>(new Player());
-#endif //  ALLPLAYER
 
 
-
-	//ƒJƒƒ‰‰Šúİ’è
+	//ã‚«ãƒ¡ãƒ©åˆæœŸè¨­å®š
 	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
@@ -108,7 +109,7 @@ void SceneGame::Initialize()
 		0.1f,
 		100.0f
 	);
-	//ƒJƒƒ‰ƒRƒ“ƒgƒ[ƒ‰[‰Šú‰»
+	//ã‚«ãƒ¡ãƒ©ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼åˆæœŸåŒ–
 	cameraController = std::unique_ptr<CameraController>(new CameraController());
 #ifdef ALLENEMY
 #ifdef ENEMYSLIME
@@ -148,21 +149,22 @@ void SceneGame::Initialize()
 #endif // ALLENEMY
 }
 
-// I—¹‰»
+// çµ‚äº†åŒ–
 void SceneGame::Finalize()
 {
-	//ƒGƒlƒ~[I—¹‰»
+	Player::Instance().Clear();
+	//ã‚¨ãƒãƒŸãƒ¼çµ‚äº†åŒ–
 	EnemyManager::Instance().clear();
-	//ƒXƒe[ƒWI—¹‰»
+	//ã‚¹ãƒ†ãƒ¼ã‚¸çµ‚äº†åŒ–
 	StageManager::Instance().Clear();
 }
 
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 void SceneGame::Update(float elapsedTime)
 {
-	//ƒJƒƒ‰ƒRƒ“ƒgƒ[ƒ‰[XVˆ—
+	//ã‚«ãƒ¡ãƒ©ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼æ›´æ–°å‡¦ç†
 #ifdef  ALLPLAYER
-	DirectX::XMFLOAT3 target = player->GetPosition();
+	DirectX::XMFLOAT3 target = Player::Instance().GetPosition();
 	target.y += 0.5f;
 	cameraController->SetTarget(target);
 #endif //  ALLPLAYER
@@ -175,24 +177,24 @@ void SceneGame::Update(float elapsedTime)
 	MouseManager::GetInstance().MouseTransform(dc, Camera::Instance().GetView(), Camera::Instance().GetProjection());
 
 #ifdef  ALLPLAYER
-	player->Update(elapsedTime);
-	if(player->PlayerDead())SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult));
+	Player::Instance().Update(elapsedTime);
+	if(Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult));
 #endif //  ALLPLAYER
 
-	//ƒGƒlƒ~[XVˆ—
+	//ã‚¨ãƒãƒŸãƒ¼æ›´æ–°å‡¦ç†
 	EnemyManager::Instance().Update(elapsedTime);
 
-	//ƒGƒtƒFƒNƒgXVˆ—
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæ›´æ–°å‡¦ç†
 	EffectManager::Instance().Update(elapsedTime);
 
-	//ƒ}ƒbƒv‚Ìƒiƒ“ƒo[‚ª•Ï‚í‚Á‚½‚çSceneGame‚ğ“Ç‚İ‚İ’¼‚µ‚Äƒ}ƒbƒv‚ğ•Ï‚¦‚é
+	//ãƒãƒƒãƒ—ã®ãƒŠãƒ³ãƒãƒ¼ãŒå¤‰ã‚ã£ãŸã‚‰SceneGameã‚’èª­ã¿è¾¼ã¿ç›´ã—ã¦ãƒãƒƒãƒ—ã‚’å¤‰ãˆã‚‹
 	if (StageMapChip::Instance().GetStageNum() != mapcategory)
 	{
 		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 	}
 }
 
-// •`‰æˆ—
+// æç”»å‡¦ç†
 void SceneGame::Render()
 {
 	Graphics& graphics = Graphics::Instance();
@@ -200,59 +202,59 @@ void SceneGame::Render()
 	ID3D11RenderTargetView* rtv = graphics.GetRenderTargetView();
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
-	// ‰æ–ÊƒNƒŠƒA•ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgİ’è
-	FLOAT color[] = { 0.4f, 0.4f, 0.4f, 1.0f };	// RGBA(0.0`1.0)
+	// ç”»é¢ã‚¯ãƒªã‚¢ï¼†ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆè¨­å®š
+	FLOAT color[] = { 0.4f, 0.4f, 0.4f, 1.0f };	// RGBA(0.0ï½1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
 
-	// •`‰æˆ—
+	// æç”»å‡¦ç†
 	RenderContext rc;
-	rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };	// ƒ‰ƒCƒg•ûŒüi‰º•ûŒüj
+	rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };	// ãƒ©ã‚¤ãƒˆæ–¹å‘ï¼ˆä¸‹æ–¹å‘ï¼‰
 
-	//ƒJƒƒ‰ƒpƒ‰ƒ[ƒ^İ’è
+	//ã‚«ãƒ¡ãƒ©ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
 	Camera& camera = Camera::Instance();
 	rc.view = camera.GetView();
 	rc.projection = camera.GetProjection();
 
 
-	// 3Dƒ‚ƒfƒ‹•`‰æ
+	// 3Dãƒ¢ãƒ‡ãƒ«æç”»
 	{
 		Shader* shader = graphics.GetShader();
 		shader->Begin(dc, rc);
-		//ƒXƒe[ƒW•`‰æ
+		//ã‚¹ãƒ†ãƒ¼ã‚¸æç”»
 		StageManager::Instance().Render(dc, shader);
 
-		//ƒGƒlƒ~[•`‰æ
+		//ã‚¨ãƒãƒŸãƒ¼æç”»
 		EnemyManager::Instance().Render(dc, shader);
 
-		//ƒvƒŒƒCƒ„[•`‰æ
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æç”»
 #ifdef  ALLPLAYER
-		player->Render(dc, shader);
+		Player::Instance().Render(dc, shader);
 #endif //  ALLPLAYER
 		shader->End(dc);
 	}
 
-	//3DƒGƒtƒFƒNƒg•`‰æ
+	//3Dã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	{
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-	// 3DƒfƒoƒbƒO•`‰æ
+	// 3Dãƒ‡ãƒãƒƒã‚°æç”»
 	{
 #ifdef  DEBUGIMGUI
-		//ƒvƒŒƒCƒ„[ƒfƒoƒbƒOƒvƒŠƒ~ƒeƒBƒu•`‰æ
-		player->DrawDebugPrimitive();
-		//ƒGƒlƒ~[ƒfƒoƒbƒOƒvƒŠƒ~ƒeƒBƒu•`‰æ
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ‡ãƒãƒƒã‚°ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–æç”»
+		Player::Instance().DrawDebugPrimitive();
+		//ã‚¨ãƒãƒŸãƒ¼ãƒ‡ãƒãƒƒã‚°ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–æç”»
 		EnemyManager::Instance().DrawDebugPrimitive();
-		// ƒ‰ƒCƒ“ƒŒƒ“ƒ_ƒ‰•`‰æÀs
+		// ãƒ©ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒ©æç”»å®Ÿè¡Œ
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
-		// ƒfƒoƒbƒOƒŒƒ“ƒ_ƒ‰•`‰æÀs
+		// ãƒ‡ãƒãƒƒã‚°ãƒ¬ãƒ³ãƒ€ãƒ©æç”»å®Ÿè¡Œ
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 #endif //DEBUGIMGUI
 	}
 
-	// 2DƒXƒvƒ‰ƒCƒg•`‰æ
+	// 2Dã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 	{
 #ifdef HPGAUGE
 		RenderEnemyGauge(dc, rc.view, rc.projection);
@@ -264,20 +266,21 @@ void SceneGame::Render()
 	}
 
 #ifdef DEBUGIMGUI
-	player->DrawDebugGUI();
+    // ãƒ†ã‚™ãƒãƒƒã‚°GUIæç”»
+	Player::Instance().DrawDebugGUI();
 	cameraController->DrawDebugGUI();
 	EnemyManager::Instance().DrawDebugGUI();
 	StageManager::Instance().DrawDebugGUI();
 #endif // DebugImGui
 }
 
-//ƒGƒlƒ~[HPƒQ[ƒW•`‰æ
+//ã‚¨ãƒãƒŸãƒ¼HPã‚²ãƒ¼ã‚¸æç”»
 void SceneGame::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
 {
-	//‚·‚×‚Ä‚Ì“G‚Ì“ªã‚ÉHPƒQ[ƒW‚ğ•\¦
+	//ã™ã¹ã¦ã®æ•µã®é ­ä¸Šã«HPã‚²ãƒ¼ã‚¸ã‚’è¡¨ç¤º
 	EnemyManager& enemyManager = EnemyManager::Instance();
 	int enemyCount = enemyManager.GetEnemyCount();
-	DirectX::XMFLOAT4 color = { 1,0,1,1 }; //ƒQ[ƒW‚ÌF
+	DirectX::XMFLOAT4 color = { 1,0,1,1 }; //ã‚²ãƒ¼ã‚¸ã®è‰²
 	for (int i = 0; i < enemyCount; ++i)
 	{
 		Enemy* enemy = enemyManager.GetEnemy(i);
@@ -287,35 +290,34 @@ void SceneGame::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT
 	}
 }
 
-//ƒvƒŒƒCƒ„[HPƒQ[ƒW•`‰æ
+//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼HPã‚²ãƒ¼ã‚¸æç”»
 void SceneGame::RenderPlayerGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
 {
 
-	DirectX::XMFLOAT3 player_position = player->GetPosition();
-	player_position.y = 1.0f + 3.0f;
+	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
 	DirectX::XMVECTOR PlayerPosition = DirectX::XMLoadFloat3(&player_position);
-	DirectX::XMFLOAT4 color = { 1,0.5,0,1 };//ƒQ[ƒW‚ÌF
-	CharacterGauge(dc, view, projection, player_position, player->GetHealth(), color);
+	DirectX::XMFLOAT4 color = { 1,0.5,0,1 };//ã‚²ãƒ¼ã‚¸ã®è‰²
+	CharacterGauge(dc, view, projection, player_position, Player::Instance().GetHealth(), color);
 }
 
 void SceneGame::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, DirectX::XMFLOAT3 position,int health, DirectX::XMFLOAT4 gaugecolor)
 {
-	//ƒrƒ…[ƒ|[ƒg
+	//ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆ
 	D3D11_VIEWPORT viewport;
 	UINT numViewports = 1;
 	dc->RSGetViewports(&numViewports, &viewport);
 
-	//•ÏŠ·s—ñ
+	//å¤‰æ›è¡Œåˆ—
 	DirectX::XMMATRIX View = DirectX::XMLoadFloat4x4(&view);
 	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
 	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
 
-	DirectX::XMFLOAT3 player_position = player->GetPosition();
+	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
 	player_position.y = 1.0f;
 	DirectX::XMVECTOR PlayerPosition = DirectX::XMLoadFloat3(&player_position);
 	DirectX::XMVECTOR Position = DirectX::XMLoadFloat3(&position);
 
-	//ƒ[ƒ‹ƒhÀ•W‚©‚çƒXƒNƒŠ[ƒ“À•W‚Ö•ÏŠ·‚·‚éŠÖ”
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‹ã‚‰ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã¸å¤‰æ›ã™ã‚‹é–¢æ•°
 	Position = DirectX::XMVector3Project(
 		Position,
 		viewport.TopLeftX,
@@ -330,7 +332,7 @@ void SceneGame::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X
 	);
 	DirectX::XMStoreFloat3(&position, Position);
 
-	player->SetScreenPos(position);
+	Player::Instance().SetScreenPos(position);
 
 	for (int i = 0; i < health; ++i)
 	{
@@ -354,23 +356,23 @@ void SceneGame::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X
 }
 
 void SceneGame::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
-{	//ƒrƒ…[ƒ|[ƒg
+{	//ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆ
 	D3D11_VIEWPORT viewport;
 	UINT numViewports = 1;
 	dc->RSGetViewports(&numViewports, &viewport);
 
-	//•ÏŠ·s—ñ
+	//å¤‰æ›è¡Œåˆ—
 	DirectX::XMMATRIX View = DirectX::XMLoadFloat4x4(&view);
 	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
 	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
 
 
-	//ƒGƒlƒ~[”z’uˆ—
+	//ã‚¨ãƒãƒŸãƒ¼é…ç½®å‡¦ç†
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	Mouse& mouse = Input::Instance().GetMouse();
 	if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
 	{
-		//ƒ}ƒEƒXƒJ[ƒ\ƒ‹À•Wæ“¾
+		//ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«åº§æ¨™å–å¾—
 		DirectX::XMFLOAT3 screenPosition;
 		screenPosition.x = static_cast<float>(mouse.GetPositionX());
 		screenPosition.y = 1;

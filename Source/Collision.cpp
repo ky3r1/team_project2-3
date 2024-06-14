@@ -330,6 +330,7 @@ bool Collision::HPbarPoint(DirectX::XMFLOAT3 player_position, DirectX::XMFLOAT3 
 bool Collision::InPoint(DirectX::XMFLOAT3 bottom_left_front, DirectX::XMFLOAT3 top_right_back, DirectX::XMFLOAT3 move_pos)
 {
     //X²AY²AZ²‚»‚ê‚¼‚ê‚Ì”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚é‚©‚Ì”»’è
+    //bottom_left_front < top_right_back‚¶‚á‚È‚¢‚Æ’Ê‚ç‚È‚¢
     if (bottom_left_front.x<move_pos.x && top_right_back.x>move_pos.x)
     {
         if (bottom_left_front.y<move_pos.y && top_right_back.y>move_pos.y)

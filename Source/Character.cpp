@@ -189,6 +189,12 @@ void Character::DrawDebugGUI()
     ImGui::Text(u8"ID@%s", std::to_string(StageMapChip::Instance().GetOnId(position)).c_str());
 }
 
+//‰Šú‰»
+void Character::Clear()
+{
+    health = maxHealth;
+}
+
 //‚’¼‘¬—Íˆ—
 void Character::UpdateVerticalVelocity(float elapsedFrame)
 {

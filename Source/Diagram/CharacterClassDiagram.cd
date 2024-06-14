@@ -57,8 +57,20 @@
   </Class>
   <Class Name="Player">
     <Position X="4.75" Y="2.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Player::Animation" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Source\Player.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Player::State" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Source\Player.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>IgSAQAAAFACgAQAkgACFQAAgICBAAAAAQBAYJQAIABI=</HashCode>
+      <HashCode>IgSAQECAFACgQwikoACFQAAgICBABACEQBAQJYAIABI=</HashCode>
       <FileName>Source\Player.h</FileName>
     </TypeIdentifier>
   </Class>

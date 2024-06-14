@@ -27,8 +27,10 @@ public:
     void SetScreenPos(DirectX::XMFLOAT3 sp) { screen_pos = sp; }
 
     DirectX::XMFLOAT3 GetScreenPos() { return screen_pos; }
-
+    //‰Šú‰»
+    virtual void Clear();
 protected:
+
     //‚’¼‘¬—Íˆ—
     void UpdateVerticalVelocity(float elapsedFrame);
 

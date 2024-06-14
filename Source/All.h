@@ -24,6 +24,8 @@
 
 //プレイヤー
 #define ALLPLAYER
+//アニメーション
+#define PLAYERANIMATION
 //壁当たり判定
 //#define WallCollision
 //Jump
