@@ -28,7 +28,7 @@ public:
 	}
 
 
-	int GetMapChipCategory(int num, int x, int z);
+	int GetMapChipCategory(int x, int z);
 
 	int GetMapChipPosition(DirectX::XMFLOAT3 p);
 	void SetMapChipData(DirectX::XMFLOAT3 p,int x,int z);
@@ -52,7 +52,7 @@ private:
 			{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1},//|
 			{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1},//| 
 			{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1},//|
-			{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1},//|
+			{-1, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0,-1},//|
 			{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1},//|15+2
 			{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1},//|
 			{-1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0,-1},//|

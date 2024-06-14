@@ -173,8 +173,30 @@ void Player::DrawDebugGUI()
     ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
+    // デバッグ文字列表示の変更
+    std::string str = "";
+    // 現在のステート番号に合わせてデバッグ文字列をstrに格納
+    switch (StageMapChip::Instance().GetMapChipPosition(position)) {
+    case WALL:
+        str = "Wall";
+        break;
+    case FLOOR:
+        str = "Floor";
+        break;
+    case HOLE:
+        str = "Hole";
+        break;
+    case SPIKE:
+        str = "Spike";
+        break;
+    default:
+        str = "None";
+        break;
+    }
+
     if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
     {
+        ImGui::Text(u8"MapChip　%s", str.c_str());
         if (ImGui::TreeNode("Transform"))
         {
             ImGui::SliderFloat3("position", &position.x, -5, 5);

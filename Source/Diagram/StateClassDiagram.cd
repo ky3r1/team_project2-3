@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PursuitState" Collapsed="true">
+    <Position X="7" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAMAAAAIAAAAAAAAQA=</HashCode>
+      <FileName>Source\StateDerived.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="State" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQAAAAAAAAAAAAEAAAAIAAABBAAAAA=</HashCode>
+      <FileName>Source\StateBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StateMachine" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAZQBMAQAAAABAAAIAAAEAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Source\StateMachine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleState" Collapsed="true">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAIAAAAAAAAAEAAAAIIAAAAAAAAA=</HashCode>
+      <FileName>Source\StateDerived.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeathState" Collapsed="true">
+    <Position X="2.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAQAAIAAAAAAAAAEAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Source\StateDerived.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HierarchicalState" Collapsed="true">
+    <Position X="8" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAEAEAAAAAAEQAAAAAAAQAAAAEAEAAIAAAAAAEAIA=</HashCode>
+      <FileName>Source\StateBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IdleState" Collapsed="true">
+    <Position X="4.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAEAAAAIAAGBAAAAAA=</HashCode>
+      <FileName>Source\StateDerived.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SearchState" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAQAAAAAAAAAAAAEAAAAKAAAAAAAAAA=</HashCode>
+      <FileName>Source\StateDerived.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AttackState" Collapsed="true">
+    <Position X="9.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAEAAAAIAACAAAAAgA=</HashCode>
+      <FileName>Source\StateDerived.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>
