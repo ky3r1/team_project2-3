@@ -72,7 +72,7 @@ void Enemy::DrawDebugGUI()
     // デバッグ文字列表示の変更
     std::string mapstr = "";
     // 現在のステート番号に合わせてデバッグ文字列をstrに格納
-    switch (StageMapChip::Instance().GetMapChipPosition(position)) {
+    switch (StageMapChip::Instance().GetMapChipPositionCategory(position)) {
     case WALL:
         str = "Wall";
         break;

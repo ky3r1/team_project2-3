@@ -8,7 +8,7 @@ EnemySlime::EnemySlime(int category)
     model = new Model("Data/Model/Slime/Slime.mdl");
 
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.006f;
+    scale.x = scale.y = scale.z = 0.01f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
@@ -16,7 +16,7 @@ EnemySlime::EnemySlime(int category)
 
     attackRange = 5.0f;
     this->category = category;
-    ChangeColor(color, category);
+    //ChangeColor(color, category);
 
 #ifdef ENEMYSTATEMACHINE
     // StateMachineを生成し、階層型ステートマシンに対応するように登録ステートを変更していく。
@@ -58,6 +58,7 @@ void EnemySlime::Update(float elapsedTime)
     UpdateTransform();
     //モデル行列更新
     model->UpdateTransform(transform);
+    model->UpdateAnimation(elapsedTime);
 }
 
 //描画処理

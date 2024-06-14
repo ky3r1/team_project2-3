@@ -144,4 +144,5 @@ protected:
     float       stepOffset = 1.0f;
     float       slopeRate = 1.0f;
     int         category = 0;
+    float       turnSpeed = DirectX::XMConvertToRadians(360);
 };

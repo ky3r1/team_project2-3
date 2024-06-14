@@ -72,7 +72,6 @@ protected:
 private:
     Model* model = nullptr;
     float       moveSpeed = 5.0f;
-    float       turnSpeed = DirectX::XMConvertToRadians(720);
     float       jumpSpeed = 20.0f;
     int color_count = 0;
     int projectile_shot;

@@ -30,8 +30,9 @@ public:
 
 	int GetMapChipCategory(int x, int z);
 
-	int GetMapChipPosition(DirectX::XMFLOAT3 p);
+	int GetMapChipPositionCategory(DirectX::XMFLOAT3 p);
 	void SetMapChipData(DirectX::XMFLOAT3 p,int x,int z);
+	DirectX::XMFLOAT3 GetMapChipPosition(int x, int z){ return position[z][x]; }
 
 	int GetStageNum() { return stagenum; };
 	void SetStageNum(int c) { stagenum = c; }

@@ -150,23 +150,7 @@ void SceneGame::Finalize()
 {
 	//エネミー終了化
 	EnemyManager::Instance().clear();
-	//if (cameraController != nullptr)
-	//{
-	//	delete cameraController;
-	//	cameraController = nullptr;
-	//}
-	//if (player != nullptr)
-	//{
-	//	delete player;
-	//	player = nullptr;
-	//}
-
-	//if (gauge != nullptr)
-	//{
-	//	delete gauge;
-	//	gauge = nullptr;
-	//}
-
+	//ステージ終了化
 	StageManager::Instance().Clear();
 }
 

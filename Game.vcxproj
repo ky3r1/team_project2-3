@@ -229,15 +229,15 @@
     <ClCompile Include="Source\StateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CharacterClassDiagram.cd" />
     <None Include="HLSL\Debug.hlsli" />
     <None Include="HLSL\ImGui.hlsli" />
     <None Include="HLSL\Lambert.hlsli" />
     <None Include="HLSL\Line.hlsli" />
     <None Include="HLSL\Sprite.hlsli" />
-    <None Include="ClassDiagram.cd" />
-    <None Include="StageClassDiagram.cd" />
-    <None Include="StateClassDiagram.cd" />
+    <None Include="Source\Diagram\CharacterClassDiagram.cd" />
+    <None Include="Source\Diagram\SceneClassDiagram.cd" />
+    <None Include="Source\Diagram\StageClassDiagram.cd" />
+    <None Include="Source\Diagram\StateClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HLSL\DebugPS.hlsl">

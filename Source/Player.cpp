@@ -43,10 +43,13 @@ Player::Player()
     hit_delay.time = DELAYPLAYERVSENEMY;
     moveSpeed = 5.0f;
 
+    position = { 0.0001f,2,0 };
+
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
     category = WHITE;
     projectile_shot = 0;
+    turnSpeed = DirectX::XMConvertToRadians(720);
 }
 
 Player::~Player()
@@ -176,7 +179,7 @@ void Player::DrawDebugGUI()
     // デバッグ文字列表示の変更
     std::string str = "";
     // 現在のステート番号に合わせてデバッグ文字列をstrに格納
-    switch (StageMapChip::Instance().GetMapChipPosition(position)) {
+    switch (StageMapChip::Instance().GetMapChipPositionCategory(position)) {
     case WALL:
         str = "Wall";
         break;
@@ -409,6 +412,8 @@ void Player::DrawDebugPrimitive()
     default:
         break;
     }
+
+    //debugRenderer->DrawSphere(StageMapChip::Instance().GetMapChipPosition(3,3), 1, DirectX::XMFLOAT4(1, 0, 0, 1));
 
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();

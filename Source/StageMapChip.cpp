@@ -11,14 +11,14 @@ int StageMapChip::GetMapChipCategory( int x, int z)
     return map_chip_category[stagenum][z][x];
 }
 
-int StageMapChip::GetMapChipPosition(DirectX::XMFLOAT3 p)
+int StageMapChip::GetMapChipPositionCategory(DirectX::XMFLOAT3 p)
 {
 	for (int z = 0; z < MAPMAX_Z; z++)
 	{
 		for (int x = 0; x < MAPMAX_X; x++)
 		{
 			DirectX::XMFLOAT3 map_position = position[z][x];
-			if (p.x > map_position.x && p.x<map_position.x + 2.5f && p.z>map_position.z && p.z < map_position.z + 2.5f)
+			if (p.x > map_position.x-1.0f && p.x<map_position.x + 1.0f && p.z>map_position.z-1.0f && p.z < map_position.z + 1.0f)
 			{
 				return map_chip_category[stagenum][z][x];
 			}
