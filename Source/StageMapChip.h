@@ -4,6 +4,7 @@
 //マップの最大値＋周りの壁
 #define MAPMAX_X 10+2
 #define MAPMAX_Z 15+2
+#define NEXTCHIP 2
 //ステージ種類の最大値
 #define CATEGORYMAX 3
 //ステージの種類
@@ -29,21 +30,32 @@ public:
 	}
 	void Clear();
 
-	int GetMapChipCategory(int x, int z);
-
+	//Characterの足元のマップチップを取得
 	bool GetOnMapChip(DirectX::XMFLOAT3 p, DirectX::XMINT2& i);
+	//足元のマップチップの種類を取得
 	int GetOnCategory(DirectX::XMFLOAT3 p);
+    //足元のマップチップのIDを取得
 	int GetOnId(DirectX::XMFLOAT3 p);
+    //マップチップのコストを設定
+    int GetOnCost(DirectX::XMFLOAT3 p);
 
-	void SetMapChipData(DirectX::XMFLOAT3 p,int x,int z);
-	DirectX::XMFLOAT3 GetMapChipPosition(int x, int z){ return position[z][x]; }
+	//コンストラクタで呼び出されるマップチップのデータ設定
+	void SetData(DirectX::XMFLOAT3 p,int x,int z);
+	//x,zのマップチップ位置を取得
+	DirectX::XMFLOAT3 GetPosition(int x, int z){ return position[z][x]; }
+	//マップチップの種類を取得
+	int GetCategory(int x, int z);
 
+	//今のステージの種類のゲッター・セッター
 	int GetStageNum() { return stagenum; };
 	void SetStageNum(int c) { stagenum = c; }
+
+	//次のマップチップの位置取得
+	DirectX::XMFLOAT3 GetNextPosition(int x, int z) { return position[z][x]; }
 private:
 	//保存用と取り出す用
 	//マップの種類:3、X軸:10、Z軸:20 (周りは‐1で囲む)
-	int 	map_chip_category[CATEGORYMAX][MAPMAX_Z][MAPMAX_X] =
+	int 	category[CATEGORYMAX][MAPMAX_Z][MAPMAX_X] =
 	{
 	//第1ステージ
 	{

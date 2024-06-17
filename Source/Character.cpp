@@ -186,7 +186,8 @@ void Character::DrawDebugGUI()
         break;
     }
     ImGui::Text(u8"MapChip　%s", str.c_str());
-    ImGui::Text(u8"ID　%s", std::to_string(StageMapChip::Instance().GetOnId(position)).c_str());
+    ImGui::Text(u8"MapID　%s", std::to_string(StageMapChip::Instance().GetOnId(position)).c_str());
+    ImGui::Text(u8"MapCost　%s", std::to_string(StageMapChip::Instance().GetOnCost(position)).c_str());
 }
 
 //初期化

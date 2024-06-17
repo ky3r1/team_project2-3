@@ -18,9 +18,9 @@ void StageMapChip::Clear()
     }
 }
 
-int StageMapChip::GetMapChipCategory( int x, int z)
+int StageMapChip::GetCategory( int x, int z)
 {
-    return map_chip_category[stagenum][z][x];
+    return category[stagenum][z][x];
 }
 
 bool StageMapChip::GetOnMapChip(DirectX::XMFLOAT3 p,DirectX::XMINT2& i)
@@ -45,7 +45,7 @@ int StageMapChip::GetOnCategory(DirectX::XMFLOAT3 p)
 	DirectX::XMINT2 xz = {};
 	if (GetOnMapChip(p,xz))
 	{
-		return map_chip_category[stagenum][xz.x][xz.y];
+		return category[stagenum][xz.x][xz.y];
 	}
 	return NONE;
 }
@@ -60,11 +60,21 @@ int StageMapChip::GetOnId(DirectX::XMFLOAT3 p)
 	return -1;
 }
 
-void StageMapChip::SetMapChipData(DirectX::XMFLOAT3 p, int x, int z)
+int StageMapChip::GetOnCost(DirectX::XMFLOAT3 p)
+{
+	DirectX::XMINT2 xz = {};
+	if (GetOnMapChip(p, xz))
+	{
+		return cost[xz.x][xz.y];
+	}
+	return -1;
+}
+
+void StageMapChip::SetData(DirectX::XMFLOAT3 p, int x, int z)
 {
     id[z][x] = id_count;
     position[z][x] = p;
-	switch (map_chip_category[stagenum][z][x])
+	switch (category[stagenum][z][x])
 	{
 	case WALL:
 		cost[z][x] = 100;

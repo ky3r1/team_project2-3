@@ -45,6 +45,8 @@ Player::Player()
 
     position = { 0.0001f,2,0 };
 
+    //state = State::Idle;
+
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
     category = WHITE;
@@ -452,7 +454,7 @@ void Player::CollisionProjectilesVsEnemies()
     }
 }
 
-
+//弾入力処理
 void Player::InputProjectile()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();

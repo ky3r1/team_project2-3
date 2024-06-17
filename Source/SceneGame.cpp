@@ -40,7 +40,7 @@ void SceneGame::Initialize()
 			StageMain* stageMain = new StageMain();
 			stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 0.0f, z * 2.0f - 2.0f));
 
-			switch (mapchip.GetMapChipCategory(x, z))
+			switch (mapchip.GetCategory(x, z))
 			{
 			case WALL:
 				//壁ならY軸方向に2.0f上げる
@@ -60,7 +60,7 @@ void SceneGame::Initialize()
 			}
 
 			//StageMapChipクラスにマップチップのグローバル座標を記憶
-			mapchip.SetMapChipData(stageMain->GetPosition(), x, z);
+			mapchip.SetData(stageMain->GetPosition(), x, z);
 
 			stageManager.Register(stageMain);
 		}
