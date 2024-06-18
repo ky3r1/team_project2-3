@@ -30,7 +30,7 @@ Player::Player()
 {
     instance = this;
     //TODO:プレイヤーのステータス設定
-    model = new Model("Data/Model/UnitytyanSD/UnitytyanSD.fbx");
+    model = new Model("Data/Model/UnitytyanSD/UnitytyanSD.mdl");
 
     scale.x = scale.y = scale.z = 0.02f;
 
