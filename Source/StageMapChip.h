@@ -38,6 +38,8 @@ public:
 	int GetOnId(DirectX::XMFLOAT3 p);
     //マップチップのコストを設定
     int GetOnCost(DirectX::XMFLOAT3 p);
+	//現在の座標からdir離れた位置の座標変換
+	DirectX::XMFLOAT3 GetPosGetAway(DirectX::XMFLOAT3 p,DirectX::XMFLOAT3 dir);
 
 	//コンストラクタで呼び出されるマップチップのデータ設定
 	void SetData(DirectX::XMFLOAT3 p,int x,int z);

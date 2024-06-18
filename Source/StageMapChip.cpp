@@ -70,26 +70,20 @@ int StageMapChip::GetOnCost(DirectX::XMFLOAT3 p)
 	return -1;
 }
 
+DirectX::XMFLOAT3 StageMapChip::GetPosGetAway(DirectX::XMFLOAT3 p, DirectX::XMFLOAT3 dir)
+{
+	DirectX::XMFLOAT3 position = p;
+	position.x += dir.x;
+	position.y += dir.y;
+	position.z += dir.z;
+	return position;
+}
+
 void StageMapChip::SetData(DirectX::XMFLOAT3 p, int x, int z)
 {
     id[z][x] = id_count;
     position[z][x] = p;
-	switch (category[stagenum][z][x])
-	{
-	case WALL:
-		cost[z][x] = 100;
-		break;
-	case FLOOR:
-		cost[z][x] = 0;
-		break;
-	case HOLE:
-		cost[z][x] = 100;
-		break;
-	case SPIKE:
-		cost[z][x] = 50;
-		break;
-	default:
-		break;
-	}
+	if(category[stagenum][z][x]!=FLOOR)		cost[z][x] = 10000;
+	else		cost[z][x] = 0;
 	id_count++;
 }

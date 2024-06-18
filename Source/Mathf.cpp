@@ -16,3 +16,13 @@ float Mathf::RandomRange(float min, float max)
 	// min`max‚Ü‚Å‚Ìƒ‰ƒ“ƒ_ƒ€’l‚É•ÏŠ·
 	return min + (max - min) * value;
 }
+
+float Mathf::Pythagoras(DirectX::XMFLOAT3 A, DirectX::XMFLOAT3 B)
+{
+    DirectX::XMVECTOR AV = DirectX::XMLoadFloat3(&A);
+    DirectX::XMVECTOR BV = DirectX::XMLoadFloat3(&B);
+    DirectX::XMVECTOR Dir = {};
+    Dir = DirectX::XMVectorSubtract(AV, BV);
+    Dir = DirectX::XMVector3Length(Dir);
+    return DirectX::XMVectorGetX(Dir);
+}

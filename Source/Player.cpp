@@ -30,9 +30,9 @@ Player::Player()
 {
     instance = this;
     //TODO:プレイヤーのステータス設定
-    model = new Model("Data/Model/Jammo/Jammo.mdl");
+    model = new Model("Data/Model/UnitytyanSD/UnitytyanSD.fbx");
 
-    scale.x = scale.y = scale.z = 0.013f;
+    scale.x = scale.y = scale.z = 0.02f;
 
     color = { 1,0,0,1 };
 

@@ -50,6 +50,8 @@ void SceneGame::Initialize()
 				
 				break;
 			case HOLE:
+				//StageMapChipクラスにマップチップのグローバル座標を記憶
+				mapchip.SetData(stageMain->GetPosition(), x, z);
 				//HORE(１)は配置しない
 				delete stageMain;
 				continue;

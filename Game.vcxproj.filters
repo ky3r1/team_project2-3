@@ -197,9 +197,6 @@
     <ClInclude Include="Source\Stage.h">
       <Filter>Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StageMain.h">
-      <Filter>Stage</Filter>
-    </ClInclude>
     <ClInclude Include="Source\StageManager.h">
       <Filter>Stage</Filter>
     </ClInclude>
@@ -247,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="Source\EnemyMoveSystem.h">
       <Filter>AI\SearchSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StageMain.h">
+      <Filter>Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -358,9 +358,6 @@
     <ClCompile Include="Source\Stage.cpp">
       <Filter>Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\StageMain.cpp">
-      <Filter>Stage</Filter>
-    </ClCompile>
     <ClCompile Include="Source\StageManager.cpp">
       <Filter>Stage</Filter>
     </ClCompile>
@@ -417,6 +414,9 @@
     </ClCompile>
     <ClCompile Include="Source\EnemyMoveSystem.cpp">
       <Filter>AI\SearchSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StageMain.cpp">
+      <Filter>Stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
