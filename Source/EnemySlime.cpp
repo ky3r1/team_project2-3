@@ -5,10 +5,11 @@
 EnemySlime::EnemySlime(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Slime/Slime.mdl");
+    //model = new Model("Data/Model/Slime/Slime.mdl");
+    model = new Model("Data/Model/Dragon/dragon.mdl");
 
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.01f;
+    scale.x = scale.y = scale.z = 0.5f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ

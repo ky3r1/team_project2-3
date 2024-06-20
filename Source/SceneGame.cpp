@@ -44,7 +44,8 @@ void SceneGame::Initialize()
 			{
 			case WALL:
 				//壁ならY軸方向に2.0f上げる
-				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 2.0f, z * 2.0f - 2.0f));
+				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 1.0f, z * 2.0f - 2.0f));
+				stageMain->SetScale(DirectX::XMFLOAT3(2.0f, 4.0f, 2.0f));
 				break;
 			case FLOOR:
 				
