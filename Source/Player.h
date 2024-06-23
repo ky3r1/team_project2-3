@@ -104,21 +104,31 @@ private:
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    //アニメーション
+    ////アニメーション:Jammo
+    //enum Animation
+    //{
+    //    Anim_Attack,
+    //    Anim_Death,
+    //    Anim_Falling,
+    //    Anim_GetHit1,
+    //    Anim_GetHit2,
+    //    Anim_Idle,
+    //    Anim_Jump,
+    //    Anim_Jump_Flip,
+    //    Anim_Landing,
+    //    Anim_Revive,
+    //    Anim_Running,
+    //    Anim_Walking,
+    //};
+    ////アニメーション:UnityChan
     enum Animation
     {
         Anim_Attack,
         Anim_Death,
-        Anim_Falling,
-        Anim_GetHit1,
-        Anim_GetHit2,
+        Anim_GetHit,
         Anim_Idle,
-        Anim_Jump,
-        Anim_Jump_Flip,
-        Anim_Landing,
-        Anim_Revive,
+        Anim_IdleAnim,
         Anim_Running,
-        Anim_Walking,
     };
 
     //ステート

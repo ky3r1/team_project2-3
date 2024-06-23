@@ -144,6 +144,8 @@ void PursuitState::Execute(float elapsedTime)
 	{
 		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Search));
 	}
+	owner->MoveSystem();
+	owner->OutMove();
 	// –Ú“I’n“_‚ÖˆÚ“®
 	owner->MoveToTarget(elapsedTime, 0.5f);
 }

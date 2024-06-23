@@ -38,14 +38,17 @@ void SceneGame::Initialize()
 		for (int x = 0; x < MAPMAX_X; x++)
 		{
 			StageMain* stageMain = new StageMain();
+			//StageMain* stageMainSec = new StageMain();
 			stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 0.0f, z * 2.0f - 2.0f));
 
 			switch (mapchip.GetCategory(x, z))
 			{
 			case WALL:
 				//壁ならY軸方向に2.0f上げる
-				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 1.0f, z * 2.0f - 2.0f));
-				stageMain->SetScale(DirectX::XMFLOAT3(2.0f, 4.0f, 2.0f));
+				//stageMainSec->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 0.0f, z * 2.0f - 2.0f));
+				//stageManager.Register(stageMainSec);
+				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 2.0f, z * 2.0f - 2.0f));
+				//stageMain->SetScale(DirectX::XMFLOAT3(2.0f, 4.0f, 2.0f));
 				break;
 			case FLOOR:
 				
@@ -66,6 +69,16 @@ void SceneGame::Initialize()
 			mapchip.SetData(stageMain->GetPosition(), x, z);
 
 			stageManager.Register(stageMain);
+			if (stageMain != nullptr)
+			{
+				stageMain= nullptr;
+				delete stageMain;
+			}
+			//if(stageMainSec != nullptr)
+   //         {
+   //             stageMainSec = nullptr;
+   //             delete stageMainSec;
+   //         }	
 		}
 	}
 
@@ -125,19 +138,19 @@ void SceneGame::Initialize()
 		switch (index)
 		{
 		case 0:
-			slime->SetPosition(DirectX::XMFLOAT3(5.0f, 0, 5));
+			slime->SetPosition(DirectX::XMFLOAT3(5.0f, 0, 25));
 			break;
 		case 1:
-			slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 5));
+			slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 25));
 			break;
 		case 2:
-			slime->SetPosition(DirectX::XMFLOAT3(-5.0f, 0, 5));
+			slime->SetPosition(DirectX::XMFLOAT3(-5.0f, 0, 25));
 			break;
 		case 3:
-			slime->SetPosition(DirectX::XMFLOAT3(-10.0f, 0, 5));
+			slime->SetPosition(DirectX::XMFLOAT3(-10.0f, 0,25));
 			break;
 		case 4:
-			slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));
+			slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 25));
 			break;
 		//default:
 		//	slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));

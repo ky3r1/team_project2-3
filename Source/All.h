@@ -46,7 +46,7 @@
 //ステートマシン
 #define ENEMYSTATEMACHINE
 //アニメーション
-//#define ENEMYANIMATION
+#define ENEMYANIMATION
 
 ///////////////////UI////////////////////////
 

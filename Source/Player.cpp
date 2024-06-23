@@ -30,10 +30,11 @@ Player::Player()
 {
     instance = this;
     //TODO:プレイヤーのステータス設定
-    model = new Model("Data/Model/UnitychanSD/UnitychanSD.mdl");
+    //model = new Model("Data/Model/UnitychanSD/UnitychanSD.mdl");
+    //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
-
-    scale.x = scale.y = scale.z = 0.02f;
+    model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
+    scale.x = scale.y = scale.z = 1.5f;
 
     color = { 1,0,0,1 };
 
@@ -42,7 +43,7 @@ Player::Player()
     projectile_front.time = DELAYFRONTTIME;
 
     hit_delay.time = DELAYPLAYERVSENEMY;
-    moveSpeed = 5.0f;
+    moveSpeed = 7.0f;
 
     position = { 0.0001f,2,0 };
 
@@ -723,7 +724,7 @@ bool Player::InputAttack()
 void Player::TransitionAttackState()
 {
     state = State::Attack;
-    //走りアニメーション再生
+    //攻撃アニメーション再生
     model->PlayAnimation(Anim_Attack, false);
 }
 void Player::UpdateAttackState(float elapsedTime)
@@ -747,7 +748,7 @@ void Player::OnDamaged()
 void Player::TransitionDamageState()
 {
     state = State::Damage;
-    model->PlayAnimation(Anim_GetHit1, false);
+    model->PlayAnimation(Anim_GetHit, false);
 }
 void Player::UpdateDamageState(float elapsedTime)
 {

@@ -14,7 +14,7 @@ public:
         return instance;
     }
 
-    void NextMoveArea(DirectX::XMFLOAT3& position);
+    void NextMoveArea(DirectX::XMFLOAT3& position, DirectX::XMFLOAT3& target_position);
 private:
     float heuristic(DirectX::XMFLOAT3 player_position, DirectX::XMFLOAT3 enemy_position) { return abs(enemy_position.x - player_position.x) + abs(enemy_position.y - player_position.y) + abs(enemy_position.z - player_position.z); }
 private:

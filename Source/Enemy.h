@@ -22,6 +22,12 @@ public:
 	//デバッグ用GUI
 	virtual void DrawDebugGUI();
 
+	//MoveSystemの実行
+	virtual void MoveSystem();
+
+	//通過不可マスに入った時元の位置に移動
+	virtual void OutMove();
+
     //破棄
 	void Destroy();
 
@@ -79,5 +85,7 @@ protected:
 	float				stateTimer = 0.0f;
 	float				attackRange = 1.5f;
 	StateMachine* stateMachine = nullptr;
+	std::vector<DirectX::XMFLOAT2> moving_roots;
 	int id = 0;
+	int old_mapID=0;
 };

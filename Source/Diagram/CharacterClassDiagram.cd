@@ -5,25 +5,8 @@
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
-    <NestedTypes>
-      <Enum Name="Enemy::State" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Source\Enemy.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-      <Enum Name="Enemy::Search" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Source\Enemy.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-      <Enum Name="Enemy::Battle" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Source\Enemy.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AgSAEgUAVACQIQAABAABAAAAQABAAAAEABBAAAIEAgA=</HashCode>
+      <HashCode>AgSAFgUAVACQIQAABAABAAgAUAhAAAAEABBAAAIEAgA=</HashCode>
       <FileName>Source\Enemy.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -58,19 +41,19 @@
   <Class Name="Player">
     <Position X="4.75" Y="2.75" Width="1.5" />
     <NestedTypes>
-      <Enum Name="Player::Animation" Collapsed="true">
+      <Enum Name="Player::State" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Source\Player.h</NewMemberFileName>
         </TypeIdentifier>
       </Enum>
-      <Enum Name="Player::State" Collapsed="true">
+      <Enum Name="Player::Animation" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Source\Player.h</NewMemberFileName>
         </TypeIdentifier>
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>IgSAQECAFACgQwikoACFQAAgICBABACEQBAQJYAIABI=</HashCode>
+      <HashCode>IgSAQECAFAAgQwikIACFwAAgICAABACEQBAQLYAIABI=</HashCode>
       <FileName>Source\Player.h</FileName>
     </TypeIdentifier>
   </Class>

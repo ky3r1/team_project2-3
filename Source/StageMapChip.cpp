@@ -23,6 +23,21 @@ int StageMapChip::GetCategory( int x, int z)
     return category[stagenum][z][x];
 }
 
+DirectX::XMFLOAT3 StageMapChip::GetIDPosition(int id)
+{
+	for (int z = 0; z < MAPMAX_Z; z++)
+	{
+		for (int x = 0; x < MAPMAX_X; x++)
+		{
+			if (id == this->id[z][x])
+			{
+				return position[z][x];
+			}
+		}
+	}
+	return DirectX::XMFLOAT3(100, 100, 100);
+}
+
 bool StageMapChip::GetOnMapChip(DirectX::XMFLOAT3 p,DirectX::XMINT2& i)
 {
 	for (int z = 0; z < MAPMAX_Z; z++)
