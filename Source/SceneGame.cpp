@@ -407,32 +407,32 @@ void SceneGame::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4
 		DirectX::XMFLOAT3 world_position_start;
 		DirectX::XMStoreFloat3(&world_position_start, WorldPosition);
 
-		//screenPosition.z = 1;
-		//ScreenCursor = DirectX::XMLoadFloat3(&screenPosition);
-		//WorldPosition = DirectX::XMVector3Unproject
-		//(
-		//	ScreenCursor,
-		//	viewport.TopLeftX,
-		//	viewport.TopLeftY,
-		//	viewport.Width,
-		//	viewport.Height,
-		//	viewport.MinDepth,
-		//	viewport.MaxDepth,
-		//	Projection,
-		//	View,
-		//	World
-		//);
-		//DirectX::XMFLOAT3 world_position_end;
-		//DirectX::XMStoreFloat3(&world_position_end, WorldPosition);
+		screenPosition.z = 1;
+		ScreenCursor = DirectX::XMLoadFloat3(&screenPosition);
+		WorldPosition = DirectX::XMVector3Unproject
+		(
+			ScreenCursor,
+			viewport.TopLeftX,
+			viewport.TopLeftY,
+			viewport.Width,
+			viewport.Height,
+			viewport.MinDepth,
+			viewport.MaxDepth,
+			Projection,
+			View,
+			World
+		);
+		DirectX::XMFLOAT3 world_position_end;
+		DirectX::XMStoreFloat3(&world_position_end, WorldPosition);
 
-		//HitResult hit;
-		//StageMain stage_main;
-		//if (stage_main.RayCast(world_position_start, world_position_end, hit))
-		//{
+		HitResult hit;
+		StageMain stage_main;
+		if (stage_main.RayCast(world_position_start, world_position_end, hit))
+		{
 			EnemyManager& enemyManager = EnemyManager::Instance();
 			EnemySlime* slime = new EnemySlime(GREEN);
 			slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
 			enemyManager.Register(slime);
-		//}
+		}
 	}
 }
