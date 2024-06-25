@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Scene">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAQAAARAAgAAAAAAAQAAAgAAACBAAAAAAAAA=</HashCode>
+      <FileName>Source\Scene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneGame">
+    <Position X="5.75" Y="4.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQIAAIAAEAAAQAAAAAAIAAAQAAEwACBABAAAIAAAAA=</HashCode>
+      <FileName>Source\SceneGame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneLoading">
+    <Position X="3.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAEAAAAAQEAAAAAAAAAABAAgCAEABAAAABAAAI=</HashCode>
+      <FileName>Source\SceneLoading.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneResult">
+    <Position X="10.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQAAAAAAAAAAQAAAAAAAAAAABAAgAAAABAAAAAABAA=</HashCode>
+      <FileName>Source\SceneResult.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneTitle">
+    <Position X="1.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAAAAAAQAAgAAAAAAAABAAgAAAABAAAAAAAAA=</HashCode>
+      <FileName>Source\SceneTitle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneTutorial">
+    <Position X="8.25" Y="4.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQIAAACgMAAFQAAAAAAAAAAQBAEwACgABIAAAAAAAA=</HashCode>
+      <FileName>Source\SceneTutorial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneManager" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAEgAAAAAAAAAAAAAACAAQBAAAABAAgQ=</HashCode>
+      <FileName>Source\SceneManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>

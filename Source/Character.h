@@ -2,7 +2,7 @@
 
 #include "All.h"
 #include "Input/Input.h"
-#include"StageMain.h"
+#include "StageMain.h"
 
 
 //キャラクター
@@ -22,13 +22,15 @@ public:
     void AddImpulse(const DirectX::XMFLOAT3& impulse);
 
     //デバッグ用GUI
-    virtual void DrawDebugGUI() {};
+    virtual void DrawDebugGUI();
 
     void SetScreenPos(DirectX::XMFLOAT3 sp) { screen_pos = sp; }
 
     DirectX::XMFLOAT3 GetScreenPos() { return screen_pos; }
-
+    //初期化
+    virtual void Clear();
 protected:
+
     //垂直速力処理
     void UpdateVerticalVelocity(float elapsedFrame);
 
@@ -144,4 +146,5 @@ protected:
     float       stepOffset = 1.0f;
     float       slopeRate = 1.0f;
     int         category = 0;
+    float       turnSpeed = DirectX::XMConvertToRadians(360);
 };

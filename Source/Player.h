@@ -13,7 +13,7 @@ class Player : public Character
 public:
     Player();
     ~Player() override;
-
+public:
     static Player& Instance();
 
     //更新処理
@@ -27,27 +27,12 @@ public:
 
     //デバッグ用GUI
     void DrawDebugGUI() override;
-
-    //死亡判定
-    bool PlayerDead();
-
-    // プレイヤーの種類
-    int GetPlayerCategory() { return category; }
 private:
     //垂直移動更新処理
     void UpdateVerticalMove(float elapsedTime)override;
 
     //スティック入力値から移動ベクトルを取得
     DirectX::XMFLOAT3 GetMoveVec() const;
-
-    //移動処理
-    //void Move(float elapsedTime, float vx, float vz, float speed);
-
-    //移動入力処理
-    void InputMove(float elapsedTime);
-
-    //旋回処理
-    //void Turn(float elapsedTime, float vx, float vz, float speed);
 
     //プレイヤーとエネミーとの衝突処理
     void CollisionPlayerVsEnemies();
@@ -57,22 +42,52 @@ private:
     //弾丸入力処理
     void InputProjectile();
 
-protected:
-
-    void OnLanding() override;
-
-    //ジャンプ入力処理
-    void InputJump();
-
+private:
     //前方弾発射
     void ProjectileStraightFront(int category,float angle);
 
     //後方弾発射
     void ProjectileStraightBack(int category, float angle);
+
+private:
+    //待機ステートへ遷移
+    void TransitionIdleState();
+    //待機ステート更新処理
+    void UpdateIdleState(float elapsedTime);
+
+    //移動入力処理
+    bool InputMove(float elapsedTime);
+    //移動ステートへ遷移
+    void TransitionMoveState();
+    //移動ステート更新処理
+    void UpdateMoveState(float elapsedTime);
+
+    //攻撃入力処理
+    bool InputAttack();
+    //攻撃ステートへ遷移
+    void TransitionAttackState();
+    //攻撃ステート更新
+    void UpdateAttackState(float elapsedTime);
+
+    //ダメージを受けた時
+    void OnDamaged()override;
+    //ダメージステート遷移
+    void TransitionDamageState();
+    //ダメージステート更新
+    void UpdateDamageState(float elapsedTime);
+
+public:
+    //死亡した時
+    void OnDead()override;
+private:
+    //死亡ステート遷移
+    void TransitionDeathState();
+    //死亡ステート更新
+    void UpdateDeathState(float elapsedTime);
+
 private:
     Model* model = nullptr;
-    float       moveSpeed = 5.0f;
-    float       turnSpeed = DirectX::XMConvertToRadians(720);
+    float       moveSpeed = 7.0f;
     float       jumpSpeed = 20.0f;
     int color_count = 0;
     int projectile_shot;
@@ -88,4 +103,42 @@ private:
     Effect*     hitEffect = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
+
+    ////アニメーション:Jammo
+    //enum Animation
+    //{
+    //    Anim_Attack,
+    //    Anim_Death,
+    //    Anim_Falling,
+    //    Anim_GetHit1,
+    //    Anim_GetHit2,
+    //    Anim_Idle,
+    //    Anim_Jump,
+    //    Anim_Jump_Flip,
+    //    Anim_Landing,
+    //    Anim_Revive,
+    //    Anim_Running,
+    //    Anim_Walking,
+    //};
+    ////アニメーション:UnityChan
+    enum Animation
+    {
+        Anim_Attack,
+        Anim_Death,
+        Anim_GetHit,
+        Anim_Idle,
+        Anim_IdleAnim,
+        Anim_Running,
+    };
+
+    //ステート
+    enum class State
+    {
+        Idle,
+        Move,
+        Attack,
+        Damage,
+        Death,
+    };
+    State state = State::Idle;
 };

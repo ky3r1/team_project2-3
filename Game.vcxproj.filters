@@ -33,9 +33,6 @@
     <Filter Include="Stage">
       <UniqueIdentifier>{ec65c4ca-6a60-4d92-8c92-c3796c1e0bc8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="State">
-      <UniqueIdentifier>{aa4836e2-7434-48e6-8942-ee08b696af25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{b1acef27-0afb-4f25-8746-efb6361e4acb}</UniqueIdentifier>
     </Filter>
@@ -50,6 +47,18 @@
     </Filter>
     <Filter Include="Character\Projectile">
       <UniqueIdentifier>{3a4daa95-d8ff-4d37-8758-65b321fa7eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClassDiagram">
+      <UniqueIdentifier>{cd684424-64ac-47eb-8246-e92123ea7eea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{aa4836e2-7434-48e6-8942-ee08b696af25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\State">
+      <UniqueIdentifier>{80886cbe-aa3c-4c06-907d-c3a42c58a2fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\SearchSystem">
+      <UniqueIdentifier>{842ef880-36c4-4b2c-8309-da53038747e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -188,23 +197,11 @@
     <ClInclude Include="Source\Stage.h">
       <Filter>Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StageMain.h">
-      <Filter>Stage</Filter>
-    </ClInclude>
     <ClInclude Include="Source\StageManager.h">
       <Filter>Stage</Filter>
     </ClInclude>
     <ClInclude Include="Source\Mathf.h">
       <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\StateBase.h">
-      <Filter>State</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\StateDerived.h">
-      <Filter>State</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\StateMachine.h">
-      <Filter>State</Filter>
     </ClInclude>
     <ClInclude Include="Source\EnemyManager.h">
       <Filter>Character\Enemy</Filter>
@@ -235,6 +232,21 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\ResourceManager.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateBase.h">
+      <Filter>AI\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateDerived.h">
+      <Filter>AI\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMachine.h">
+      <Filter>AI\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EnemyMoveSystem.h">
+      <Filter>AI\SearchSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StageMain.h">
+      <Filter>Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -346,23 +358,11 @@
     <ClCompile Include="Source\Stage.cpp">
       <Filter>Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\StageMain.cpp">
-      <Filter>Stage</Filter>
-    </ClCompile>
     <ClCompile Include="Source\StageManager.cpp">
       <Filter>Stage</Filter>
     </ClCompile>
     <ClCompile Include="Source\Mathf.cpp">
       <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\StateBase.cpp">
-      <Filter>State</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\StateDerived.cpp">
-      <Filter>State</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\StateMachine.cpp">
-      <Filter>State</Filter>
     </ClCompile>
     <ClCompile Include="Source\Enemy.cpp">
       <Filter>Character\Enemy</Filter>
@@ -403,6 +403,21 @@
     <ClCompile Include="Source\Graphics\texture.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateBase.cpp">
+      <Filter>AI\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateDerived.cpp">
+      <Filter>AI\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMachine.cpp">
+      <Filter>AI\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EnemyMoveSystem.cpp">
+      <Filter>AI\SearchSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StageMain.cpp">
+      <Filter>Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">
@@ -419,6 +434,18 @@
     </None>
     <None Include="HLSL\Sprite.hlsli">
       <Filter>HLSL</Filter>
+    </None>
+    <None Include="Source\Diagram\CharacterClassDiagram.cd">
+      <Filter>ClassDiagram</Filter>
+    </None>
+    <None Include="Source\Diagram\SceneClassDiagram.cd">
+      <Filter>ClassDiagram</Filter>
+    </None>
+    <None Include="Source\Diagram\StageClassDiagram.cd">
+      <Filter>ClassDiagram</Filter>
+    </None>
+    <None Include="Source\Diagram\StateClassDiagram.cd">
+      <Filter>ClassDiagram</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

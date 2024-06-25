@@ -62,9 +62,6 @@ void SceneTutorial::Initialize()
 	ui[5] = std::make_unique<sprite_batch>(L".\\Data\\Sprite\\telop_6.png", 1);
 #endif // HPGAUGE
 
-#ifdef  ALLPLAYER
-	player = new Player();
-#endif //  ALLPLAYER
 
 	game_timer = 0;
 
@@ -108,11 +105,6 @@ void SceneTutorial::Finalize()
 		delete cameraController;
 		cameraController = nullptr;
 	}
-	if (player != nullptr)
-	{
-		delete player;
-		player = nullptr;
-	}
 
 	if (gauge != nullptr)
 	{
@@ -131,7 +123,7 @@ void SceneTutorial::Update(float elapsedTime)
 
 	//カメラコントローラー更新処理
 #ifdef  ALLPLAYER
-	DirectX::XMFLOAT3 target = player->GetPosition();
+	DirectX::XMFLOAT3 target = Player::Instance().GetPosition();
 	target.y += 0.5f;
 	cameraController->SetTarget(target);
 #endif //  ALLPLAYER
@@ -140,8 +132,8 @@ void SceneTutorial::Update(float elapsedTime)
 	StageManager::Instance().Update(elapsedTime);
 
 #ifdef  ALLPLAYER
-	player->Update(elapsedTime);
-	if (player->PlayerDead())SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult));
+	Player::Instance().Update(elapsedTime);
+	if (Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult));
 #endif //  ALLPLAYER
 
 	Graphics& graphics = Graphics::Instance();
@@ -185,7 +177,7 @@ void SceneTutorial::Update(float elapsedTime)
 			enemyManager.Register(slime);
 		}
 		enemyAdd = false;
-		if (player->GetPlayerCategory() != WHITE)
+		if (Player::Instance().GetCategory() != WHITE)
 		{
 			clear_check = true;
 		}
@@ -264,7 +256,7 @@ void SceneTutorial::Render()
 
 		//プレイヤー描画
 #ifdef  ALLPLAYER
-		player->Render(dc, shader);
+		Player::Instance().Render(dc, shader);
 #endif //  ALLPLAYER
 		shader->End(dc);
 	}
@@ -278,7 +270,7 @@ void SceneTutorial::Render()
 	{
 #ifdef  DEBUGIMGUI
 		//プレイヤーデバッグプリミティブ描画
-		player->DrawDebugPrimitive();
+		Player::Instance().DrawDebugPrimitive();
 		//エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
 		// ラインレンダラ描画実行
@@ -327,7 +319,8 @@ void SceneTutorial::Render()
 	}
 
 #ifdef DEBUGIMGUI
-	player->DrawDebugGUI();
+    // デバッグGUI描画
+	Player::Instance().DrawDebugGUI();
 	cameraController->DrawDebugGUI();
 	EnemyManager::Instance().DrawDebugGUI();
 	StageManager::Instance().DrawDebugGUI();
@@ -352,11 +345,11 @@ void SceneTutorial::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMF
 void SceneTutorial::RenderPlayerGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
 {
 
-	DirectX::XMFLOAT3 player_position = player->GetPosition();
+	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
 	player_position.y = 1.0f;
 	DirectX::XMVECTOR PlayerPosition = DirectX::XMLoadFloat3(&player_position);
 	DirectX::XMFLOAT4 color = { 1,0.5,0,1 };//ゲージの色
-	CharacterGauge(dc, view, projection, player_position, player->GetHealth(), color);
+	CharacterGauge(dc, view, projection, player_position, Player::Instance().GetHealth(), color);
 }
 
 void SceneTutorial::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, DirectX::XMFLOAT3 position, float health, DirectX::XMFLOAT4 gaugecolor)
@@ -371,7 +364,7 @@ void SceneTutorial::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLO
 	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
 	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
 
-	DirectX::XMFLOAT3 player_position = player->GetPosition();
+	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
 	player_position.y = 1.0f;
 	DirectX::XMVECTOR PlayerPosition = DirectX::XMLoadFloat3(&player_position);
 	DirectX::XMVECTOR Position = DirectX::XMLoadFloat3(&position);
@@ -391,7 +384,7 @@ void SceneTutorial::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLO
 	);
 	DirectX::XMStoreFloat3(&position, Position);
 
-	player->SetScreenPos(position);
+	Player::Instance().SetPosition(position);
 
 	for (int i = 0; i < health; ++i)
 	{

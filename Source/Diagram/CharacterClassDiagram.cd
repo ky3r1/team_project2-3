@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Enemy">
+    <Position X="11.75" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AgSAFgUAVACQIQAABAABAAgAUAhAAAAEABBAAAIEAgA=</HashCode>
+      <FileName>Source\Enemy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyManager" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AESAAAACBCEIAAAAAAAABYAAAAABAAABQBQAACAAAAA=</HashCode>
+      <FileName>Source\EnemyManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemySlime">
+    <Position X="14.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASQAAAABAAAAAAAAAAAgAAAAAAAAAAAABAAAAAAIAA=</HashCode>
+      <FileName>Source\EnemySlime.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Character">
+    <Position X="8.25" Y="1.25" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="Character::DelayTime" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Source\Character.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>QoEkgAgIDqGEFgQAgAADoAhCAUAEkgSgIARICi5IOAg=</HashCode>
+      <FileName>Source\Character.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player">
+    <Position X="4.75" Y="2.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Player::State" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Source\Player.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Player::Animation" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Source\Player.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IgSAQECAFAAgQwikIACFwAAgICAABACEQBAQLYAIABI=</HashCode>
+      <FileName>Source\Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projectile" Collapsed="true">
+    <Position X="19.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAQDCAIMgAAAgAAIAAGAABEAACAIBAAAAgAIAA=</HashCode>
+      <FileName>Source\Projectile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectileHoming" Collapsed="true">
+    <Position X="19.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAAAAAVAAAQAAAIAAAAEAAAAAAAAAAABAEAAAIAAA=</HashCode>
+      <FileName>Source\ProjectileHoming.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectileManager" Collapsed="true">
+    <Position X="17.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAgCAABAAABAAAAAAABIAAAAABAAAAABBAAABAAEA=</HashCode>
+      <FileName>Source\ProjectileManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectileStraight" Collapsed="true">
+    <Position X="23.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAgAARAAAQAAAAAAQAAAAAAAAAQAAABAAAAAIAAA=</HashCode>
+      <FileName>Source\ProjectileStraight.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>

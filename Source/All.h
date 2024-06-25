@@ -24,6 +24,8 @@
 
 //プレイヤー
 #define ALLPLAYER
+//アニメーション
+#define PLAYERANIMATION
 //壁当たり判定
 //#define WallCollision
 //Jump
@@ -37,14 +39,14 @@
 #define ENEMYHITTINGDAMAGE
 
 //エネミー
-//#define ALLENEMY
+#define ALLENEMY
 //スライム
 #define ENEMYSLIME
 
 //ステートマシン
 #define ENEMYSTATEMACHINE
 //アニメーション
-//#define ENEMYANIMATION
+#define ENEMYANIMATION
 
 ///////////////////UI////////////////////////
 

@@ -128,6 +128,8 @@ DebugRenderer::DebugRenderer(ID3D11Device* device)
 
 	// 円柱メッシュ作成
 	CreateCylinderMesh(device, 1.0f, 1.0f, 0.0f, 1.0f, 16, 1);
+
+	CreateCubeMesh(device);
 }
 
 // 描画開始
@@ -197,6 +199,27 @@ void DebugRenderer::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4
 		context->Draw(cylinderVertexCount, 0);
 	}
 	cylinders.clear();
+
+	context->IASetVertexBuffers(0, 1, cubeVertexBuffer.GetAddressOf(), &stride, &offset);
+	context->IASetIndexBuffer(cubeIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	for (const Cube& cube : cubes)
+	{
+		// ワールドビュープロジェクション行列作成
+		DirectX::XMMATRIX S = DirectX::XMMatrixScaling(cube.scale.x, cube.scale.y, cube.scale.z);
+		DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(cube.position.x, cube.position.y, cube.position.z);
+		DirectX::XMMATRIX W = S * T;
+		DirectX::XMMATRIX WVP = W * VP;
+
+		// 定数バッファ更新
+		CbMesh cbMesh;
+		cbMesh.color = cube.color;
+		DirectX::XMStoreFloat4x4(&cbMesh.wvp, WVP);
+
+		context->UpdateSubresource(constantBuffer.Get(), 0, 0, &cbMesh, 0, 0);
+		//context->Draw(cubeVertexCount, 0);
+		context->DrawIndexed(ByteWidth / sizeof(uint32_t), 0, 0);
+	}
+	cubes.clear();
 }
 
 // 球描画
@@ -218,6 +241,15 @@ void DebugRenderer::DrawCylinder(const DirectX::XMFLOAT3& position, float radius
 	cylinder.height = height;
 	cylinder.color = color;
 	cylinders.emplace_back(cylinder);
+}
+
+void DebugRenderer::DrawCube(const DirectX::XMFLOAT3& start_position, const DirectX::XMFLOAT3& end_position, const DirectX::XMFLOAT4& color)
+{
+	Cube cube;
+	cube.position = start_position;
+	cube.scale = { end_position.x - start_position.x,end_position.y - start_position.y,end_position.z - start_position.z };
+	cube.color = color;
+	cubes.emplace_back(cube);
 }
 
 // 球メッシュ作成
@@ -351,6 +383,7 @@ void DebugRenderer::CreateCylinderMesh(ID3D11Device* device, float radius1, floa
 		D3D11_SUBRESOURCE_DATA subresourceData = {};
 
 		desc.ByteWidth = static_cast<UINT>(sizeof(DirectX::XMFLOAT3) * cylinderVertexCount);
+		ByteWidth = desc.ByteWidth;
 		desc.Usage = D3D11_USAGE_IMMUTABLE;	// D3D11_USAGE_DEFAULT;
 		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		desc.CPUAccessFlags = 0;
@@ -361,6 +394,97 @@ void DebugRenderer::CreateCylinderMesh(ID3D11Device* device, float radius1, floa
 		subresourceData.SysMemSlicePitch = 0;
 
 		HRESULT hr = device->CreateBuffer(&desc, &subresourceData, cylinderVertexBuffer.GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	}
+}
+
+void DebugRenderer::CreateCubeMesh(ID3D11Device* device)
+{
+	cubeVertexCount = 24;
+	std::unique_ptr<DirectX::XMFLOAT3[]> vertices = std::make_unique<DirectX::XMFLOAT3[]>(cubeVertexCount);
+
+	DirectX::XMFLOAT3* p = vertices.get();
+
+	
+
+	
+		//front
+	p[0] = { 0.0f,0.0f,0.0f }; //0
+	p[1] = { 0.0f,1.0f,0.0f }; //1
+	p[2] = { 1.0f,1.0f,0.0f }; //2
+	p[3] = { 1.0f,0.0f,0.0f }; //3
+	   //back
+	p[4] = { 1.0f,1.0f,1.0f }; //4
+	p[5] = { 0.0f,1.0f,1.0f }; //5
+	p[6] = { 0.0f,0.0f,1.0f }; //6
+	p[7] = { 1.0f,0.0f,1.0f }; //7
+	   //top
+	p[8] = { 0.0f,1.0f,1.0f }; //8
+	p[9] = { 1.0f,1.0f,1.0f }; //9
+	p[10] = { 1.0f,1.0f,0.0f }; //10
+	p[11] = { 0.0f,1.0f,0.0f }; //11
+	   //bottom
+	p[12] = { 0.0f,0.0f,0.0f }; //12
+	p[13] = { 1.0f,0.0f,0.0f }; //13
+	p[14] = { 1.0f,0.0f,1.0f }; //14
+	p[15] = { 0.0f,0.0f,1.0f }; //15
+	   //left
+	p[16] = { 0.0f,1.0f,1.0f }; //16
+	p[17] = { 0.0f,1.0f,0.0f }; //17
+	p[18] = { 0.0f,0.0f,0.0f }; //18
+	p[19] = { 0.0f,0.0f,1.0f }; //19
+	   //right
+	p[20] = { 1.0f,1.0f,0.0f };  //20
+	p[21] = { 1.0f,1.0f,1.0f };  //21
+	p[22] = { 1.0f,0.0f,1.0f };  //22
+	p[23] = { 1.0f,0.0f,0.0f };  //23
+
+
+	uint32_t indices[36]{
+		//front
+		0,1,2,
+		0,2,3,
+		//back
+		7,4,5,
+		7,5,6,
+		//top
+		8,9,10,
+		8,10,11,
+		//bottom
+		12,13,14,
+		12,14,15,
+		//left
+		16,17,18,
+		16,18,19,
+		//right
+		20,21,22,
+		20,22,23,
+	};
+
+
+	// 頂点バッファ
+	{
+		D3D11_BUFFER_DESC desc = {};
+		D3D11_SUBRESOURCE_DATA subresourceData = {};
+
+		desc.ByteWidth = static_cast<UINT>(sizeof(DirectX::XMFLOAT3) * cubeVertexCount);
+		desc.Usage = D3D11_USAGE_IMMUTABLE;	// D3D11_USAGE_DEFAULT;
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = 0;
+		subresourceData.pSysMem = vertices.get();
+		subresourceData.SysMemPitch = 0;
+		subresourceData.SysMemSlicePitch = 0;
+
+		HRESULT hr = device->CreateBuffer(&desc, &subresourceData, cubeVertexBuffer.GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		desc.ByteWidth = static_cast<UINT>(sizeof(uint32_t) * 36);
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		subresourceData.pSysMem = indices;
+		hr = device->CreateBuffer(&desc, &subresourceData, cubeIndexBuffer.ReleaseAndGetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 }

@@ -38,7 +38,7 @@ void SearchState::Exit()
 void DeathState::Enter()
 {
 #ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Death), false);
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Die), false);
 #endif // ENEMYANIMATION
 }
 // 実行中
@@ -144,6 +144,8 @@ void PursuitState::Execute(float elapsedTime)
 	{
 		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Search));
 	}
+	owner->MoveSystem();
+	owner->OutMove();
 	// 目的地点へ移動
 	owner->MoveToTarget(elapsedTime, 0.5f);
 }
@@ -158,7 +160,7 @@ void PursuitState::Exit()
 void AttackState::Enter()
 {
 #ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Attack01), false);
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Attack01), true);
 #endif // ENEMYANIMATION
 }
 //実行中
@@ -166,6 +168,7 @@ void AttackState::Execute(float elapsedTime)
 {
 	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
 	DirectX::XMFLOAT3 enemy_position = owner->GetPosition();
+	owner->SetTargetPosition(player_position);
 	float vx = player_position.x - enemy_position.x;
 	float vz = player_position.z - enemy_position.z;
 	float distSq = vx * vx + vz * vz;

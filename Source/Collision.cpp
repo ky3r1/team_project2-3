@@ -326,3 +326,20 @@ bool Collision::HPbarPoint(DirectX::XMFLOAT3 player_position, DirectX::XMFLOAT3 
     HPpoint = false;
     return HPpoint;
 }
+
+bool Collision::InPoint(DirectX::XMFLOAT3 bottom_left_front, DirectX::XMFLOAT3 top_right_back, DirectX::XMFLOAT3 move_pos)
+{
+    //Xé≤ÅAYé≤ÅAZé≤ÇªÇÍÇºÇÍÇÃîÕàÕì‡Ç…ì¸Ç¡ÇƒÇ¢ÇÈÇ©ÇÃîªíË
+    //bottom_left_front < top_right_backÇ∂Ç·Ç»Ç¢Ç∆í ÇÁÇ»Ç¢
+    if (bottom_left_front.x<move_pos.x && top_right_back.x>move_pos.x)
+    {
+        if (bottom_left_front.y<move_pos.y && top_right_back.y>move_pos.y)
+        {
+            if (bottom_left_front.z<move_pos.z && top_right_back.z>move_pos.z)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}

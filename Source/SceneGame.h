@@ -29,7 +29,6 @@ private:
 	void CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, DirectX::XMFLOAT3 position,int health,DirectX::XMFLOAT4 gaugecolor);
 	void CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
 private:
-	//Player* player = nullptr;
 	std::unique_ptr<Player> player = nullptr;
 	std::unique_ptr<CameraController> cameraController = nullptr;
 	std::unique_ptr<Sprite> gauge = nullptr;

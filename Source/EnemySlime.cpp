@@ -1,14 +1,17 @@
 #include "EnemySlime.h"
 #include "StateDerived.h"
+#include "StageMapChip.h"
 
 //コンストラクタ
 EnemySlime::EnemySlime(int category)
 {
     //TODO:エネミースライムのステータス設定
     model = new Model("Data/Model/Slime/Slime.mdl");
+    //model = new Model("Data/Model/Dragon/dragon.mdl");
 
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.006f;
+    //scale.x = scale.y = scale.z = 0.5f;
+    scale.x = scale.y = scale.z = 0.01f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
@@ -16,7 +19,7 @@ EnemySlime::EnemySlime(int category)
 
     attackRange = 5.0f;
     this->category = category;
-    ChangeColor(color, category);
+    //ChangeColor(color, category);
 
 #ifdef ENEMYSTATEMACHINE
     // StateMachineを生成し、階層型ステートマシンに対応するように登録ステートを変更していく。
@@ -58,6 +61,7 @@ void EnemySlime::Update(float elapsedTime)
     UpdateTransform();
     //モデル行列更新
     model->UpdateTransform(transform);
+    model->UpdateAnimation(elapsedTime);
 }
 
 //描画処理

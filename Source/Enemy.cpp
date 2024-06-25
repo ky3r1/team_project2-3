@@ -4,6 +4,7 @@
 #include "Mathf.h"
 #include "Player.h"
 #include "StageMapChip.h"
+#include "EnemyMoveSystem.h"
 
 //デバッグプリミティブ描画
 void Enemy::DrewDebugPrimitive()
@@ -68,31 +69,29 @@ void Enemy::DrawDebugGUI()
         }
         break;
     }
-
-    // デバッグ文字列表示の変更
-    std::string mapstr = "";
-    // 現在のステート番号に合わせてデバッグ文字列をstrに格納
-    switch (StageMapChip::Instance().GetMapChipPosition(position)) {
-    case WALL:
-        str = "Wall";
-        break;
-    case FLOOR:
-        str = "Floor";
-        break;
-    case HOLE:
-        str = "Hole";
-        break;
-    case SPIKE:
-        str = "Spike";
-        break;
-    default:
-        str = "None";
-        break;
-    }
     ImGui::Text(u8"State　%s", str.c_str());
     ImGui::Text(u8"SubState　%s", subStr.c_str());
-    ImGui::Text(u8"MapChip　%s", mapstr.c_str());
+    Character::DrawDebugGUI();
+    ImGui::Text(u8"MapOldID　%d", old_mapID);
 #endif // ENEMYSTATEMACHINE
+}
+
+void Enemy::MoveSystem()
+{
+    EnemyMoveSystem::Instance().NextMoveArea(position, targetPosition);
+}
+
+void Enemy::OutMove()
+{
+    if (StageMapChip::Instance().GetOnCost(position) > 20)
+    {
+        DirectX::XMFLOAT3 old_position = StageMapChip::Instance().GetIDPosition(old_mapID);
+        targetPosition = old_position;
+    }
+    else
+    {
+        old_mapID = StageMapChip::Instance().GetOnId(position);
+    }
 }
 
 //破棄

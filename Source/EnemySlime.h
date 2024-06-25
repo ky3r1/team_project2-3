@@ -48,5 +48,4 @@ protected:
 
 private:
     //Model* model = nullptr;
-    int elapestime;
 };
