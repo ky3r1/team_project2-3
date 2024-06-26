@@ -8,7 +8,7 @@
 #include "SceneManager.h"
 #include "SceneLoading.h"
 
-#include "StageMapChip.h"
+//#include "StageMapChip.h"
 
 float enemy_score[5];
 float total_score;
@@ -17,7 +17,7 @@ void SceneResult::Initialize()
 {
     //スプライト初期化
     sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/Title.png"));
-    StageMapChip::Instance().SetStageNum(0);
+    //StageMapChip::Instance().SetStageNum(0);
 }
 
 void SceneResult::Finalize()

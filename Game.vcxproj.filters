@@ -224,9 +224,6 @@
     <ClInclude Include="Source\ProjectileStraight.h">
       <Filter>Character\Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StageMapChip.h">
-      <Filter>Stage</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Enemy.h">
       <Filter>Character\Enemy</Filter>
     </ClInclude>
@@ -387,9 +384,6 @@
     </ClCompile>
     <ClCompile Include="Source\ProjectileStraight.cpp">
       <Filter>Character\Projectile</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\StageMapChip.cpp">
-      <Filter>Stage</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ResourceManager.cpp">
       <Filter>Graphics</Filter>

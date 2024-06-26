@@ -5,9 +5,11 @@ bool Collision::IntersectCylinderVsSphere(
     const DirectX::XMFLOAT3& positionA,
     float radiusA,
     float heightA,
+    float weightA,
     const DirectX::XMFLOAT3& positionB,
     float radiusB,
     float heightB,
+    float weightB,
     DirectX::XMFLOAT3& outPositionB)
 {
     //Aの足元がBの頭より上なら当たってない
@@ -44,10 +46,40 @@ bool Collision::IntersectCylinderVsSphere(
         return false;
     }
 
-    // A が B を押し出す（B は下に押し出してはいけない）
+    if(weightA > weightB)
+    {
+        Vec = DirectX::XMVectorSubtract(PositionB, PositionA);
+        // Vec 方向の単位ベクトル（Normalize）を取得
+        Vec = DirectX::XMVector2Normalize(Vec);
+        // 上記のベクトルを range 分スケール
+        Vec = DirectX::XMVectorScale(Vec, range);
+        // そのベクトルを位置 A （PositionA）からの足した位置に移動
+        Vec = DirectX::XMVectorAdd(PositionA, Vec);
+        // 出力用の位置（outPositionB）に代入する
+        DirectX::XMFLOAT2 resultPos;
+        DirectX::XMStoreFloat2(&resultPos, Vec);
 
-    // あたっている場合
+        outPositionB.x = resultPos.x;
+        outPositionB.y = positionB.y;
+        outPositionB.z = resultPos.y;
+    }
+    else
+    {
+        Vec = DirectX::XMVectorSubtract(PositionA, PositionB);
+        // Vec 方向の単位ベクトル（Normalize）を取得
+        Vec = DirectX::XMVector2Normalize(Vec);
+        // 上記のベクトルを range 分スケール
+        Vec = DirectX::XMVectorScale(Vec, range);
+        // そのベクトルを位置 A （PositionA）からの足した位置に移動
+        Vec = DirectX::XMVectorAdd(PositionB, Vec);
+        // 出力用の位置（outPositionB）に代入する
+        DirectX::XMFLOAT2 resultPos;
+        DirectX::XMStoreFloat2(&resultPos, Vec);
 
+        outPositionB.x = resultPos.x;
+        outPositionB.y = positionB.y;
+        outPositionB.z = resultPos.y;
+    }
     // Vec 方向の単位ベクトル（Normalize）を取得
     Vec = DirectX::XMVector2Normalize(Vec);
     // 上記のベクトルを range 分スケール
@@ -63,33 +95,6 @@ bool Collision::IntersectCylinderVsSphere(
     outPositionB.z = resultPos.y;
 
     return true;
-
-
-    ////A→Bの単位ベクトルを算出
-    //DirectX::XMVECTOR PositionA = DirectX::XMLoadFloat3(&positionA);
-    //DirectX::XMVECTOR PositionB = DirectX::XMLoadFloat3(&positionB);
-    //DirectX::XMVECTOR Vec       = DirectX::XMVectorSubtract(PositionB, PositionA);
-    //DirectX::XMVECTOR LengthSq  = DirectX::XMVector3LengthSq(Vec);
-    //float lengthSq;
-    //DirectX::XMStoreFloat(&lengthSq, LengthSq);
-
-    ////距離判定
-    //float range = radiusA + radiusB;
-    //if (lengthSq > range)
-    //{
-    //    return false;
-    //}
-
-    ////AがBを押し出す
-    ////A→Bベクトルを正規化
-    //Vec = DirectX::XMVector3Normalize(Vec);
-    ////ベクトルをrange分スケール
-    //Vec = DirectX::XMVectorScale(Vec, range);
-    ////
-    //Vec = DirectX::XMVectorAdd(PositionA, Vec);
-
-    //DirectX::XMStoreFloat3(&outPositionB, Vec);
-
 }
 
 

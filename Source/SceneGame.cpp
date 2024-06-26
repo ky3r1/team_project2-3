@@ -17,8 +17,8 @@
 //StageIncldue
 #include "StageManager.h"
 #include "StageMain.h"
-#include "StageMapChip.h"
-#include "StageMapChip.h"
+//#include "StageMapChip.h"
+//#include "StageMapChip.h"
 
 #include "Input/Input.h"
 
@@ -30,57 +30,8 @@ void SceneGame::Initialize()
 #ifdef ALLSTAGE
 	//Main
 	StageManager& stageManager = StageManager::Instance();
-	StageMapChip& mapchip = StageMapChip::Instance();
-	//ステージのナンバーをSceneGame内に記憶
-	mapcategory = StageMapChip::Instance().GetStageNum();
-	for (int z = 0; z< MAPMAX_Z; z++)
-	{
-		for (int x = 0; x < MAPMAX_X; x++)
-		{
-			StageMain* stageMain = new StageMain();
-			//StageMain* stageMainSec = new StageMain();
-			stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 0.0f, z * 2.0f - 2.0f));
-
-			switch (mapchip.GetCategory(x, z))
-			{
-			case WALL:
-				//壁ならY軸方向に2.0f上げる
-				//stageMainSec->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 0.0f, z * 2.0f - 2.0f));
-				//stageManager.Register(stageMainSec);
-				stageMain->SetPosition(DirectX::XMFLOAT3(x * 2.0f - 11.0f, 2.0f, z * 2.0f - 2.0f));
-				//stageMain->SetScale(DirectX::XMFLOAT3(2.0f, 4.0f, 2.0f));
-				break;
-			case FLOOR:
-				
-				break;
-			case HOLE:
-				//StageMapChipクラスにマップチップのグローバル座標を記憶
-				mapchip.SetData(stageMain->GetPosition(), x, z);
-				//HORE(１)は配置しない
-				delete stageMain;
-				continue;
-				break;
-			case SPIKE:
-				stageMain->SetColor(DirectX::XMFLOAT4(1, 0, 0, 1));
-				break;
-			}
-
-			//StageMapChipクラスにマップチップのグローバル座標を記憶
-			mapchip.SetData(stageMain->GetPosition(), x, z);
-
-			stageManager.Register(stageMain);
-			if (stageMain != nullptr)
-			{
-				stageMain= nullptr;
-				delete stageMain;
-			}
-			//if(stageMainSec != nullptr)
-   //         {
-   //             stageMainSec = nullptr;
-   //             delete stageMainSec;
-   //         }	
-		}
-	}
+	StageMain* stageMain = new StageMain();
+	stageManager.Register(stageMain);
 
 #ifdef STAGEMOVE
 	for (int index = 0; index < 1; ++index)
@@ -139,18 +90,23 @@ void SceneGame::Initialize()
 		{
 		case 0:
 			slime->SetPosition(DirectX::XMFLOAT3(5.0f, 0, 25));
+			slime->SetWeight(0.0f);
 			break;
 		case 1:
 			slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 25));
+			slime->SetWeight(1.0f);
 			break;
 		case 2:
 			slime->SetPosition(DirectX::XMFLOAT3(-5.0f, 0, 25));
+			slime->SetWeight(2.0f);
 			break;
 		case 3:
 			slime->SetPosition(DirectX::XMFLOAT3(-10.0f, 0,25));
+			slime->SetWeight(3.0f);
 			break;
 		case 4:
 			slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 25));
+			slime->SetWeight(4.0f);
 			break;
 		//default:
 		//	slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));
@@ -203,11 +159,11 @@ void SceneGame::Update(float elapsedTime)
 	//エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
-	//マップのナンバーが変わったらSceneGameを読み込み直してマップを変える
-	if (StageMapChip::Instance().GetStageNum() != mapcategory)
-	{
-		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
-	}
+	////マップのナンバーが変わったらSceneGameを読み込み直してマップを変える
+	//if (StageMapChip::Instance().GetStageNum() != mapcategory)
+	//{
+	//	SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+	//}
 }
 
 // 描画処理

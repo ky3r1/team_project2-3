@@ -26,8 +26,6 @@
 #define ALLPLAYER
 //アニメーション
 #define PLAYERANIMATION
-//壁当たり判定
-//#define WallCollision
 //Jump
 //#define JUMPFRAG
 //Player->Enemy 弾のダメージ
