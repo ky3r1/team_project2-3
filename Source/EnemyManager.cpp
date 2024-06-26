@@ -106,11 +106,12 @@ void EnemyManager::CollisionEnemyVsEnemies()
             //Õ“Ëˆ—
             DirectX::XMFLOAT3 outPosition;
             if (Collision::IntersectCylinderVsSphere(
-                enemy1->GetPosition(), enemy1->GetRadius(),enemy1->GetHeight(),
-                enemy2->GetPosition(), enemy2->GetRadius(),enemy2->GetHeight(),
+                enemy1->GetPosition(), enemy1->GetRadius(),enemy1->GetHeight(),enemy1->GetWeight(),
+                enemy2->GetPosition(), enemy2->GetRadius(),enemy2->GetHeight(),enemy2->GetWeight(),
                 outPosition))
             {
-                enemy2->SetPosition(outPosition);
+                if(enemy1->GetWeight()<enemy2->GetWeight())enemy1->SetPosition(outPosition);
+                else enemy2->SetPosition(outPosition);
             }
         }
     }

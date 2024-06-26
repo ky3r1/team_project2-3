@@ -21,9 +21,11 @@ public:
         const DirectX::XMFLOAT3& positionA,
         float radiusA,
         float heightA,
+        float weightA,
         const DirectX::XMFLOAT3& positionB,
         float radiusB,
         float heightB,
+        float weightB,
         DirectX::XMFLOAT3& outPositionB
     );
 

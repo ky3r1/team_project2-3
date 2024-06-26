@@ -3,7 +3,7 @@
 #include "EnemyManager.h"
 #include "Mathf.h"
 #include "Player.h"
-#include "StageMapChip.h"
+//#include "StageMapChip.h"
 #include "EnemyMoveSystem.h"
 
 //デバッグプリミティブ描画
@@ -83,15 +83,15 @@ void Enemy::MoveSystem()
 
 void Enemy::OutMove()
 {
-    if (StageMapChip::Instance().GetOnCost(position) > 20)
-    {
-        DirectX::XMFLOAT3 old_position = StageMapChip::Instance().GetIDPosition(old_mapID);
-        targetPosition = old_position;
-    }
-    else
-    {
-        old_mapID = StageMapChip::Instance().GetOnId(position);
-    }
+    //if (StageMapChip::Instance().GetOnCost(position) > 20)
+    //{
+    //    DirectX::XMFLOAT3 old_position = StageMapChip::Instance().GetIDPosition(old_mapID);
+    //    targetPosition = old_position;
+    //}
+    //else
+    //{
+    //    old_mapID = StageMapChip::Instance().GetOnId(position);
+    //}
 }
 
 //破棄

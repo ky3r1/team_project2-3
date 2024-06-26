@@ -109,6 +109,10 @@ public:
 
     //categoryのゲッター
     int GetCategory()const { return category; }
+
+    //weightのゲッター
+    float GetWeight()const { return weight; }
+    void SetWeight(float w) { weight = w; }
 protected:
     Model* model = nullptr;
     DirectX::XMFLOAT3   position = { 0,0,0 };
@@ -123,6 +127,7 @@ protected:
         0,0,0,1
     };
     float radius = 0.5f;
+    float weight = 0.0f;
     struct DelayTime
     {
         int time;

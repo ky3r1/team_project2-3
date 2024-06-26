@@ -9,7 +9,7 @@
 #include "ProjectileHoming.h"
 #include "MouseManager.h"
 
-#include "StageMapChip.h"
+//#include "StageMapChip.h"
 
 static Player* instance = nullptr;
 
@@ -36,6 +36,7 @@ Player::Player()
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
     scale.x = scale.y = scale.z = 1.5f;
 
+    weight = 100.0f;
     color = { 1,0,0,1 };
 
     projectile_auto.time = DELAYAUTOTIME;
@@ -203,7 +204,7 @@ void Player::DrawDebugPrimitive()
         break;
     }
     //衝突判定用のデバッグ立方体を描画
-    debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
+    //debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();
 
@@ -297,7 +298,7 @@ void Player::UpdateVerticalMove(float elapsedTime)
     }
     if (Collision::InPoint({ -12,-10,29 }, { 12,-5,31 }, position))
     {
-        StageMapChip::Instance().SetStageNum(StageMapChip::Instance().GetStageNum() + 1);
+        //StageMapChip::Instance().SetStageNum(StageMapChip::Instance().GetStageNum() + 1);
     }
 }
 //プレイヤーと敵の衝突
@@ -314,8 +315,8 @@ void Player::CollisionPlayerVsEnemies()
         //衝突処理
         DirectX::XMFLOAT3 outPosition;
         if (Collision::IntersectCylinderVsSphere(
-            position, radius,height,
-            enemy->GetPosition(), enemy->GetRadius(),enemy->GetHeight(),
+            position, radius,height,weight,
+            enemy->GetPosition(), enemy->GetRadius(),enemy->GetHeight(),enemy->GetWeight(),
             outPosition))
         {
             enemy->SetPosition(outPosition);
