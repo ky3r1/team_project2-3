@@ -34,7 +34,7 @@ Player::Player()
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
-    scale.x = scale.y = scale.z = 1.5f;
+    scale.x = scale.y = scale.z = 0.01f;
 
     weight = 100.0f;
     color = { 1,0,0,1 };
@@ -464,7 +464,7 @@ void Player::InputProjectile()
     Mouse& mouse = Input::Instance().GetMouse();
 
     //前方弾丸発射
-    if (mouse.GetButton() & Mouse::BTN_RIGHT)
+    if (mouse.GetButton() & Mouse::BTN_LEFT)
     {
         if (projectile_auto.checker)
         {
@@ -474,7 +474,7 @@ void Player::InputProjectile()
     }
     if(category!=WHITE)
     {
-        if (mouse.GetButton() & Mouse::BTN_LEFT)
+        if (mouse.GetButton() & Mouse::BTN_RIGHT)
         {
             if (projectile_shot == 0)
             {
@@ -582,10 +582,9 @@ void Player::ProjectileStraightFront(int category, float angle)//category:弾の
             enemy_position = enemy->GetPosition();
         }
     }
-
     dir.x = transform._31 * 100.0f;
     dir.y = 0.0f;
-    dir.z = transform._33 * 100.0f; 
+    dir.z = transform._33 * 100.0f;
     DirectX::XMFLOAT3 right;
     right.x = transform._11 * 100.0f; 
     right.y = 0.0f;
@@ -681,9 +680,39 @@ bool Player::InputMove(float elapsedTime)
 
     //移動処理
     Move(moveVec.x, moveVec.z, moveSpeed);
+    EnemyManager& enemyManager = EnemyManager::Instance();
+
+    //すべての弾丸とすべての敵をそう当たりで衝突処理
+    int projectileCount = projectileManager.GetProjectileCount();
+    int enemyCount = enemyManager.GetEnemyCount();
+
+    int nearest_enemy_index = -1;
+    float current_nearest_distance = FLT_MAX;
+
+    for (int index = 0; index < enemyCount; index++)
+    {
+        Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
+        DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+        DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
+        DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
+        DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
+        float d;
+        DirectX::XMStoreFloat(&d, D);
+        if (d < current_nearest_distance)
+        {
+            current_nearest_distance = d;
+            nearest_enemy_index = index;
+        }      
+    }
+    Enemy* ne= enemyManager.GetEnemy(nearest_enemy_index);
+    DirectX::XMVECTOR NE= DirectX::XMLoadFloat3(&ne->GetPosition());
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+    DirectX::XMFLOAT3 ND;
+    DirectX::XMStoreFloat3(&ND, Vec);
 
     //旋回処理
-    Turn(elapsedTime, moveVec.x, moveVec.z, turnSpeed);
+    Turn(elapsedTime, ND.x, ND.z, turnSpeed);
     if (moveVec.x != 0 /*|| moveVec.y != 0 */ || moveVec.z != 0)return true;
     return false;
 }

@@ -98,6 +98,9 @@ private:
     DelayTime projectile_auto;
     DelayTime projectile_front;
 
+    DirectX::XMFLOAT3 territoryOrigin = { 0,0,0 };
+    float territoryRange = 5.0f;
+
     ProjectileManager projectileManager;
 
     Effect*     hitEffect = nullptr;
