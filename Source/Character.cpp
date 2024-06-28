@@ -98,6 +98,7 @@ void Character::UpdateVelocity(float elapsedTime)
     UpdateHorizontalMove(elapsedTime);
 }
 
+//無敵時間
 void Character::UpdateInvincibleTime(float elapsedTime)
 {
     if (invincibleTimer > 0.0f)
@@ -106,19 +107,7 @@ void Character::UpdateInvincibleTime(float elapsedTime)
     }
 }
 
-void Character::ChangeColor(DirectX::XMFLOAT4& color, int category)
-{
-    switch (category)
-    {
-    case PLAYERCATEGORY:
-        color = { 1,0,0,1 };
-        break;
-    case ENEMYCATEGORY:
-        color = { 0,1,0,1 };
-        break;
-    }
-}
-
+//ダメージを与える
 bool Character::ApplyDamage(int damage, float invincibleTime)
 {
     //　ダメージが０の場合は健康状態を変更する必要がない
@@ -145,6 +134,7 @@ bool Character::ApplyDamage(int damage, float invincibleTime)
     }
 }
 
+//衝撃を与える
 void Character::AddImpulse(const DirectX::XMFLOAT3& impulse)
 {
     //速力に力を加える
@@ -492,8 +482,11 @@ void Character::ProjectileDirection(ID3D11DeviceContext* dc, const DirectX::XMFL
     //}
 }
 
+//DelayTimeの更新
 void Character::UpdateDelayTime(bool& checker, int& time, int delaytime)
 {
+    //checkerがfalse場合はタイムを減らす
+    //checkerがtrue場合はcheckerをtrueにしてタイムをリセット
     if (!checker)
     {
         time--;
@@ -505,14 +498,18 @@ void Character::UpdateDelayTime(bool& checker, int& time, int delaytime)
     }
 }
 
-void Character::CollisionProjectileVsCharacter(/*DirectX::XMFLOAT3 target_position, float target_radius, float target_height,*/Character* character, Effect hiteffect)
+
+//弾とキャラクターの衝突判定
+void Character::CollisionProjectileVsCharacter(Character* character, Effect hiteffect)
 {
     //すべての弾丸とtargetを総当たりで衝突処理
     int projectileCount = ProjectileManager::Instance().GetProjectileCount();
     for (int i = 0; i < projectileCount; ++i)
     {
+        //弾丸取得
         Projectile* projectile = ProjectileManager::Instance().GetProjectile(i);
-        //衝突処理
+
+        //衝突判定
         DirectX::XMFLOAT3 outPosition;
         if (Collision::IntersectSphereVsCylinder(
             projectile->GetPosition(),
@@ -522,6 +519,7 @@ void Character::CollisionProjectileVsCharacter(/*DirectX::XMFLOAT3 target_positi
             character->GetHeight(),
             outPosition))
         {
+            //衝突した弾と弾を出したキャラクター(引数のcharacterではない)のカテゴリーが同じ場合
             if (category == projectile->GetCategory())
             {
                 //弾丸破棄
@@ -569,6 +567,7 @@ void Character::CollisionProjectileVsCharacter(/*DirectX::XMFLOAT3 target_positi
     }
 }
 
+//弾丸発射処理
 void Character::ProjectileStraightShotting(int category, float angle, int vector)
 {
     //発射
@@ -582,24 +581,6 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     DirectX::XMFLOAT3 axis = { 0,1,0 };
     DirectX::XMVECTOR Axis;
 
-    //float dist = FLT_MAX;
-    //DirectX::XMFLOAT3 enemy_position = {};
-    //EnemyManager& enemyManager = EnemyManager::Instance();
-    //int enemyCount = enemyManager.GetEnemyCount();
-    //for (int index = 0; index < enemyCount; index++)
-    //{
-    //    Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
-    //    DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
-    //    DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
-    //    DirectX::XMVECTOR V = DirectX::XMVectorSubtract(E, P);
-    //    DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(V);
-    //    float d;
-    //    DirectX::XMStoreFloat(&d, D);
-    //    if (d < dist)
-    //    {
-    //        enemy_position = enemy->GetPosition();
-    //    }
-    //}
     dir.x = transform._31 * 100.0f;
     dir.y = 0.0f;
     dir.z = transform._33 * 100.0f;

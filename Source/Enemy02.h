@@ -41,7 +41,7 @@ protected:
 	void OnDead() override;
 
 	//デバッグ用GUI
-	void DrawDebugGUI() override;
+	//void DrawDebugGUI() override;
 
 	//デバッグオブジェクト表示
 	void DrewDebugPrimitive()override;

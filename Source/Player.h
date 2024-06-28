@@ -42,6 +42,7 @@ private:
     void InputProjectile();
 
 private:
+    /////////////////////ステート//////////////////////////
     //待機ステートへ遷移
     void TransitionIdleState();
     //待機ステート更新処理
@@ -87,11 +88,11 @@ public:
 private:
     //Model* model = nullptr;
     float       moveSpeed = 7.0f;
-    float       jumpSpeed = 20.0f;
-    int projectile_shot;
+    //float       jumpSpeed = 20.0f;
+    //int projectile_shot;
 
-    int         jumpCount = 0;
-    int         jumpLimit = 2;
+    //int         jumpCount = 0;
+    //int         jumpLimit = 2;
     DelayTime projectile_auto;
 
     int nearest_enemy_index = -1;

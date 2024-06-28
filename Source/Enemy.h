@@ -85,7 +85,8 @@ public:
 		Attack,
 	};
 
-/////////////////////ゲッター・セッター//////////////////////////
+public:
+	/////////////////////ゲッター・セッター//////////////////////////
 
 	// ターゲットのゲッター・セッター
 	DirectX::XMFLOAT3 GetTargetPosition() { return targetPosition; }
@@ -111,6 +112,7 @@ protected:
 	StateMachine* stateMachine = nullptr;
 	std::vector<DirectX::XMFLOAT2> moving_roots;
 	int id = 0;
-	int old_mapID=0;
+	int category_id = 0;
 	DelayTime projectile_auto;
+	std::string name = "";
 };

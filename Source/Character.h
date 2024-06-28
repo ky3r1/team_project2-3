@@ -27,9 +27,6 @@ public:
     //デバッグ用GUI
     virtual void DrawDebugGUI();
 
-    void SetScreenPos(DirectX::XMFLOAT3 sp) { screen_pos = sp; }
-
-    DirectX::XMFLOAT3 GetScreenPos() { return screen_pos; }
     //初期化
     virtual void Clear();
 protected:
@@ -53,9 +50,9 @@ protected:
     void UpdateDelayTime(bool& checker, int& time,int delaytime);
 
     //弾とキャラクターの衝突判定
-    void CollisionProjectileVsCharacter(/*DirectX::XMFLOAT3 target_position,float target_radius,float target_height*/Character* character, Effect hiteffect);
+    void CollisionProjectileVsCharacter(Character* character, Effect hiteffect);
 
-    //前方弾発射
+    //弾丸発射処理
     virtual void ProjectileStraightShotting(int category, float angle,int vector);
 public:
     //旋回処理
@@ -83,8 +80,6 @@ protected:
 
     //死亡したときに呼ばれる
     virtual void OnDead() {}
-
-    virtual void ChangeColor(DirectX::XMFLOAT4& color, int category);
 public:
     /////////////////////ゲッター・セッター//////////////////////////
 
@@ -122,7 +117,7 @@ public:
     //categoryのゲッター
     int GetCategory()const { return category; }
 
-    //weightのゲッター
+    //weightのゲッター・セッター
     float GetWeight()const { return weight; }
     void SetWeight(float w) { weight = w; }
 
@@ -133,6 +128,9 @@ public:
     //ターンスピードのゲッター
     float GetTurnSpeed() { return turnSpeed; }
 
+    //スクリーン座標のゲッター・セッター
+    void SetScreenPos(DirectX::XMFLOAT3 sp) { screen_pos = sp; }
+    DirectX::XMFLOAT3 GetScreenPos() { return screen_pos; }
 protected:
     Model* model = nullptr;
     //Effect* hitEffect = nullptr;

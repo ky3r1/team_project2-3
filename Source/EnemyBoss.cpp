@@ -11,6 +11,10 @@ EnemyBoss::EnemyBoss(int category)
 {
     //TODO:エネミースライムのステータス設定
     model = new Model("Data/Model/Dragon/dragon.mdl");
+    static int id_enemyboss = 0;
+    id_enemyboss++;
+    category_id = id_enemyboss;
+    name = std::string("EnemyBoss:") + std::to_string(category_id);
 
     //表示サイズを調整
     scale.x = scale.y = scale.z = 1.0f;
@@ -81,22 +85,22 @@ void EnemyBoss::OnDead()
     Destroy();
 }
 
-void EnemyBoss::DrawDebugGUI()
-{
-    std::string name = std::string("slime") + std::to_string(id);
-
-    if (ImGui::TreeNode(name.c_str()))
-    {
-        Enemy::DrawDebugGUI();
-        std::string p = std::string("position") + std::to_string(id);
-        ImGui::SliderFloat3(p.c_str(), &position.x, -5, 5);
-        std::string s = std::string("scale") + std::to_string(id);
-        ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
-        std::string a = std::string("angle") + std::to_string(id);
-        ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
-        ImGui::TreePop();
-    }
-}
+//void EnemyBoss::DrawDebugGUI()
+//{
+//    //name = std::string("EnemyBoss:") + std::to_string(category_id);
+//
+//    //if (ImGui::TreeNode(name.c_str()))
+//    //{
+//    //    Enemy::DrawDebugGUI();
+//    //    std::string p = std::string("position") + std::to_string(category_id);
+//    //    ImGui::SliderFloat3(p.c_str(), &position.x, -5, 5);
+//    //    std::string s = std::string("scale") + std::to_string(category_id);
+//    //    ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
+//    //    std::string a = std::string("angle") + std::to_string(category_id);
+//    //    ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
+//    //    ImGui::TreePop();
+//    //}
+//}
 
 void EnemyBoss::DrewDebugPrimitive()
 {

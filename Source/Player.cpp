@@ -50,7 +50,6 @@ Player::Player()
     //ヒットエフェクト読み込み
     hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/Hit.efk"));
     category = PLAYERCATEGORY;
-    projectile_shot = 0;
     turnSpeed = DirectX::XMConvertToRadians(720);
     ProjectileManager& projectile_manager = ProjectileManager::Instance();
 }
@@ -71,7 +70,7 @@ void Player::Update(float elapsedTime)
         Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
     }
     //色変え
-    ChangeColor(color, category);
+    //ChangeColor(color, category);
 
     switch (state)
     {
@@ -294,31 +293,8 @@ void Player::CollisionPlayerVsEnemies()
                     velocity.y += power * 0.5f;
                     velocity.z += power * vec.z;
                 }
-
-                /*if (category == WHITE)
-                {
-                    category = enemy->GetCategory();
-                    color_count = 5;
-                }
-
-                if (category == enemy->GetCategory())
-                {
-                }
-                else
-                {
-                    health--;
-                    hitEffect->Play(position,2.0f);
-                }*/
-                //hit_delay.checker = false;
             }
 #endif // ENEMYHITTINGDAMAGE
-            if (position.y >= (enemy->GetPosition().y + enemy->GetHeight())-0.1f)
-            {
-                Jump(jumpSpeed);
-#ifdef JUMPDAMAGE
-                enemy->ApplyDamage(1, 0.5f);
-#endif//JUMPDAMAGE
-            }
         }
     }
 }
@@ -326,78 +302,13 @@ void Player::CollisionPlayerVsEnemies()
 void Player::CollisionProjectilesVsEnemies()
 {
     EnemyManager& enemyManager = EnemyManager::Instance();
-
-    //すべての弾丸とすべての敵をそう当たりで衝突処理
-    //int projectileCount = ProjectileManager::Instance().GetProjectileCount();
+    //すべての弾丸とすべての敵をそう当たりで衝突判定
     int enemyCount = enemyManager.GetEnemyCount();
-    //for (int i = 0; i < projectileCount; ++i)
-    //{
-        //Projectile* projectile = ProjectileManager::Instance().GetProjectile(i);
-
-        for (int j = 0; j < enemyCount; ++j)
-        {
-            Enemy* enemy = enemyManager.GetEnemy(j);
-            Character::CollisionProjectileVsCharacter(enemy,*hitEffect);
-//            //衝突処理
-//            DirectX::XMFLOAT3 outPosition;
-//            if (Collision::IntersectSphereVsCylinder(
-//                projectile->GetPosition(),
-//                projectile->GetRadius(),
-//                enemy->GetPosition(),
-//                enemy->GetRadius(),
-//                enemy->GetHeight(),
-//                outPosition))
-//            {
-//                if (category == projectile->GetCategory())
-//                {
-//                    //弾丸破棄
-//                    projectile->Destroy();
-//#ifdef PROJECTILEDAMAGE
-//                    //ダメージを与える
-//                    if (enemy->ApplyDamage(1, 0.5f))
-//                    {
-//                        //吹き飛ばす
-//                        {
-//                            DirectX::XMFLOAT3 impulse;
-//                            //吹き飛ばす力
-//                            const float power = 10.0f;
-//
-//                            //敵の位置
-//                            DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&enemy->GetPosition());
-//                            //弾の位置
-//                            DirectX::XMVECTOR pVec = DirectX::XMLoadFloat3(&projectile->GetPosition());
-//                            //弾から敵への方向ベクトルを計算（敵 - 弾）
-//                            auto v = DirectX::XMVectorSubtract(eVec, pVec);
-//                            //方向ベクトルを正規化
-//                            v = DirectX::XMVector3Normalize(v);
-//
-//                            DirectX::XMFLOAT3 vec;
-//                            DirectX::XMStoreFloat3(&vec, v);
-//
-//                            impulse.x = power * vec.x;
-//                            impulse.y = power * 0.5f;
-//                            impulse.z = power * vec.z;
-//
-//                            enemy->AddImpulse(impulse);
-//                        }
-//                        //ヒットエフェクト再生
-//                        {
-//                            DirectX::XMFLOAT3 e = enemy->GetPosition();
-//                            e.y += enemy->GetHeight() * 0.5f;
-//                            hitEffect->Play(e, 2.0f);
-//                        }
-//                    }
-//                }
-//#endif // PROJECTILEDAMAGE
-//
-//                else
-//                {
-//                    //弾丸破棄
-//                    projectile->Destroy();
-//                }
-//            }
-        }
-    //}
+    for (int j = 0; j < enemyCount; ++j)
+    {
+        Enemy* enemy = enemyManager.GetEnemy(j);
+        Character::CollisionProjectileVsCharacter(enemy, *hitEffect);
+    }
 }
 
 //弾入力処理
@@ -406,91 +317,12 @@ void Player::InputProjectile()
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
 
-    ////前方弾丸発射
-    //if (mouse.GetButton() & Mouse::BTN_LEFT)
-    //{
-        if (projectile_auto.checker)
-        {
-            ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
-            projectile_auto.checker = false;
-        }
-    //}
-    //if(category!=WHITE)
-    //{
-    //    if (mouse.GetButton() & Mouse::BTN_RIGHT)
-    //    {
-    //        if (projectile_shot == 0)
-    //        {
-    //            if (projectile_front.checker)
-    //            {
-    //                for (int index = 0; index < 3; index++)
-    //                {
-    //                    switch (index)
-    //                    {
-    //                    case 0:
-    //                        ProjectileStraightFront(category, 0.0f);
-    //                        break;
-    //                    case 1:
-    //                        ProjectileStraightFront(category, 0.3f);
-    //                        break;
-    //                    case 2:
-    //                        ProjectileStraightFront(category, -0.3f);
-    //                        break;
-    //                    default:
-    //                        break;
-    //                    }
-    //                }
-    //                projectile_front.checker = false;
-    //            }
-    //        }
-    //    }
-    //        //直進弾丸発射
-    //    if (mouse.GetButton() & Mouse::BTN_LEFT && projectile_allangle.checker)
-    //    {
-    //        if (projectile_shot == 1)
-    //        {
-    //            for (int index = 0; index < 10; index++)
-    //            {
-    //                switch (index)
-    //                {
-    //                case 0:
-    //                    ProjectileStraightFront(category, 0.0f);
-    //                    break;
-    //                case 1:
-    //                    ProjectileStraightFront(category, 0.9);
-    //                    break;
-    //                case 2:
-    //                    ProjectileStraightFront(category, 3.0);
-    //                    break;
-    //                case 3:
-    //                    ProjectileStraightFront(category, -0.9);
-    //                    break;
-    //                case 4:
-    //                    ProjectileStraightFront(category, -3.0);
-    //                    break;
-    //                case 5:
-    //                    ProjectileStraightBack(category, 0.0f);
-    //                    break;
-    //                case 6:
-    //                    ProjectileStraightBack(category, 0.9f);
-    //                    break;
-    //                case 7:
-    //                    ProjectileStraightBack(category, 3.0f);
-    //                    break;
-    //                case 8:
-    //                    ProjectileStraightBack(category, -0.9f);
-    //                    break;
-    //                case 9:
-    //                    ProjectileStraightBack(category, -3.0f);
-    //                    break;
-    //                default:
-    //                    break;
-    //                }
-    //            }
-    //            projectile_allangle.checker = false;
-    //        }
-    //    }
-    //}
+    //前方弾丸発射
+    if (projectile_auto.checker)
+    {
+        ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+        projectile_auto.checker = false;
+    }
 }
 
 
