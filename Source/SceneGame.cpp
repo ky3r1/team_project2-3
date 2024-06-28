@@ -5,7 +5,10 @@
 
 //CharacterInclude
 #include "EnemyManager.h"
-#include "EnemySlime.h"
+#include "Enemy01.h"
+#include "Enemy02.h"
+#include "Enemy03.h"
+#include "EnemyBoss.h"
 #include "EffectManager.h"
 #include "MouseManager.h"
 
@@ -81,11 +84,10 @@ void SceneGame::Initialize()
 #ifdef ALLENEMY
 #ifdef ENEMYSLIME
 	int index = 0;
-	while (index < 5)
+	while (index < 1)
 	{
-		int color = 0;
 		//if (index < 3)color = 1;
-		EnemySlime* slime = new EnemySlime(color);
+		Enemy01* slime = new Enemy01(ENEMYCATEGORY);
 		switch (index)
 		{
 		case 0:
@@ -113,6 +115,30 @@ void SceneGame::Initialize()
   //          break;
 		}
 		EnemyManager::Instance().Register(slime);
+		index++;
+	}
+	index = 0;
+    while (index < 1)
+    {
+        Enemy02* slime = new Enemy02(ENEMYCATEGORY);
+        slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 20));
+        EnemyManager::Instance().Register(slime);
+        index++;
+    }
+	index = 0;
+	while (index < 1)
+	{
+		Enemy03* jammo = new Enemy03(ENEMYCATEGORY);
+		jammo->SetPosition(DirectX::XMFLOAT3(7.0f, 0, 20));
+		EnemyManager::Instance().Register(jammo);
+		index++;
+	}
+	index = 0;
+	while (index < 1)
+	{
+		EnemyBoss* boss = new EnemyBoss(ENEMYCATEGORY);
+		boss->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 20));
+		EnemyManager::Instance().Register(boss);
 		index++;
 	}
 #endif // ENEMYSLIME
@@ -386,12 +412,12 @@ void SceneGame::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4
 
 		HitResult hit;
 		StageMain stage_main;
-		if (stage_main.RayCast(world_position_start, world_position_end, hit))
-		{
-			EnemyManager& enemyManager = EnemyManager::Instance();
-			EnemySlime* slime = new EnemySlime(GREEN);
-			slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
-			enemyManager.Register(slime);
-		}
+		//if (stage_main.RayCast(world_position_start, world_position_end, hit))
+		//{
+		//	EnemyManager& enemyManager = EnemyManager::Instance();
+		//	Enemy01* slime = new Enemy01(GREEN);
+		//	slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
+		//	enemyManager.Register(slime);
+		//}
 	}
 }

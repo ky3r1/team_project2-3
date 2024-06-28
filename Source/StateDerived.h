@@ -1,5 +1,5 @@
 #pragma once
-#include "EnemySlime.h"
+#include "Enemy01.h"
 #include "StateBase.h"
 
 //メインステート
@@ -10,7 +10,7 @@
 class SearchState :public HierarchicalState
 {
 public:
-	SearchState(EnemySlime* enemy) :HierarchicalState(enemy){}
+	SearchState(Enemy* enemy) :HierarchicalState(enemy){}
 	~SearchState();
 
 	//すべて継承先で実装させる必要があるため純粋仮想関数で実装
@@ -27,7 +27,7 @@ public:
 class BattleState :public HierarchicalState
 {
 public:
-	BattleState(EnemySlime* enemy) :HierarchicalState(enemy) {}
+	BattleState(Enemy* enemy) :HierarchicalState(enemy) {}
 	~BattleState();
 
 	//すべて継承先で実装させる必要があるため純粋仮想関数で実装
@@ -45,7 +45,7 @@ class DeathState : public State
 {
 public:
 	// コンストラクタ
-	DeathState(EnemySlime* enemy) :State(enemy) {};
+	DeathState(Enemy* enemy) :State(enemy) {};
 	// デストラクタ
 	~DeathState() {}
 	// ステートに入った時のメソッド
@@ -61,7 +61,7 @@ class IdleState : public State
 {
 public:
 	// コンストラクタ
-	IdleState(EnemySlime* enemy) :State(enemy) {};
+	IdleState(Enemy* enemy) :State(enemy) {};
 	// デストラクタ
 	~IdleState() {}
 	// ステートに入った時のメソッド
@@ -81,7 +81,7 @@ class PursuitState : public State
 {
 public:
 	// コンストラクタ
-	PursuitState(EnemySlime* enemy) :State(enemy) {};
+	PursuitState(Enemy* enemy) :State(enemy) {};
 	// デストラクタ
 	~PursuitState() {}
 	// ステートに入った時のメソッド
@@ -97,7 +97,7 @@ class AttackState : public State
 {
 public:
 	// コンストラクタ
-	AttackState(EnemySlime* enemy) :State(enemy) {};
+	AttackState(Enemy* enemy) :State(enemy) {};
 	// デストラクタ
 	~AttackState() {}
 	// ステートに入った時のメソッド

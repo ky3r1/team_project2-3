@@ -3,32 +3,12 @@
 #include "Graphics/Model.h"
 #include "Enemy.h"
 
-enum class EnemySlimeAnimation
-{
-	IdleNormal,
-	IdleBattle,
-	Attack01,
-	Attack02,
-	WalkFWD,
-	WalkBWD,
-	WalkLeft,
-	WalkRight,
-	RunFWD,
-	SenseSomethingST,
-	SenseSomethingRPT,
-	Taunt,
-	Victory,
-	GetHit,
-	Dizzy,
-	Die,
-};
-
 //スライム
-class EnemySlime : public Enemy
+class Enemy01 : public Enemy
 {
 public:
-    EnemySlime(int category);
-    ~EnemySlime() override;
+	Enemy01(int category);
+    ~Enemy01() override;
 
     //更新処理
     void Update(float elapsedTime);
@@ -41,10 +21,13 @@ protected:
     void OnDead() override;
 
     //デバッグ用GUI
-    void DrawDebugGUI() override;
+    //void DrawDebugGUI() override;
 
 	//デバッグオブジェクト表示
 	void DrewDebugPrimitive()override;
+
+	////前方弾発射
+	//void ProjectileStraightFront(int category, float angle)override;
 
 private:
     //Model* model = nullptr;

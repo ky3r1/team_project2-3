@@ -206,7 +206,7 @@
     <ClInclude Include="Source\EnemyManager.h">
       <Filter>Character\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EnemySlime.h">
+    <ClInclude Include="Source\Enemy01.h">
       <Filter>Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Source\Player.h">
@@ -244,6 +244,15 @@
     </ClInclude>
     <ClInclude Include="Source\StageMain.h">
       <Filter>Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy02.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy03.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EnemyBoss.h">
+      <Filter>Character\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -367,7 +376,7 @@
     <ClCompile Include="Source\EnemyManager.cpp">
       <Filter>Character\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EnemySlime.cpp">
+    <ClCompile Include="Source\Enemy01.cpp">
       <Filter>Character\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Source\Player.cpp">
@@ -411,6 +420,15 @@
     </ClCompile>
     <ClCompile Include="Source\StageMain.cpp">
       <Filter>Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy02.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy03.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EnemyBoss.cpp">
+      <Filter>Character\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

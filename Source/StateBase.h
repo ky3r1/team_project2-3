@@ -1,12 +1,13 @@
 #pragma once
 #include <vector>
 class EnemySlime;
+class Enemy;
 
 class State
 {
 public:
 	// コンストラクタ
-	State(EnemySlime* enemy) :owner(enemy) {}
+	State(Enemy* enemy) :owner(enemy) {}
 	virtual ~State() {}
 	// 全て継承先で実装させる必要があるため純粋仮想関数で実装
 	// ステートに入った時のメソッド
@@ -17,13 +18,13 @@ public:
 	virtual void Exit() = 0;
 	//EnemySlime* GetOwner(){ return owner; }
 protected:
-	EnemySlime* owner;
+	Enemy* owner;
 };
 
 class HierarchicalState :public State
 {
 public:
-	HierarchicalState(EnemySlime* enemy) :State(enemy) {}
+	HierarchicalState(Enemy* enemy) :State(enemy) {}
 	virtual ~HierarchicalState() {}
 	// 全て継承先で実装させる必要があるため純粋仮想関数で実装
 	// ステートに入った時のメソッド

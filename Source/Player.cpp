@@ -40,8 +40,6 @@ Player::Player()
     color = { 1,0,0,1 };
 
     projectile_auto.time = DELAYAUTOTIME;
-    projectile_allangle.time = DELAYALLANGLETIME;
-    projectile_front.time = DELAYFRONTTIME;
 
     hit_delay.time = DELAYPLAYERVSENEMY;
     moveSpeed = 7.0f;
@@ -59,6 +57,7 @@ Player::Player()
     category = WHITE;
     projectile_shot = 0;
     turnSpeed = DirectX::XMConvertToRadians(720);
+    ProjectileManager& projectile_manager = ProjectileManager::Instance();
 }
 
 Player::~Player()
@@ -81,7 +80,7 @@ void Player::Update(float elapsedTime)
         Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
     }
     //色変え
-    ChangeColor(color, category);
+    //ChangeColor(color, category);
 
     switch (state)
     {
@@ -106,7 +105,7 @@ void Player::Update(float elapsedTime)
     UpdateVelocity(elapsedTime);
 
     //弾丸更新処理
-    projectileManager.Update(elapsedTime);
+    ProjectileManager::Instance().Update(elapsedTime);
 
     //プレイヤーと敵との衝突処理
     CollisionPlayerVsEnemies();
@@ -126,48 +125,28 @@ void Player::Update(float elapsedTime)
     AT_Field->Play(position, 10.0f);
 
     //当たり判定のdelay
-    if (!hit_delay.checker)
-    {
-        hit_delay.time--;
-    }
-    if (hit_delay.time < 0)
-    {
-        hit_delay.checker = true;
-        hit_delay.time = DELAYAUTOTIME;
-    }
+    //if (!hit_delay.checker)
+    //{
+    //    hit_delay.time--;
+    //}
+    //if (hit_delay.time < 0)
+    //{
+    //    hit_delay.checker = true;
+    //    hit_delay.time = DELAYAUTOTIME;
+    //}
 
+    UpdateDelayTime(hit_delay.checker, hit_delay.time, DELAYPLAYERVSENEMY);
     //オートで出てる弾のdelay
-    if (!projectile_auto.checker)
-    {
-        projectile_auto.time--;
-    }
-    if (projectile_auto.time < 0)
-    {
-        projectile_auto.checker = true;
-        projectile_auto.time = DELAYAUTOTIME;
-    }
-
-    //前方の弾のdelay
-    if (!projectile_front.checker)
-    {
-        projectile_front.time--;
-    }
-    if (projectile_front.time < 0)
-    {
-        projectile_front.checker = true;
-        projectile_front.time = DELAYFRONTTIME;
-    }
-
-    //周囲に出す弾のdelay
-    if (!projectile_allangle.checker)
-    {
-        projectile_allangle.time--;
-    }
-    if (projectile_allangle.time < 0)
-    {
-        projectile_allangle.checker = true;
-        projectile_allangle.time = DELAYALLANGLETIME;
-    }
+    //if (!projectile_auto.checker)
+    //{
+    //    projectile_auto.time--;
+    //}
+    //if (projectile_auto.time < 0)
+    //{
+    //    projectile_auto.checker = true;
+    //    projectile_auto.time = DELAYAUTOTIME;
+    //}
+    UpdateDelayTime(projectile_auto.checker, projectile_auto.time, DELAYAUTOTIME);
 }
 
 void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
@@ -175,7 +154,7 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
     shader->Draw(dc, model, color);
 
     //弾丸描画処理
-    projectileManager.Render(dc, shader);
+    ProjectileManager::Instance().Render(dc, shader);
 }
 
 //デバッグプリミティブ描画
@@ -191,8 +170,7 @@ void Player::DrawDebugPrimitive()
     debugRenderer->DrawCylinder(position, attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.0f, 0.5f, 1.0f));
     debugRenderer->DrawCylinder(position, sub_attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.3f, 0.3f, 1.0f));
     //弾丸デバッグプリミティブ描画
-    projectileManager.DrawDebugPrimitive();
-
+    ProjectileManager::Instance().DrawDebugPrimitive();
 }
 //デバッグGUI
 void Player::DrawDebugGUI()
@@ -213,15 +191,13 @@ void Player::DrawDebugGUI()
             ImGui::SliderFloat("movespeed", &moveSpeed, 0.0f, 20.0f);
 
             ImGui::SliderInt("delay_auto_time", &projectile_auto.time, 0.0f, DELAYAUTOTIME);
-            ImGui::SliderInt("delay_front_time", &projectile_front.time, 0.0f, DELAYFRONTTIME);
-            ImGui::SliderInt("delay_allangle_time", &projectile_allangle.time, 0.0f, DELAYALLANGLETIME);
 
             ImGui::TreePop();
         }
     }
     ImGui::End();
 
-    projectileManager.DrawDebugGUI();
+    ProjectileManager::Instance().DrawDebugGUI();
 }
 
 //プレイヤーの移動方向を取得
@@ -329,31 +305,8 @@ void Player::CollisionPlayerVsEnemies()
                     velocity.y += power * 0.5f;
                     velocity.z += power * vec.z;
                 }
-
-                /*if (category == WHITE)
-                {
-                    category = enemy->GetCategory();
-                    color_count = 5;
-                }
-
-                if (category == enemy->GetCategory())
-                {
-                }
-                else
-                {
-                    health--;
-                    hitEffect->Play(position,2.0f);
-                }*/
-                hit_delay.checker = false;
             }
 #endif // ENEMYHITTINGDAMAGE
-            if (position.y >= (enemy->GetPosition().y + enemy->GetHeight())-0.1f)
-            {
-                Jump(jumpSpeed);
-#ifdef JUMPDAMAGE
-                enemy->ApplyDamage(1, 0.5f);
-#endif//JUMPDAMAGE
-            }
         }
     }
 }
@@ -361,9 +314,7 @@ void Player::CollisionPlayerVsEnemies()
 void Player::CollisionProjectilesVsEnemies()
 {
     EnemyManager& enemyManager = EnemyManager::Instance();
-
-    //すべての弾丸とすべての敵をそう当たりで衝突処理
-    int projectileCount = projectileManager.GetProjectileCount();
+    //すべての弾丸とすべての敵をそう当たりで衝突判定
     int enemyCount = enemyManager.GetEnemyCount();
     for (int i = 0; i < projectileCount; ++i)
     {
@@ -791,7 +742,9 @@ void Player::UpdateAttackState(float elapsedTime)
     float animationTime = 0.138;
     //attackCollisionFlag = animationTime ? true : false;
     //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
+#ifdef PLAYERATTACK
     InputProjectile();
+#endif // PLAYERATTACK
     //攻撃モーションが終わったら待機モーションに移動
     if (InputMove(elapsedTime))
     {

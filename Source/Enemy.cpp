@@ -6,6 +6,23 @@
 //#include "StageMapChip.h"
 #include "EnemyMoveSystem.h"
 
+#include "ProjectileManager.h"
+#include "ProjectileStraight.h"
+
+#define DELAYAUTOTIME 40
+
+Enemy::Enemy()
+{
+    //ヒットエフェクト読み込み
+    hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/Hit.efk"));
+}
+
+void Enemy::Update(float elapsedTime)
+{
+    UpdateDelayTime(projectile_auto.checker, projectile_auto.time, DELAYAUTOTIME);
+    CollisionProjectileVsPlayer();
+}
+
 //デバッグプリミティブ描画
 void Enemy::DrewDebugPrimitive()
 {
@@ -13,23 +30,11 @@ void Enemy::DrewDebugPrimitive()
 
     switch (category)
     {
-    case RED:
+    case PLAYERCATEGORY:
         debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
         break;
-    case GREEN:
+    case ENEMYCATEGORY:
         debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 1, 0, 1));
-        break;
-    case BLUE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 1, 1));
-        break;
-    case YELLOW:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 1, 0, 1));
-        break;
-    case PURPLE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 1, 1));
-        break;
-    case WHITE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 1, 1, 1));
         break;
     default:
         break;
@@ -39,40 +44,52 @@ void Enemy::DrewDebugPrimitive()
 void Enemy::DrawDebugGUI()
 {
 #ifdef ENEMYSTATEMACHINE
-    // デバッグ文字列表示の変更
-    std::string str = "";
-    std::string subStr = "";
-    // 現在のステート番号に合わせてデバッグ文字列をstrに格納
-    switch (static_cast<State>(stateMachine->GetStateIndex())) {
-    case State::Search:
-        str = "Search";
-        switch (stateMachine->GetState()->GetSubStateIndex())
-        {
-        case static_cast<int>(Enemy::Search::Death):
-            subStr = "Death";
-            break;
-        case static_cast<int>(Enemy::Search::Idle):
-            subStr = "Idle";
-            break;
-        }
-        break;
-    case State::Battle:
-        str = "Battle";
-        switch (stateMachine->GetState()->GetSubStateIndex())
-        {
-        case static_cast<int>(Enemy::Battle::Pursuit):
-            subStr = "Pursuit";
-            break;
-        case static_cast<int>(Enemy::Battle::Attack):
-            subStr = "Attack";
-            break;
-        }
-        break;
-    }
-    ImGui::Text(u8"State　%s", str.c_str());
-    ImGui::Text(u8"SubState　%s", subStr.c_str());
     Character::DrawDebugGUI();
-    ImGui::Text(u8"MapOldID　%d", old_mapID);
+    if (ImGui::TreeNode(name.c_str()))
+    {
+        // デバッグ文字列表示の変更
+        std::string str = "";
+        std::string subStr = "";
+        // 現在のステート番号に合わせてデバッグ文字列をstrに格納
+        switch (static_cast<State>(stateMachine->GetStateIndex())) {
+        case State::Search:
+            str = "Search";
+            switch (stateMachine->GetState()->GetSubStateIndex())
+            {
+            case static_cast<int>(Enemy::Search::Death):
+                subStr = "Death";
+                break;
+            case static_cast<int>(Enemy::Search::Idle):
+                subStr = "Idle";
+                break;
+            }
+            break;
+        case State::Battle:
+            str = "Battle";
+            switch (stateMachine->GetState()->GetSubStateIndex())
+            {
+            case static_cast<int>(Enemy::Battle::Pursuit):
+                subStr = "Pursuit";
+                break;
+            case static_cast<int>(Enemy::Battle::Attack):
+                subStr = "Attack";
+                break;
+            }
+            break;
+        }
+        ImGui::Text(u8"State:%s", str.c_str());
+        ImGui::Text(u8"SubState:%s", subStr.c_str());
+        ImGui::Text(u8"ID:%d", id);
+        std::string p = std::string("position") + std::to_string(category_id);
+        ImGui::SliderFloat3(p.c_str(), &position.x, -5, 5);
+        std::string s = std::string("scale") + std::to_string(category_id);
+        ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
+        std::string a = std::string("angle") + std::to_string(category_id);
+        ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
+        std::string b = std::string("attack_range") + std::to_string(category_id);
+        ImGui::SliderFloat(b.c_str(), &attack_range, 1.0f, 10.0f);
+        ImGui::TreePop();
+    }
 #endif // ENEMYSTATEMACHINE
 }
 
@@ -137,4 +154,23 @@ bool Enemy::InAttackRange()
         return true;
     }
     false;
+}
+
+void Enemy::InputProjectile()
+{
+    GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
+
+    if (projectile_auto.checker)
+    {   
+        ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
+        projectile_auto.checker = false;
+    }
+}
+
+void Enemy::CollisionProjectileVsPlayer()
+{
+    //Playerと弾を衝突判定
+    Player& player= Player::Instance();
+    Character::CollisionProjectileVsCharacter(&player, *hitEffect);
 }

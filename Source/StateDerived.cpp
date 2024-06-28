@@ -73,12 +73,12 @@ void IdleState::Execute(float elapsedTime)
 	if (idle_timer > 60)
 	{
 		idle_timer = 0;
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Search::Death));
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Search::Death));
 	}
 	// プレイヤー索敵
 	//if (owner->SearchPlayer())
 	//{
-		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Battle));
+		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy01::State::Battle));
 	//}
 }
 //出ていくとき
@@ -101,7 +101,7 @@ BattleState::~BattleState()
 //入った時
 void BattleState::Enter()
 {
-	SetSubState(static_cast<int>(EnemySlime::Battle::Pursuit));
+	SetSubState(static_cast<int>(Enemy01::Battle::Pursuit));
 }
 //実行中
 void BattleState::Execute(float elapsedTime)
@@ -138,11 +138,11 @@ void PursuitState::Execute(float elapsedTime)
 	float radius = owner->GetAttackRange();
 	if (distSq < radius * radius)
 	{
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Battle::Attack));
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Battle::Attack));
 	}
 	if (Player::Instance().GetHealth() <= 0)
 	{
-		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Search));
+		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy01::State::Search));
 	}
 	owner->MoveSystem();
 	owner->OutMove();
@@ -174,12 +174,16 @@ void AttackState::Execute(float elapsedTime)
 	float distSq = vx * vx + vz * vz;
 	if (distSq > owner->GetAttackRange() * owner->GetAttackRange())
 	{
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(EnemySlime::Battle::Pursuit));
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Battle::Pursuit));
 	}
 	if (Player::Instance().GetHealth() <= 0)
 	{
-		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Search));
+		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy01::State::Search));
 	}
+	owner->Turn(elapsedTime, vx, vz, owner->GetTurnSpeed());
+#ifdef ENEMYATTACK
+	owner->InputProjectile();
+#endif // ENEMYATTACK
 }
 //出ていくとき
 void AttackState::Exit()

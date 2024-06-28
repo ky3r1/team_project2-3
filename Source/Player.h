@@ -4,7 +4,6 @@
 #include "Graphics/Model.h"
 #include "Character.h"
 #include "ProjectileManager.h"
-#include "Effect.h"
 #include "Graphics/sprite.h"
 
 
@@ -93,23 +92,21 @@ public:
         return sub_attack_range;
     }
 private:
-    Model* model = nullptr;
+    //Model* model = nullptr;
     float       moveSpeed = 7.0f;
-    float       jumpSpeed = 20.0f;
-    int projectile_shot;
+    //float       jumpSpeed = 20.0f;
+    //int projectile_shot;
 
-    int         jumpCount = 0;
-    int         jumpLimit = 2;
-    DelayTime projectile_allangle;
+    //int         jumpCount = 0;
+    //int         jumpLimit = 2;
     DelayTime projectile_auto;
-    DelayTime projectile_front;
 
     int nearest_enemy_index = -1;
     float current_nearest_distance = FLT_MAX;
     int penetration_count = 10;
     int ricochet_count = 30;
 
-    ProjectileManager projectileManager;
+    //ProjectileManager& projectile_manager;
 
     Effect*     hitEffect = nullptr;
     Effect*     AT_Field = nullptr;

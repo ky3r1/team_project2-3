@@ -3,7 +3,10 @@
 #include "All.h"
 #include "Input/Input.h"
 #include "StageMain.h"
+#include "Effect.h"
 
+#define FRONT 1
+#define BACK -1
 
 //キャラクター
 class Character
@@ -24,9 +27,6 @@ public:
     //デバッグ用GUI
     virtual void DrawDebugGUI();
 
-    void SetScreenPos(DirectX::XMFLOAT3 sp) { screen_pos = sp; }
-
-    DirectX::XMFLOAT3 GetScreenPos() { return screen_pos; }
     //初期化
     virtual void Clear();
 protected:
@@ -46,13 +46,22 @@ protected:
     // 3Dを2Dに変換
     void ProjectileDirection(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
 
+    //DelayTimeの更新
+    void UpdateDelayTime(bool& checker, int& time,int delaytime);
+
+    //弾とキャラクターの衝突判定
+    void CollisionProjectileVsCharacter(Character* character, Effect hiteffect);
+
+    //弾丸発射処理
+    virtual void ProjectileStraightShotting(int category, float angle,int vector);
+public:
+    //旋回処理
+    void Turn(float elapsedTime, float vx, float vz, float speed);
+
 protected:
     //移動処理
     //void Move(float elapsedTime, float vx, float vz, float speed);
     void Move(float vx, float vz, float speed);
-
-    //旋回処理
-    void Turn(float elapsedTime, float vx, float vz, float speed);
 
     //ジャンプ処理
     void Jump(float speed);
@@ -71,8 +80,6 @@ protected:
 
     //死亡したときに呼ばれる
     virtual void OnDead() {}
-
-    virtual void ChangeColor(DirectX::XMFLOAT4& color, int category);
 public:
     /////////////////////ゲッター・セッター//////////////////////////
 
@@ -110,15 +117,24 @@ public:
     //categoryのゲッター
     int GetCategory()const { return category; }
 
-    //weightのゲッター
+    //weightのゲッター・セッター
     float GetWeight()const { return weight; }
     void SetWeight(float w) { weight = w; }
 
     // 攻撃範囲のゲッター・セッター
     float GetAttackRange() { return attack_range; }
     void SetAttackRange(float a) { attack_range = a; }
+
+    //ターンスピードのゲッター
+    float GetTurnSpeed() { return turnSpeed; }
+
+    //スクリーン座標のゲッター・セッター
+    void SetScreenPos(DirectX::XMFLOAT3 sp) { screen_pos = sp; }
+    DirectX::XMFLOAT3 GetScreenPos() { return screen_pos; }
 protected:
     Model* model = nullptr;
+    //Effect* hitEffect = nullptr;
+    std::unique_ptr<Effect>hitEffect=nullptr;
     DirectX::XMFLOAT3   position = { 0,0,0 };
     DirectX::XMFLOAT3   screen_pos = { 0,0,0 };
     DirectX::XMFLOAT3   angle = { 0,0,0 };

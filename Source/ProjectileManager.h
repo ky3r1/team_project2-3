@@ -11,6 +11,15 @@ public:
     ProjectileManager();
     ~ProjectileManager();
 
+public:
+    //唯一のインスタンス取得
+    static ProjectileManager& Instance()
+    {
+        static ProjectileManager instance;
+        return instance;
+    }
+
+
     //更新処理
     void Update(float elapsedTime);
 
