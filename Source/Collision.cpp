@@ -319,6 +319,23 @@ bool Collision::InPoint(DirectX::XMFLOAT3 bottom_left_front, DirectX::XMFLOAT3 t
     return false;
 }
 
+bool Collision::InXYPoint(DirectX::XMFLOAT3 bottom_left_front, DirectX::XMFLOAT3 top_right_back, DirectX::XMFLOAT3 move_pos)
+{
+    //Xé≤ÅAZé≤ÇªÇÍÇºÇÍÇÃîÕàÕì‡Ç…ì¸Ç¡ÇƒÇ¢ÇÈÇ©ÇÃîªíË
+    //bottom_left_front < top_right_backÇ∂Ç·Ç»Ç¢Ç∆í ÇÁÇ»Ç¢
+    if (bottom_left_front.x<move_pos.x && top_right_back.x>move_pos.x)
+    {
+        if (bottom_left_front.y<move_pos.y && top_right_back.y>move_pos.y)
+        {
+            if (bottom_left_front.z<move_pos.z && top_right_back.z>move_pos.z)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool Collision::PointInsideCircle(DirectX::XMFLOAT3 point, DirectX::XMFLOAT3 center, float radius)
 {
     float distance = sqrt(pow(point.x - center.x, 2) + pow(point.z - center.z, 2));
