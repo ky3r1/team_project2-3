@@ -15,7 +15,7 @@ EnemySlime::EnemySlime(int category)
     height = 1.0f;//当たり判定の高さ
     health = 10.0f;//体力
 
-    attackRange = 5.0f;
+    attack_range = 5.0f;
     this->category = category;
     //ChangeColor(color, category);
 
@@ -100,5 +100,5 @@ void EnemySlime::DrewDebugPrimitive()
     // ターゲット位置をデバッグ球描画
     debugRenderer->DrawSphere(targetPosition, 1.3f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
     // 攻撃範囲をデバッグ円柱描画
-    debugRenderer->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f));
+    debugRenderer->DrawCylinder(position, attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f));
 }

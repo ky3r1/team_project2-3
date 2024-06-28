@@ -69,10 +69,6 @@ public:
 	float GetStateTimer() { return stateTimer; }
 	void SetStateTimer(float timer) { stateTimer = timer; }
 
-	// 攻撃範囲のゲッター・セッター
-	float GetAttackRange() { return attackRange; }
-	void SetAttackRange(float a) { attackRange = a; }
-
 	StateMachine* GetStateMachine() { return stateMachine; }
 
 	// IDゲッター・セッター
@@ -83,7 +79,6 @@ protected:
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
 	float				moveSpeed = 3.0f;
 	float				stateTimer = 0.0f;
-	float				attackRange = 1.5f;
 	StateMachine* stateMachine = nullptr;
 	std::vector<DirectX::XMFLOAT2> moving_roots;
 	int id = 0;

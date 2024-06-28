@@ -59,4 +59,7 @@ public:
         DirectX::XMFLOAT3 top_right_back,
         DirectX::XMFLOAT3 move_pos
     );
+
+    //“_‚ª‰~“à‚É“ü‚Á‚Ä‚¢‚é‚©
+    static bool PointInsideCircle(DirectX::XMFLOAT3 point, DirectX::XMFLOAT3 center, float radius);
 };

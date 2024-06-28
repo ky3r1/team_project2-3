@@ -132,7 +132,7 @@ bool Enemy::InAttackRange()
     float vz = player_position.z - position.z;
     float distSq = vx * vx + vz * vz;
     // UŒ‚”ÍˆÍ“à‚Ü‚ÅƒvƒŒƒCƒ„[‚É‹ß‚Ã‚¢‚½
-    if (distSq < attackRange * attackRange)
+    if (distSq < attack_range * attack_range)
     {
         return true;
     }

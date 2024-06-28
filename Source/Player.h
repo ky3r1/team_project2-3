@@ -85,6 +85,13 @@ private:
     //死亡ステート更新
     void UpdateDeathState(float elapsedTime);
 
+public:
+
+    //サブ攻撃範囲のゲッター
+    float GetSubAttackRange()
+    {
+        return sub_attack_range;
+    }
 private:
     Model* model = nullptr;
     float       moveSpeed = 7.0f;
@@ -105,6 +112,8 @@ private:
     Effect*     hitEffect = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
+
+    float sub_attack_range = 3.0f;
 
     ////アニメーション:Jammo
     //enum Animation

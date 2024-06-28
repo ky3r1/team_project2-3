@@ -110,8 +110,9 @@ void EnemyManager::CollisionEnemyVsEnemies()
                 enemy2->GetPosition(), enemy2->GetRadius(),enemy2->GetHeight(),enemy2->GetWeight(),
                 outPosition))
             {
-                if(enemy1->GetWeight()<enemy2->GetWeight())enemy1->SetPosition(outPosition);
-                else enemy2->SetPosition(outPosition);
+                //if(enemy1->GetWeight()<enemy2->GetWeight())enemy1->SetPosition(outPosition);
+                //else enemy2->SetPosition(outPosition);
+                enemy2->SetPosition(outPosition);
             }
         }
     }

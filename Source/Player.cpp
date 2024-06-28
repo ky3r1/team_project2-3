@@ -34,7 +34,7 @@ Player::Player()
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
-    scale.x = scale.y = scale.z = 0.01f;
+    scale.x = scale.y = scale.z = 0.1f;
 
     weight = 100.0f;
     color = { 1,0,0,1 };
@@ -47,6 +47,7 @@ Player::Player()
     moveSpeed = 7.0f;
 
     position = { 0.0001f,2,0 };
+    attack_range = 9.0f;
 
     //state = State::Idle;
 
@@ -179,6 +180,9 @@ void Player::DrawDebugPrimitive()
     
     //衝突判定用のデバッグ立方体を描画
     //debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
+    // 攻撃範囲をデバッグ円柱描画
+    debugRenderer->DrawCylinder(position, attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.0f, 0.5f, 1.0f));
+    debugRenderer->DrawCylinder(position, sub_attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.3f, 0.3f, 1.0f));
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();
 
@@ -429,88 +433,91 @@ void Player::InputProjectile()
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
 
-    //前方弾丸発射
-   
-    if (projectile_auto.checker)
-    {
-        ProjectileStraightFront(WHITE, 0.0f);
-        projectile_auto.checker = false;
-    }
-    
-    /*if (mouse.GetButton() & Mouse::BTN_RIGHT)
-    {
-        if (projectile_shot == 0)
+    ////前方弾丸発射
+    //if (mouse.GetButton() & Mouse::BTN_LEFT)
+    //{
+        if (projectile_auto.checker)
         {
-            if (projectile_front.checker)
-            {
-                for (int index = 0; index < 3; index++)
-                {
-                    switch (index)
-                    {
-                    case 0:
-                        ProjectileStraightFront(category, 0.0f);
-                        break;
-                    case 1:
-                        ProjectileStraightFront(category, 0.3f);
-                        break;
-                    case 2:
-                        ProjectileStraightFront(category, -0.3f);
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                projectile_front.checker = false;
-            }
+            ProjectileStraightFront(WHITE, 0.0f);
+            projectile_auto.checker = false;
         }
-    }*/
-    //直進弾丸発射
-    /*if (mouse.GetButton() & Mouse::BTN_LEFT && projectile_allangle.checker)
-    {
-        if (projectile_shot == 1)
-        {
-            for (int index = 0; index < 10; index++)
-            {
-                switch (index)
-                {
-                case 0:
-                    ProjectileStraightFront(category, 0.0f);
-                    break;
-                case 1:
-                    ProjectileStraightFront(category, 0.9);
-                    break;
-                case 2:
-                    ProjectileStraightFront(category, 3.0);
-                    break;
-                case 3:
-                    ProjectileStraightFront(category, -0.9);
-                    break;
-                case 4:
-                    ProjectileStraightFront(category, -3.0);
-                    break;
-                case 5:
-                    ProjectileStraightBack(category, 0.0f);
-                    break;
-                case 6:
-                    ProjectileStraightBack(category, 0.9f);
-                    break;
-                case 7:
-                    ProjectileStraightBack(category, 3.0f);
-                    break;
-                case 8:
-                    ProjectileStraightBack(category, -0.9f);
-                    break;
-                case 9:
-                    ProjectileStraightBack(category, -3.0f);
-                    break;
-                default:
-                    break;
-                }
-            }
-            projectile_allangle.checker = false;
-        }
-    }*/
-
+    //}
+    //if(category!=WHITE)
+    //{
+    //    if (mouse.GetButton() & Mouse::BTN_RIGHT)
+    //    {
+    //        if (projectile_shot == 0)
+    //        {
+    //            if (projectile_front.checker)
+    //            {
+    //                for (int index = 0; index < 3; index++)
+    //                {
+    //                    switch (index)
+    //                    {
+    //                    case 0:
+    //                        ProjectileStraightFront(category, 0.0f);
+    //                        break;
+    //                    case 1:
+    //                        ProjectileStraightFront(category, 0.3f);
+    //                        break;
+    //                    case 2:
+    //                        ProjectileStraightFront(category, -0.3f);
+    //                        break;
+    //                    default:
+    //                        break;
+    //                    }
+    //                }
+    //                projectile_front.checker = false;
+    //            }
+    //        }
+    //    }
+    //        //直進弾丸発射
+    //    if (mouse.GetButton() & Mouse::BTN_LEFT && projectile_allangle.checker)
+    //    {
+    //        if (projectile_shot == 1)
+    //        {
+    //            for (int index = 0; index < 10; index++)
+    //            {
+    //                switch (index)
+    //                {
+    //                case 0:
+    //                    ProjectileStraightFront(category, 0.0f);
+    //                    break;
+    //                case 1:
+    //                    ProjectileStraightFront(category, 0.9);
+    //                    break;
+    //                case 2:
+    //                    ProjectileStraightFront(category, 3.0);
+    //                    break;
+    //                case 3:
+    //                    ProjectileStraightFront(category, -0.9);
+    //                    break;
+    //                case 4:
+    //                    ProjectileStraightFront(category, -3.0);
+    //                    break;
+    //                case 5:
+    //                    ProjectileStraightBack(category, 0.0f);
+    //                    break;
+    //                case 6:
+    //                    ProjectileStraightBack(category, 0.9f);
+    //                    break;
+    //                case 7:
+    //                    ProjectileStraightBack(category, 3.0f);
+    //                    break;
+    //                case 8:
+    //                    ProjectileStraightBack(category, -0.9f);
+    //                    break;
+    //                case 9:
+    //                    ProjectileStraightBack(category, -3.0f);
+    //                    break;
+    //                default:
+    //                    break;
+    //                }
+    //            }
+    //            projectile_allangle.checker = false;
+    //        }
+    //    }
+    //}
 }
 
 
@@ -626,13 +633,29 @@ void Player::UpdateIdleState(float elapsedTime)
     }
 
     //攻撃処理
-    if (InputAttack())
+    //if (InputAttack())
+    //{
+    //    TransitionAttackState();
+    //}
+    else if (state != State::Attack)
     {
-        TransitionAttackState();
+        EnemyManager& enemyManager = EnemyManager::Instance();
+
+        //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
+        int enemyCount = enemyManager.GetEnemyCount();
+        for (int j = 0; j < enemyCount; ++j)
+        {
+            Enemy* enemy = enemyManager.GetEnemy(j);
+            DirectX::XMFLOAT3 enemy_position = enemy->GetPosition();
+            if (Collision::PointInsideCircle(enemy_position, position, attack_range))
+            {
+                TransitionAttackState();
+            }
+        }
     }
 
     //弾丸入力処理
-    InputProjectile();
+    //InputProjectile();
 }
 
 //移動ステート
@@ -690,14 +713,14 @@ void Player::UpdateMoveState(float elapsedTime)
         TransitionIdleState();
     }
 
-    //攻撃処理
-    if (InputAttack())
-    {
-        TransitionAttackState();
-    }
+    ////攻撃処理
+    //if (InputAttack())
+    //{
+    //    TransitionAttackState();
+    //}
 
     //弾丸入力処理
-    InputProjectile();
+    //InputProjectile();
 }
 
 //攻撃ステート
@@ -715,7 +738,7 @@ void Player::TransitionAttackState()
 {
     state = State::Attack;
     //攻撃アニメーション再生
-    model->PlayAnimation(Anim_Attack, false);
+    model->PlayAnimation(Anim_Attack, true);
 }
 void Player::UpdateAttackState(float elapsedTime)
 {
@@ -723,10 +746,11 @@ void Player::UpdateAttackState(float elapsedTime)
     float animationTime = 0.138;
     //attackCollisionFlag = animationTime ? true : false;
     //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
+    InputProjectile();
     //攻撃モーションが終わったら待機モーションに移動
-    if (!model->IsPlayAnimation())
+    if (InputMove(elapsedTime))
     {
-        TransitionIdleState();
+        TransitionMoveState();
     }
 }
 
