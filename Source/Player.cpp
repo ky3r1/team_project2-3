@@ -47,6 +47,7 @@ Player::Player()
     moveSpeed = 7.0f;
 
     position = { 0.0001f,2,0 };
+    attack_range = 9.0f;
 
     //state = State::Idle;
 
@@ -205,6 +206,9 @@ void Player::DrawDebugPrimitive()
     }
     //衝突判定用のデバッグ立方体を描画
     //debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
+    // 攻撃範囲をデバッグ円柱描画
+    debugRenderer->DrawCylinder(position, attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.0f, 0.5f, 1.0f));
+    debugRenderer->DrawCylinder(position, sub_attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.3f, 0.3f, 1.0f));
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();
 
@@ -669,11 +673,23 @@ void Player::UpdateIdleState(float elapsedTime)
     //}
     else if (state != State::Attack)
     {
-        TransitionAttackState();
+        EnemyManager& enemyManager = EnemyManager::Instance();
+
+        //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
+        int enemyCount = enemyManager.GetEnemyCount();
+        for (int j = 0; j < enemyCount; ++j)
+        {
+            Enemy* enemy = enemyManager.GetEnemy(j);
+            DirectX::XMFLOAT3 enemy_position = enemy->GetPosition();
+            if (Collision::PointInsideCircle(enemy_position, position, attack_range))
+            {
+                TransitionAttackState();
+            }
+        }
     }
 
     //弾丸入力処理
-    InputProjectile();
+    //InputProjectile();
 }
 
 //移動ステート
@@ -741,7 +757,7 @@ void Player::UpdateMoveState(float elapsedTime)
     //}
 
     //弾丸入力処理
-    InputProjectile();
+    //InputProjectile();
 }
 
 //攻撃ステート

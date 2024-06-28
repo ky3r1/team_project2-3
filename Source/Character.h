@@ -113,6 +113,10 @@ public:
     //weightのゲッター
     float GetWeight()const { return weight; }
     void SetWeight(float w) { weight = w; }
+
+    // 攻撃範囲のゲッター・セッター
+    float GetAttackRange() { return attack_range; }
+    void SetAttackRange(float a) { attack_range = a; }
 protected:
     Model* model = nullptr;
     DirectX::XMFLOAT3   position = { 0,0,0 };
@@ -152,4 +156,6 @@ protected:
     float       slopeRate = 1.0f;
     int         category = 0;
     float       turnSpeed = DirectX::XMConvertToRadians(360);
+    //攻撃範囲
+    float				attack_range = 1.5f;
 };

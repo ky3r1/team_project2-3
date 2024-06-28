@@ -318,3 +318,10 @@ bool Collision::InPoint(DirectX::XMFLOAT3 bottom_left_front, DirectX::XMFLOAT3 t
     }
     return false;
 }
+
+bool Collision::PointInsideCircle(DirectX::XMFLOAT3 point, DirectX::XMFLOAT3 center, float radius)
+{
+    float distance = sqrt(pow(point.x - center.x, 2) + pow(point.z - center.z, 2));
+
+    return distance <= radius;
+}
