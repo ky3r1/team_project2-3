@@ -161,11 +161,6 @@ void Player::Update(float elapsedTime)
         projectile_allangle.checker = true;
         projectile_allangle.time = DELAYALLANGLETIME;
     }
-
-    if (color_count == 0)
-    {
-        category = WHITE;
-    }
 }
 
 void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
@@ -181,29 +176,8 @@ void Player::DrawDebugPrimitive()
 {
     DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
     //衝突判定用のデバッグ円柱を描画
-    switch (category)
-    {
-    case RED:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
-        break;
-    case GREEN:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 1, 0, 1));
-        break;
-    case BLUE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 1, 1));
-        break;
-    case YELLOW:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 1, 0, 1));
-        break;
-    case PURPLE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 1, 1));
-        break;
-    case WHITE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 1, 1, 1));
-        break;
-    default:
-        break;
-    }
+    debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
+    
     //衝突判定用のデバッグ立方体を描画
     //debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
     // 攻撃範囲をデバッグ円柱描画
@@ -349,7 +323,7 @@ void Player::CollisionPlayerVsEnemies()
                     velocity.z += power * vec.z;
                 }
 
-                if (category == WHITE)
+                /*if (category == WHITE)
                 {
                     category = enemy->GetCategory();
                     color_count = 5;
@@ -362,7 +336,7 @@ void Player::CollisionPlayerVsEnemies()
                 {
                     health--;
                     hitEffect->Play(position,2.0f);
-                }
+                }*/
                 hit_delay.checker = false;
             }
 #endif // ENEMYHITTINGDAMAGE
@@ -402,55 +376,47 @@ void Player::CollisionProjectilesVsEnemies()
                 enemy->GetHeight(),
                 outPosition))
             {
-                if (projectile->GetProectileCategory() == enemy->GetCategory())
-                {
-                    color_count--;
-                    //弾丸破棄
-                    projectile->Destroy();
+
+                //弾丸破棄
+                projectile->Destroy();
 #ifdef PROJECTILEDAMAGE
-                    //ダメージを与える
-                    if (enemy->ApplyDamage(1, 0.5f))
-                    {
-                        //吹き飛ばす
-                        {
-                            DirectX::XMFLOAT3 impulse;
-                            //吹き飛ばす力
-                            const float power = 10.0f;
-
-                            //敵の位置
-                            DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&enemy->GetPosition());
-                            //弾の位置
-                            DirectX::XMVECTOR pVec = DirectX::XMLoadFloat3(&projectile->GetPosition());
-                            //弾から敵への方向ベクトルを計算（敵 - 弾）
-                            auto v = DirectX::XMVectorSubtract(eVec, pVec);
-                            //方向ベクトルを正規化
-                            v = DirectX::XMVector3Normalize(v);
-
-                            DirectX::XMFLOAT3 vec;
-                            DirectX::XMStoreFloat3(&vec, v);
-
-                            impulse.x = power * vec.x;
-                            impulse.y = power * 0.5f;
-                            impulse.z = power * vec.z;
-
-                            enemy->AddImpulse(impulse);
-                        }
-
-                        //ヒットエフェクト再生
-                        {
-                            DirectX::XMFLOAT3 e = enemy->GetPosition();
-                            e.y += enemy->GetHeight() * 0.5f;
-                            hitEffect->Play(e,2.0f);
-                        }
-                    }
-#endif // PROJECTILEDAMAGE
-                }
-                else if (projectile->GetProectileCategory() == WHITE)
+                //ダメージを与える
+                if (enemy->ApplyDamage(1, 0.5f))
                 {
-                    category = enemy->GetCategory();
-                    color_count = 5;
-                    projectile->Destroy();
+                    //吹き飛ばす
+                    {
+                        DirectX::XMFLOAT3 impulse;
+                        //吹き飛ばす力
+                        const float power = 10.0f;
+
+                        //敵の位置
+                        DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&enemy->GetPosition());
+                        //弾の位置
+                        DirectX::XMVECTOR pVec = DirectX::XMLoadFloat3(&projectile->GetPosition());
+                        //弾から敵への方向ベクトルを計算（敵 - 弾）
+                        auto v = DirectX::XMVectorSubtract(eVec, pVec);
+                        //方向ベクトルを正規化
+                        v = DirectX::XMVector3Normalize(v);
+
+                        DirectX::XMFLOAT3 vec;
+                        DirectX::XMStoreFloat3(&vec, v);
+
+                        impulse.x = power * vec.x;
+                        impulse.y = power * 0.5f;
+                        impulse.z = power * vec.z;
+
+                        enemy->AddImpulse(impulse);
+                    }
+
+                    //ヒットエフェクト再生
+                    {
+                        DirectX::XMFLOAT3 e = enemy->GetPosition();
+                        e.y += enemy->GetHeight() * 0.5f;
+                        hitEffect->Play(e, 2.0f);
+                    }
                 }
+#endif // PROJECTILEDAMAGE
+
                 else
                 {
                     //弾丸破棄
@@ -706,13 +672,11 @@ bool Player::InputMove(float elapsedTime)
     int projectileCount = projectileManager.GetProjectileCount();
     int enemyCount = enemyManager.GetEnemyCount();
 
-    int nearest_enemy_index = -1;
-    float current_nearest_distance = FLT_MAX;
 
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
     for (int index = 0; index < enemyCount; index++)
     {
         Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
-        DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
         DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
         DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
         DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
@@ -726,7 +690,6 @@ bool Player::InputMove(float elapsedTime)
     }
     Enemy* ne= enemyManager.GetEnemy(nearest_enemy_index);
     DirectX::XMVECTOR NE= DirectX::XMLoadFloat3(&ne->GetPosition());
-    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
     DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
     DirectX::XMFLOAT3 ND;
     DirectX::XMStoreFloat3(&ND, Vec);
