@@ -5,7 +5,7 @@
 
 //CharacterInclude
 #include "EnemyManager.h"
-#include "EnemySlime.h"
+#include "Enemy01.h"
 #include "EffectManager.h"
 #include "MouseManager.h"
 
@@ -89,7 +89,7 @@ void SceneTutorial::Initialize()
 		EnemyManager::Instance().Register(slime);
 	}*/
 #endif // ENEMYSLIME
-	slime = new EnemySlime(RED);
+	slime = new Enemy01(RED);
 
 #endif // ALLENEMY
 }
@@ -169,10 +169,10 @@ void SceneTutorial::Update(float elapsedTime)
 		if (enemyAdd == true)
 		{
 			EnemyManager& enemyManager = EnemyManager::Instance();
-			slime = new EnemySlime(RED);
+			slime = new Enemy01(RED);
 			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
 			enemyManager.Register(slime);
-			slime = new EnemySlime(BLUE);
+			slime = new Enemy01(BLUE);
 			slime->SetPosition(DirectX::XMFLOAT3(0, 1, 2));
 			enemyManager.Register(slime);
 		}
@@ -187,7 +187,7 @@ void SceneTutorial::Update(float elapsedTime)
 		if (enemyAdd == true)
 		{
 			EnemyManager& enemyManager = EnemyManager::Instance();
-		    slime = new EnemySlime(GREEN);
+		    slime = new Enemy01(GREEN);
 			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
 			enemyManager.Register(slime);
 		}
@@ -202,7 +202,7 @@ void SceneTutorial::Update(float elapsedTime)
 		if (enemyAdd == true)
 		{
 			EnemyManager& enemyManager = EnemyManager::Instance();
-			slime = new EnemySlime(BLUE);
+			slime = new Enemy01(BLUE);
 			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
 			enemyManager.Register(slime);
 		}
@@ -471,7 +471,7 @@ void SceneTutorial::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOA
 		//if (stage_main.RayCast(world_position_start, world_position_end, hit))
 		//{
 		EnemyManager& enemyManager = EnemyManager::Instance();
-		EnemySlime* slime = new EnemySlime(GREEN);
+		Enemy01* slime = new Enemy01(GREEN);
 		slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
 		enemyManager.Register(slime);
 		//}

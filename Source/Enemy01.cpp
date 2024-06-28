@@ -1,10 +1,10 @@
-#include "EnemySlime.h"
+#include "Enemy01.h"
 #include "StateDerived.h"
 //#include "StageMapChip.h"
 #include "ProjectileManager.h"
 
 //コンストラクタ
-EnemySlime::EnemySlime(int category)
+Enemy01::Enemy01(int category)
 {
     //TODO:エネミースライムのステータス設定
     model = new Model("Data/Model/Enemy/enemy01.mdl");
@@ -27,23 +27,23 @@ EnemySlime::EnemySlime(int category)
     stateMachine->RegisterState(new SearchState(this));
     stateMachine->RegisterState(new BattleState(this));
     // 各親ステートにサブステートを登録
-    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Search), new DeathState(this));
-    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Search), new IdleState(this));
-    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Battle), new PursuitState(this));
-    stateMachine->RegisterSubState(static_cast<int>(EnemySlime::State::Battle), new AttackState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Search), new DeathState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Search), new IdleState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new PursuitState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new AttackState(this));
     // デフォルトステートをセット
     stateMachine->SetState(static_cast<int>(State::Search));
 #endif // ENEMYSTATEMACHINE
 }
 
 //デストラクタ
-EnemySlime::~EnemySlime()
+Enemy01::~Enemy01()
 {
     delete model;
 }
 
 //更新処理
-void EnemySlime::Update(float elapsedTime)
+void Enemy01::Update(float elapsedTime)
 {
     Enemy::Update(elapsedTime);
 #ifdef ENEMYSTATEMACHINE
@@ -65,18 +65,18 @@ void EnemySlime::Update(float elapsedTime)
 }
 
 //描画処理
-void EnemySlime::Render(ID3D11DeviceContext* dc, Shader* shader)
+void Enemy01::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
     shader->Draw(dc, model, color);
 }
 
 //死亡したときに呼ばれる
-void EnemySlime::OnDead()
+void Enemy01::OnDead()
 {
     Destroy();
 }
 
-void EnemySlime::DrawDebugGUI()
+void Enemy01::DrawDebugGUI()
 {
     std::string name = std::string("slime") + std::to_string(id);
 
@@ -93,7 +93,7 @@ void EnemySlime::DrawDebugGUI()
     }
 }
 
-void EnemySlime::DrewDebugPrimitive()
+void Enemy01::DrewDebugPrimitive()
 {
     // 基底クラスのデバッグプリミティブ描画
     Enemy::DrewDebugPrimitive();

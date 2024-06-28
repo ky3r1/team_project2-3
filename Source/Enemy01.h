@@ -24,11 +24,11 @@ enum class EnemySlimeAnimation
 };
 
 //スライム
-class EnemySlime : public Enemy
+class Enemy01 : public Enemy
 {
 public:
-    EnemySlime(int category);
-    ~EnemySlime() override;
+	Enemy01(int category);
+    ~Enemy01() override;
 
     //更新処理
     void Update(float elapsedTime);

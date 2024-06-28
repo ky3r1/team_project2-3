@@ -5,7 +5,7 @@
 #include "CameraController.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
-#include "EnemySlime.h"
+#include "Enemy01.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class SceneTutorial : public Scene
@@ -34,7 +34,7 @@ private:
 	CameraController* cameraController = nullptr;
 	Sprite* gauge = nullptr;
 	Sprite* sprite = nullptr;
-	EnemySlime* slime = nullptr;
+	Enemy01* slime = nullptr;
 	int game_timer = 0;
 	bool enemyAdd = false;
 	bool clear_check = false;

@@ -5,7 +5,7 @@
 
 //CharacterInclude
 #include "EnemyManager.h"
-#include "EnemySlime.h"
+#include "Enemy01.h"
 #include "EffectManager.h"
 #include "MouseManager.h"
 
@@ -85,7 +85,7 @@ void SceneGame::Initialize()
 	{
 		int color = 0;
 		//if (index < 3)color = 1;
-		EnemySlime* slime = new EnemySlime(color);
+		Enemy01* slime = new Enemy01(color);
 		switch (index)
 		{
 		case 0:
@@ -389,7 +389,7 @@ void SceneGame::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4
 		if (stage_main.RayCast(world_position_start, world_position_end, hit))
 		{
 			EnemyManager& enemyManager = EnemyManager::Instance();
-			EnemySlime* slime = new EnemySlime(GREEN);
+			Enemy01* slime = new Enemy01(GREEN);
 			slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
 			enemyManager.Register(slime);
 		}
