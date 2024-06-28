@@ -465,3 +465,16 @@ void Character::ProjectileDirection(ID3D11DeviceContext* dc, const DirectX::XMFL
     }
     //}
 }
+
+void Character::UpdateDelayTime(bool& checker, int& time, int delaytime)
+{
+    if (!checker)
+    {
+        time--;
+    }
+    if (time < 0)
+    {
+        checker = true;
+        time = delaytime;
+    }
+}

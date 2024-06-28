@@ -100,9 +100,7 @@ private:
 
     int         jumpCount = 0;
     int         jumpLimit = 2;
-    DelayTime projectile_allangle;
     DelayTime projectile_auto;
-    DelayTime projectile_front;
 
     int nearest_enemy_index = -1;
     float current_nearest_distance = FLT_MAX;

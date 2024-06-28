@@ -20,8 +20,6 @@ Player& Player::Instance()
 
 //TODO:弾のDelayTime
 #define DELAYAUTOTIME 40
-#define DELAYALLANGLETIME 60
-#define DELAYFRONTTIME 60
 
 //TODO:PlayerDamageの当たり判定のDelayTime
 #define DELAYPLAYERVSENEMY 60
@@ -40,8 +38,6 @@ Player::Player()
     color = { 1,0,0,1 };
 
     projectile_auto.time = DELAYAUTOTIME;
-    projectile_allangle.time = DELAYALLANGLETIME;
-    projectile_front.time = DELAYFRONTTIME;
 
     hit_delay.time = DELAYPLAYERVSENEMY;
     moveSpeed = 7.0f;
@@ -139,28 +135,6 @@ void Player::Update(float elapsedTime)
         projectile_auto.checker = true;
         projectile_auto.time = DELAYAUTOTIME;
     }
-
-    //前方の弾のdelay
-    if (!projectile_front.checker)
-    {
-        projectile_front.time--;
-    }
-    if (projectile_front.time < 0)
-    {
-        projectile_front.checker = true;
-        projectile_front.time = DELAYFRONTTIME;
-    }
-
-    //周囲に出す弾のdelay
-    if (!projectile_allangle.checker)
-    {
-        projectile_allangle.time--;
-    }
-    if (projectile_allangle.time < 0)
-    {
-        projectile_allangle.checker = true;
-        projectile_allangle.time = DELAYALLANGLETIME;
-    }
 }
 
 void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
@@ -206,8 +180,6 @@ void Player::DrawDebugGUI()
             ImGui::SliderFloat("movespeed", &moveSpeed, 0.0f, 20.0f);
 
             ImGui::SliderInt("delay_auto_time", &projectile_auto.time, 0.0f, DELAYAUTOTIME);
-            ImGui::SliderInt("delay_front_time", &projectile_front.time, 0.0f, DELAYFRONTTIME);
-            ImGui::SliderInt("delay_allangle_time", &projectile_allangle.time, 0.0f, DELAYALLANGLETIME);
 
             ImGui::TreePop();
         }
@@ -746,7 +718,9 @@ void Player::UpdateAttackState(float elapsedTime)
     float animationTime = 0.138;
     //attackCollisionFlag = animationTime ? true : false;
     //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
+#ifdef PLAYERATTACK
     InputProjectile();
+#endif // PLAYERATTACK
     //攻撃モーションが終わったら待機モーションに移動
     if (InputMove(elapsedTime))
     {

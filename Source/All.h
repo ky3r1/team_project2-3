@@ -20,14 +20,20 @@
 //動く床
 //#define STAGEMOVE
 
+///////////////////Camera////////////////////////
+#define MOUSECAMERA
+
 ///////////////////Character////////////////////////
 
+//Player
 //プレイヤー
 #define ALLPLAYER
 //アニメーション
 #define PLAYERANIMATION
 //Jump
 //#define JUMPFRAG
+// 攻撃
+//#define PLAYERATTACK
 //Player->Enemy 弾のダメージ
 #define PROJECTILEDAMAGE
 //Player->Enemy 踏みつけダメージ
@@ -36,6 +42,7 @@
 //Enemy->Player 接触ダメージ
 #define ENEMYHITTINGDAMAGE
 
+//Enemy
 //エネミー
 #define ALLENEMY
 //スライム

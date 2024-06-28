@@ -46,6 +46,9 @@ protected:
 	//デバッグオブジェクト表示
 	void DrewDebugPrimitive()override;
 
+	////前方弾発射
+	//void ProjectileStraightFront(int category, float angle)override;
+
 private:
     //Model* model = nullptr;
 };

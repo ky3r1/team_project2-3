@@ -180,6 +180,8 @@ void AttackState::Execute(float elapsedTime)
 	{
 		owner->GetStateMachine()->ChangeState(static_cast<int>(EnemySlime::State::Search));
 	}
+	owner->Turn(elapsedTime, vx, vz, owner->GetTurnSpeed());
+	owner->InputProjectile();
 }
 //o‚Ä‚¢‚­‚Æ‚«
 void AttackState::Exit()

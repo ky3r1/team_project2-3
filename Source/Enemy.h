@@ -12,7 +12,7 @@ public:
     ~Enemy() override {}
 
     //XVˆ—
-    virtual void Update(float elapsedTime) = 0;
+    virtual void Update(float elapsedTime);
 
     //•`‰æˆ—
     virtual void Render(ID3D11DeviceContext* dc, Shader* shader) = 0;
@@ -39,6 +39,11 @@ public:
 
 	//UŒ‚”ÍˆÍ‚É“ü‚Á‚½‚çtrue‚ğ•Ô‚·
 	bool InAttackRange();
+
+	//’eŠÛ“ü—Íˆ—
+	void InputProjectile();
+
+	virtual void ProjectileStraightFront(int category, float angle);
 
 	//s“®State
 	enum class State
@@ -83,4 +88,6 @@ protected:
 	std::vector<DirectX::XMFLOAT2> moving_roots;
 	int id = 0;
 	int old_mapID=0;
+	DelayTime projectile_auto;
+	ProjectileManager projectileManager;
 };

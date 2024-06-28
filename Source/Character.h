@@ -46,13 +46,16 @@ protected:
     // 3Dを2Dに変換
     void ProjectileDirection(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
 
+    void UpdateDelayTime(bool& checker, int& time,int delaytime);
+
+public:
+    //旋回処理
+    void Turn(float elapsedTime, float vx, float vz, float speed);
+
 protected:
     //移動処理
     //void Move(float elapsedTime, float vx, float vz, float speed);
     void Move(float vx, float vz, float speed);
-
-    //旋回処理
-    void Turn(float elapsedTime, float vx, float vz, float speed);
 
     //ジャンプ処理
     void Jump(float speed);
@@ -117,6 +120,10 @@ public:
     // 攻撃範囲のゲッター・セッター
     float GetAttackRange() { return attack_range; }
     void SetAttackRange(float a) { attack_range = a; }
+
+    //ターンスピードのゲッター
+    float GetTurnSpeed() { return turnSpeed; }
+
 protected:
     Model* model = nullptr;
     DirectX::XMFLOAT3   position = { 0,0,0 };

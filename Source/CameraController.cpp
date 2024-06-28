@@ -10,15 +10,9 @@
 void CameraController::Update(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
-    Mouse& mouse = Input::Instance().GetMouse();
     //カメラの回転速度
     float speed = rollSpeed * elapsedTime;
-    // デバッグウインドウ操作中は処理しない
-    //if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
-    //{
-    //    return;
-    //}
-
+#ifdef  MOUSECAMERA
     // IMGUIのマウス入力値を使ってカメラ操作する
     ImGuiIO io = ImGui::GetIO();
 
@@ -64,6 +58,7 @@ void CameraController::Update(float elapsedTime)
     {
         angle.x = MINANGLE_X;
     }
+#endif
 
     //カメラ回転値を回転行列に変換
     DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);

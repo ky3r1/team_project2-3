@@ -1,15 +1,16 @@
 #include "EnemySlime.h"
 #include "StateDerived.h"
 //#include "StageMapChip.h"
+#include "ProjectileManager.h"
 
 //コンストラクタ
 EnemySlime::EnemySlime(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Slime/Slime.mdl");
+    model = new Model("Data/Model/Enemy/enemy01.mdl");
 
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.01f;
+    scale.x = scale.y = scale.z = 0.02f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
@@ -44,6 +45,7 @@ EnemySlime::~EnemySlime()
 //更新処理
 void EnemySlime::Update(float elapsedTime)
 {
+    Enemy::Update(elapsedTime);
 #ifdef ENEMYSTATEMACHINE
     //ステート更新
     stateMachine->Update(elapsedTime);
