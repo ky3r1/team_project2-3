@@ -325,12 +325,9 @@ bool Collision::InXYPoint(DirectX::XMFLOAT3 bottom_left_front, DirectX::XMFLOAT3
     //bottom_left_front < top_right_back‚¶‚á‚È‚¢‚Æ’Ê‚ç‚È‚¢
     if (bottom_left_front.x<move_pos.x && top_right_back.x>move_pos.x)
     {
-        if (bottom_left_front.y<move_pos.y && top_right_back.y>move_pos.y)
+        if (bottom_left_front.z<move_pos.z && top_right_back.z>move_pos.z)
         {
-            if (bottom_left_front.z<move_pos.z && top_right_back.z>move_pos.z)
-            {
-                return true;
-            }
+            return true;
         }
     }
     return false;
