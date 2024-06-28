@@ -175,37 +175,12 @@ void Player::DrawDebugPrimitive()
 {
     DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
     //衝突判定用のデバッグ円柱を描画
-    switch (category)
-    {
-    case RED:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
-        break;
-    case GREEN:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 1, 0, 1));
-        break;
-    case BLUE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 1, 1));
-        break;
-    case YELLOW:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 1, 0, 1));
-        break;
-    case PURPLE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 1, 1));
-        break;
-    case WHITE:
-        debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 1, 1, 1));
-        break;
-    default:
-        break;
-    }
+    debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
+    
     //衝突判定用のデバッグ立方体を描画
     //debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
     //弾丸デバッグプリミティブ描画
     projectileManager.DrawDebugPrimitive();
-
-    // エリア
-    debugRenderer->DrawCylinder(position, player_territory, 1.0f, DirectX::XMFLOAT4{ 0,0,1,1 });
-    debugRenderer->DrawCylinder(position, 5.0f, 1.0f, DirectX::XMFLOAT4{ 1,0,0,1 });
 
 }
 //デバッグGUI
@@ -454,41 +429,14 @@ void Player::InputProjectile()
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
 
-    EnemyManager& enemyManager = EnemyManager::Instance();
-    int enemyCount = enemyManager.GetEnemyCount();
-
-    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-    for (int index = 0; index < enemyCount; index++)
-    {
-        Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
-        DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
-        DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
-        DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
-        float d;
-        DirectX::XMStoreFloat(&d, D);
-        if (d < current_nearest_distance)
-        {
-            current_nearest_distance = d;
-            nearest_enemy_index = index;
-        }
-    }
-    Enemy* ne = enemyManager.GetEnemy(nearest_enemy_index);
-    DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
-    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
-    DirectX::XMFLOAT3 ND;
-    DirectX::XMStoreFloat3(&ND, Vec);
-
     //前方弾丸発射
-    if (ND.x && ND.z >= player_territory)
+   
+    if (projectile_auto.checker)
     {
-        if (projectile_auto.checker)
-        {
-            ProjectileStraightFront(WHITE, 0.0f);
-            projectile_auto.checker = false;
-        }
+        ProjectileStraightFront(WHITE, 0.0f);
+        projectile_auto.checker = false;
     }
-    else{}
-
+    
     /*if (mouse.GetButton() & Mouse::BTN_RIGHT)
     {
         if (projectile_shot == 0)

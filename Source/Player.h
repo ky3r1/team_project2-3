@@ -99,7 +99,6 @@ private:
 
     int nearest_enemy_index = -1;
     float current_nearest_distance = FLT_MAX;
-    float player_territory = 8.0f;
 
     ProjectileManager projectileManager;
 
