@@ -47,7 +47,7 @@ private:
     void ProjectileStraightFront(int category,float angle);
 
     //後方弾発射
-    void ProjectileStraightBack(int category, float angle);
+    void ProjectileRicochet(int category, float angle,int count, int index);
 
 private:
     //待機ステートへ遷移
@@ -106,10 +106,13 @@ private:
 
     int nearest_enemy_index = -1;
     float current_nearest_distance = FLT_MAX;
+    int penetration_count = 10;
+    int ricochet_count = 30;
 
     ProjectileManager projectileManager;
 
     Effect*     hitEffect = nullptr;
+    Effect*     AT_Field = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 

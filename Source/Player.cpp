@@ -19,7 +19,7 @@ Player& Player::Instance()
 }
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 40
+#define DELAYAUTOTIME 70
 #define DELAYALLANGLETIME 60
 #define DELAYFRONTTIME 60
 
@@ -51,8 +51,11 @@ Player::Player()
 
     //state = State::Idle;
 
+    // エフェクト
+    AT_Field=new Effect("Data/Effect/AT_field.efk");
+
     //ヒットエフェクト読み込み
-    hitEffect = new Effect("Data/Effect/Hit.efk");
+    hitEffect = new Effect("Data/Effect/bullet.efk");
     category = WHITE;
     projectile_shot = 0;
     turnSpeed = DirectX::XMConvertToRadians(720);
@@ -60,6 +63,8 @@ Player::Player()
 
 Player::~Player()
 {
+    delete AT_Field;
+
     delete hitEffect;
     hitEffect = nullptr;
     delete model;
@@ -117,6 +122,8 @@ void Player::Update(float elapsedTime)
 
     //モデルアニメーション更新
     model->UpdateAnimation(elapsedTime);
+
+    AT_Field->Play(position, 10.0f);
 
     //当たり判定のdelay
     if (!hit_delay.checker)
@@ -376,9 +383,14 @@ void Player::CollisionProjectilesVsEnemies()
                 enemy->GetHeight(),
                 outPosition))
             {
-
+                penetration_count--;
                 //弾丸破棄
-                projectile->Destroy();
+                if(penetration_count <= 0)
+                {
+                    projectile->Destroy();
+                }
+                //ProjectileRicochet(WHITE, 0.0f, ricochet_count, j);
+                
 #ifdef PROJECTILEDAMAGE
                 //ダメージを与える
                 if (enemy->ApplyDamage(1, 0.5f))
@@ -387,7 +399,7 @@ void Player::CollisionProjectilesVsEnemies()
                     {
                         DirectX::XMFLOAT3 impulse;
                         //吹き飛ばす力
-                        const float power = 10.0f;
+                        const float power = 5.0f;
 
                         //敵の位置
                         DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&enemy->GetPosition());
@@ -404,7 +416,6 @@ void Player::CollisionProjectilesVsEnemies()
                         impulse.x = power * vec.x;
                         impulse.y = power * 0.5f;
                         impulse.z = power * vec.z;
-
                         enemy->AddImpulse(impulse);
                     }
 
@@ -416,12 +427,6 @@ void Player::CollisionProjectilesVsEnemies()
                     }
                 }
 #endif // PROJECTILEDAMAGE
-
-                else
-                {
-                    //弾丸破棄
-                    projectile->Destroy();
-                }
             }
         }
     }
@@ -439,6 +444,8 @@ void Player::InputProjectile()
         if (projectile_auto.checker)
         {
             ProjectileStraightFront(WHITE, 0.0f);
+            //ProjectileRicochet(WHITE, 0.0f, 5);
+            penetration_count = 10;
             projectile_auto.checker = false;
         }
     //}
@@ -580,26 +587,53 @@ void Player::ProjectileStraightFront(int category, float angle)//category:弾の
     projectile = new ProjectileStraight(&projectileManager, category);
     projectile->Launch(dir, pos);
 }
-void Player::ProjectileStraightBack(int category, float angle)
+void Player::ProjectileRicochet(int category, float angle, int count, int index)
 {
     //発射
     ProjectileStraight* projectile{};
+
+    float dist = FLT_MAX;
+    DirectX::XMFLOAT3 enemy_position = {};
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    int enemyCount = enemyManager.GetEnemyCount();
+    DirectX::XMFLOAT3 dir = {};
+    for (int i = 0; i < enemyCount; i++)
+    {
+        Enemy* enemy1 = EnemyManager::Instance().GetEnemy(index);
+        for (int j = i + 1; j < enemyCount; j++)
+        {
+            Enemy* enemy2 = EnemyManager::Instance().GetEnemy(j);
+            DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
+            DirectX::XMVECTOR E1 = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&enemy1->GetPosition()));
+            DirectX::XMVECTOR E2 = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&enemy2->GetPosition()));
+            DirectX::XMVECTOR V = DirectX::XMVectorSubtract(E1, E2);
+            DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(V);
+            D = DirectX::XMVector3Normalize(D);
+            float d;
+            DirectX::XMStoreFloat(&d, D);
+            if (d < dist)
+            {
+                //DirectX::XMStoreFloat3(&dir, V);
+                enemy_position = enemy1->GetPosition();
+            }
+        }
+    }
+    ricochet_count--;
     //前方向
-    DirectX::XMFLOAT3 dir;
-    dir.x = -transform._31 * 100.0f;
+    dir.x= transform._31 * 100.0f;
     dir.y = 0.0f;
-    dir.z = -transform._33 * 100.0f;
+    dir.z = transform._33 * 100.0f;
     DirectX::XMFLOAT3 right;
     right.x = transform._11 * 100.0f;
     right.y = 0.0f;
     right.z = transform._13 * 100.0f;
     //発射位置（プレイヤーの腰当たり）
     DirectX::XMFLOAT3 pos;
-    pos.x = position.x;
-    pos.y = position.y + height * 0.5f;
-    pos.z = position.z;
+    pos.x = enemy_position.x;
+    pos.y = enemy_position.y + height * 0.5f;
+    pos.z = enemy_position.z;
 
-    DirectX::XMVECTOR Right = DirectX::XMLoadFloat3(&right);
+    /*DirectX::XMVECTOR Right = DirectX::XMLoadFloat3(&right);
     Right = DirectX::XMVectorScale(Right, angle);
     DirectX::XMVECTOR Dir = DirectX::XMLoadFloat3(&dir);
     DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&pos);
@@ -610,7 +644,7 @@ void Player::ProjectileStraightBack(int category, float angle)
     DirectX::XMStoreFloat3(&ep, Ep);
     dir.x = ep.x;
     dir.y = 0.0f;
-    dir.z = ep.z;
+    dir.z = ep.z;*/
     projectile = new ProjectileStraight(&projectileManager, category);
     projectile->Launch(dir, pos);
 }
@@ -666,36 +700,47 @@ bool Player::InputMove(float elapsedTime)
 
     //移動処理
     Move(moveVec.x, moveVec.z, moveSpeed);
-    EnemyManager& enemyManager = EnemyManager::Instance();
 
     //すべての弾丸とすべての敵をそう当たりで衝突処理
     int projectileCount = projectileManager.GetProjectileCount();
-    int enemyCount = enemyManager.GetEnemyCount();
 
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    int enemyCount = enemyManager.GetEnemyCount();
+    current_nearest_distance = FLT_MAX;
 
     DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-    for (int index = 0; index < enemyCount; index++)
+    
+    DirectX::XMFLOAT3 ND{ moveVec };
+
+    if(enemyCount)
     {
-        Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
-        DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
-        DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
-        DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
-        float d;
-        DirectX::XMStoreFloat(&d, D);
-        if (d < current_nearest_distance)
+        for (int index = 0; index < enemyCount; index++)
         {
-            current_nearest_distance = d;
-            nearest_enemy_index = index;
-        }      
+            Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
+            DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
+            DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
+            DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
+            float d;
+            DirectX::XMStoreFloat(&d, D);
+            if (d < current_nearest_distance)
+            {
+                if (enemyCount >= index)
+                {
+                    current_nearest_distance = d;
+                    nearest_enemy_index = index;
+                }
+            }
+        }
+        Enemy* ne = enemyManager.GetEnemy(nearest_enemy_index);
+        DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
+        DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+        
+        DirectX::XMStoreFloat3(&ND, Vec);
     }
-    Enemy* ne= enemyManager.GetEnemy(nearest_enemy_index);
-    DirectX::XMVECTOR NE= DirectX::XMLoadFloat3(&ne->GetPosition());
-    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
-    DirectX::XMFLOAT3 ND;
-    DirectX::XMStoreFloat3(&ND, Vec);
 
     //旋回処理
     Turn(elapsedTime, ND.x, ND.z, turnSpeed);
+
     if (moveVec.x != 0 /*|| moveVec.y != 0 */ || moveVec.z != 0)return true;
     return false;
 }
