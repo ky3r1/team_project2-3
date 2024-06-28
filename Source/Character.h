@@ -3,7 +3,10 @@
 #include "All.h"
 #include "Input/Input.h"
 #include "StageMain.h"
+#include "Effect.h"
 
+#define FRONT 1
+#define BACK -1
 
 //キャラクター
 class Character
@@ -46,8 +49,14 @@ protected:
     // 3Dを2Dに変換
     void ProjectileDirection(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
 
+    //DelayTimeの更新
     void UpdateDelayTime(bool& checker, int& time,int delaytime);
 
+    //弾とキャラクターの衝突判定
+    void CollisionProjectileVsCharacter(/*DirectX::XMFLOAT3 target_position,float target_radius,float target_height*/Character* character, Effect hiteffect);
+
+    //前方弾発射
+    virtual void ProjectileStraightShotting(int category, float angle,int vector);
 public:
     //旋回処理
     void Turn(float elapsedTime, float vx, float vz, float speed);
@@ -126,6 +135,8 @@ public:
 
 protected:
     Model* model = nullptr;
+    //Effect* hitEffect = nullptr;
+    std::unique_ptr<Effect>hitEffect=nullptr;
     DirectX::XMFLOAT3   position = { 0,0,0 };
     DirectX::XMFLOAT3   screen_pos = { 0,0,0 };
     DirectX::XMFLOAT3   angle = { 0,0,0 };

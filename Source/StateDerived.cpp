@@ -181,7 +181,9 @@ void AttackState::Execute(float elapsedTime)
 		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy01::State::Search));
 	}
 	owner->Turn(elapsedTime, vx, vz, owner->GetTurnSpeed());
+#ifdef ENEMYATTACK
 	owner->InputProjectile();
+#endif // ENEMYATTACK
 }
 //o‚Ä‚¢‚­‚Æ‚«
 void AttackState::Exit()

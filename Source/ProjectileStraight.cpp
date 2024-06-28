@@ -11,7 +11,7 @@ ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category)
     //表示サイズを調整
     scale.x = scale.y = scale.z = 0.006f;
     radius = 0.5f;
-    projectile_category = category;
+    this->category = category;
 }
 
 ProjectileStraight::~ProjectileStraight()
@@ -21,7 +21,7 @@ ProjectileStraight::~ProjectileStraight()
 
 void ProjectileStraight::Update(float elapsedTime)
 {
-    ChangeColor(color, projectile_category);
+    ChangeColor(color, category);
     //寿命処理
     lifeTimer -= elapsedTime;
     if (lifeTimer <= 0)
@@ -56,11 +56,11 @@ void ProjectileStraight::Launch(const DirectX::XMFLOAT3& direction,
 
 void ProjectileStraight::DrawDebugGUI()
 {
-    //if (ImGui::TreeNode("ProjectileStraight"))
-    //{
-    //    ImGui::SliderFloat3("position", &position.x, -5, 5);
-    //    ImGui::SliderFloat3("scale", &scale.x, 0.001f, 4.0f);
-    //    ImGui::SliderFloat3("direction", &direction.x, -3.14f, 3.14f);
-    //    ImGui::TreePop();
-    //}
+    if (ImGui::TreeNode("ProjectileStraight"))
+    {
+        ImGui::SliderFloat3("position", &position.x, -5, 5);
+        ImGui::SliderFloat3("scale", &scale.x, 0.001f, 4.0f);
+        ImGui::SliderFloat3("direction", &direction.x, -3.14f, 3.14f);
+        ImGui::TreePop();
+    }
 }

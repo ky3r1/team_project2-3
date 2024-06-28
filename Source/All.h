@@ -33,7 +33,7 @@
 //Jump
 //#define JUMPFRAG
 // 攻撃
-//#define PLAYERATTACK
+#define PLAYERATTACK
 //Player->Enemy 弾のダメージ
 #define PROJECTILEDAMAGE
 //Player->Enemy 踏みつけダメージ
@@ -47,6 +47,8 @@
 #define ALLENEMY
 //スライム
 #define ENEMYSLIME
+// 攻撃
+#define ENEMYATTACK
 
 //ステートマシン
 #define ENEMYSTATEMACHINE
@@ -61,9 +63,5 @@
 //#define ENEMYADD
 
 ///////////////////CATEGORY////////////////////////
-#define RED 0       //enemy01
-#define GREEN 1     //enemy02
-#define BLUE 2      //enemy03
-#define YELLOW 3    //enemy04
-#define PURPLE 4    //enemy05
-#define WHITE 5    //enemy06
+#define PLAYERCATEGORY 0       //Player
+#define ENEMYCATEGORY 1     //Enemy

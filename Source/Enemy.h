@@ -28,7 +28,7 @@ enum class EnemySlimeAnimation
 class Enemy : public Character
 {
 public:
-    Enemy() {}
+	Enemy();
     ~Enemy() override {}
 
     //更新処理
@@ -63,7 +63,8 @@ public:
 	//弾丸入力処理
 	void InputProjectile();
 
-	virtual void ProjectileStraightFront(int category, float angle);
+	//弾VSPlayer
+	void CollisionProjectileVsPlayer();
 
 	//行動State
 	enum class State
@@ -99,6 +100,9 @@ public:
 	// IDゲッター・セッター
 	virtual int GetId() { return id; }
 	virtual void	SetId(int id) { this->id = id; }
+
+	//delaytime.flgのゲッター
+    bool GetProjectileAttackFlg() { return projectile_auto.checker; }
 protected:
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
@@ -109,5 +113,4 @@ protected:
 	int id = 0;
 	int old_mapID=0;
 	DelayTime projectile_auto;
-	ProjectileManager projectileManager;
 };

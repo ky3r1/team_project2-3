@@ -4,7 +4,6 @@
 #include "Graphics/Model.h"
 #include "Character.h"
 #include "ProjectileManager.h"
-#include "Effect.h"
 #include "Graphics/sprite.h"
 
 
@@ -41,13 +40,6 @@ private:
 
     //’eŠÛ“ü—Íˆ—
     void InputProjectile();
-
-private:
-    //‘O•û’e”­Ë
-    void ProjectileStraightFront(int category,float angle);
-
-    //Œã•û’e”­Ë
-    void ProjectileStraightBack(int category, float angle);
 
 private:
     //‘Ò‹@ƒXƒe[ƒg‚Ö‘JˆÚ
@@ -93,7 +85,7 @@ public:
         return sub_attack_range;
     }
 private:
-    Model* model = nullptr;
+    //Model* model = nullptr;
     float       moveSpeed = 7.0f;
     float       jumpSpeed = 20.0f;
     int projectile_shot;
@@ -105,9 +97,9 @@ private:
     int nearest_enemy_index = -1;
     float current_nearest_distance = FLT_MAX;
 
-    ProjectileManager projectileManager;
+    //ProjectileManager& projectile_manager;
 
-    Effect*     hitEffect = nullptr;
+    //Effect*     hitEffect = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 

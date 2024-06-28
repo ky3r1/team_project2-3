@@ -86,9 +86,8 @@ void SceneGame::Initialize()
 	int index = 0;
 	while (index < 1)
 	{
-		int color = 0;
 		//if (index < 3)color = 1;
-		Enemy01* slime = new Enemy01(color);
+		Enemy01* slime = new Enemy01(ENEMYCATEGORY);
 		switch (index)
 		{
 		case 0:
@@ -121,7 +120,7 @@ void SceneGame::Initialize()
 	index = 0;
     while (index < 1)
     {
-        Enemy02* slime = new Enemy02(0);
+        Enemy02* slime = new Enemy02(ENEMYCATEGORY);
         slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 20));
         EnemyManager::Instance().Register(slime);
         index++;
@@ -129,7 +128,7 @@ void SceneGame::Initialize()
 	index = 0;
 	while (index < 1)
 	{
-		Enemy03* jammo = new Enemy03(0);
+		Enemy03* jammo = new Enemy03(ENEMYCATEGORY);
 		jammo->SetPosition(DirectX::XMFLOAT3(7.0f, 0, 20));
 		EnemyManager::Instance().Register(jammo);
 		index++;
@@ -137,7 +136,7 @@ void SceneGame::Initialize()
 	index = 0;
 	while (index < 1)
 	{
-		EnemyBoss* boss = new EnemyBoss(0);
+		EnemyBoss* boss = new EnemyBoss(ENEMYCATEGORY);
 		boss->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 20));
 		EnemyManager::Instance().Register(boss);
 		index++;
@@ -413,12 +412,12 @@ void SceneGame::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4
 
 		HitResult hit;
 		StageMain stage_main;
-		if (stage_main.RayCast(world_position_start, world_position_end, hit))
-		{
-			EnemyManager& enemyManager = EnemyManager::Instance();
-			Enemy01* slime = new Enemy01(GREEN);
-			slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
-			enemyManager.Register(slime);
-		}
+		//if (stage_main.RayCast(world_position_start, world_position_end, hit))
+		//{
+		//	EnemyManager& enemyManager = EnemyManager::Instance();
+		//	Enemy01* slime = new Enemy01(GREEN);
+		//	slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
+		//	enemyManager.Register(slime);
+		//}
 	}
 }

@@ -89,7 +89,7 @@ void SceneTutorial::Initialize()
 		EnemyManager::Instance().Register(slime);
 	}*/
 #endif // ENEMYSLIME
-	slime = new Enemy01(RED);
+	//slime = new Enemy01(RED);
 
 #endif // ALLENEMY
 }
@@ -166,51 +166,51 @@ void SceneTutorial::Update(float elapsedTime)
 	}
 	if (game_timer == 1)
 	{
-		if (enemyAdd == true)
-		{
-			EnemyManager& enemyManager = EnemyManager::Instance();
-			slime = new Enemy01(RED);
-			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
-			enemyManager.Register(slime);
-			slime = new Enemy01(BLUE);
-			slime->SetPosition(DirectX::XMFLOAT3(0, 1, 2));
-			enemyManager.Register(slime);
-		}
-		enemyAdd = false;
-		if (Player::Instance().GetCategory() != WHITE)
-		{
-			clear_check = true;
-		}
+		//if (enemyAdd == true)
+		//{
+		//	EnemyManager& enemyManager = EnemyManager::Instance();
+		//	slime = new Enemy01(RED);
+		//	slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
+		//	enemyManager.Register(slime);
+		//	slime = new Enemy01(BLUE);
+		//	slime->SetPosition(DirectX::XMFLOAT3(0, 1, 2));
+		//	enemyManager.Register(slime);
+		//}
+		//enemyAdd = false;
+		//if (Player::Instance().GetCategory() != WHITE)
+		//{
+		//	clear_check = true;
+		//}
 	}
 	if (game_timer == 2)
 	{
-		if (enemyAdd == true)
-		{
-			EnemyManager& enemyManager = EnemyManager::Instance();
-		    slime = new Enemy01(GREEN);
-			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
-			enemyManager.Register(slime);
-		}
-		enemyAdd = false;
-		if (slime->GetHealth() <= 0)
-		{
-			clear_check = true;
-		}
+		//if (enemyAdd == true)
+		//{
+		//	EnemyManager& enemyManager = EnemyManager::Instance();
+		//    slime = new Enemy01(GREEN);
+		//	slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
+		//	enemyManager.Register(slime);
+		//}
+		//enemyAdd = false;
+		//if (slime->GetHealth() <= 0)
+		//{
+		//	clear_check = true;
+		//}
 	}
 	if(game_timer==3)
 	{
-		if (enemyAdd == true)
-		{
-			EnemyManager& enemyManager = EnemyManager::Instance();
-			slime = new Enemy01(BLUE);
-			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
-			enemyManager.Register(slime);
-		}
-		enemyAdd = false;
-		if (slime->GetHealth() <= 0)
-		{
-			
-		}
+		//if (enemyAdd == true)
+		//{
+		//	EnemyManager& enemyManager = EnemyManager::Instance();
+		//	slime = new Enemy01(BLUE);
+		//	slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
+		//	enemyManager.Register(slime);
+		//}
+		//enemyAdd = false;
+		//if (slime->GetHealth() <= 0)
+		//{
+		//	
+		//}
 	}
 	if(game_timer==4)
 	{
@@ -470,10 +470,10 @@ void SceneTutorial::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOA
 		//StageMain stage_main;
 		//if (stage_main.RayCast(world_position_start, world_position_end, hit))
 		//{
-		EnemyManager& enemyManager = EnemyManager::Instance();
-		Enemy01* slime = new Enemy01(GREEN);
-		slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
-		enemyManager.Register(slime);
+		//EnemyManager& enemyManager = EnemyManager::Instance();
+		//Enemy01* slime = new Enemy01(GREEN);
+		//slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
+		//enemyManager.Register(slime);
 		//}
 	}
 }

@@ -10,6 +10,8 @@ public:
     ProjectileStraight(ProjectileManager* manager,int category);
     ~ProjectileStraight() override;
 
+
+
     //XVˆ—
     virtual void Update(float elapsedTime) override;
 

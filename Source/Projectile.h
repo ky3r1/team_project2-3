@@ -40,7 +40,7 @@ public:
     float GetRadius() const { return radius; }
 
     //エネミーの種類
-    int GetProectileCategory() { return projectile_category; }
+    int GetCategory() { return category; }
 
     virtual void DrawDebugGUI() = 0;
 
@@ -58,5 +58,5 @@ protected:
     ProjectileManager*      manager = nullptr;
     float                   radius = 0.5f;
     //エネミーの種類
-    int projectile_category;
+    int category;
 };

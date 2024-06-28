@@ -10,7 +10,7 @@ ProjectileHoming::ProjectileHoming(ProjectileManager* manager,int category)
     //モデルが小さいのでスケーリング
     scale.x = scale.y = scale.z = 0.5f; //sword is 3.0
     radius = 0.5f;
-    projectile_category = category;
+    this->category = category;
 }
 
 ProjectileHoming::~ProjectileHoming()

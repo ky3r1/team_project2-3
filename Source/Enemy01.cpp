@@ -3,6 +3,9 @@
 //#include "StageMapChip.h"
 #include "ProjectileManager.h"
 
+//TODO:弾のDelayTime
+#define DELAYAUTOTIME 40
+
 //コンストラクタ
 Enemy01::Enemy01(int category)
 {
@@ -62,6 +65,8 @@ void Enemy01::Update(float elapsedTime)
     //モデル行列更新
     model->UpdateTransform(transform);
     model->UpdateAnimation(elapsedTime);
+
+    UpdateDelayTime(projectile_auto.checker, projectile_auto.time, DELAYAUTOTIME);
 }
 
 //描画処理
