@@ -18,7 +18,7 @@ bool Collision::IntersectCylinderVsSphere(
         return false;
     }
     //Aの頭がBの足元より下なら当たってない
-    if(positionA.y+heightA<positionB.y)
+    if (positionA.y + heightA < positionB.y)
     {
         return false;
     }
@@ -46,40 +46,10 @@ bool Collision::IntersectCylinderVsSphere(
         return false;
     }
 
-    if(weightA > weightB)
-    {
-        Vec = DirectX::XMVectorSubtract(PositionB, PositionA);
-        // Vec 方向の単位ベクトル（Normalize）を取得
-        Vec = DirectX::XMVector2Normalize(Vec);
-        // 上記のベクトルを range 分スケール
-        Vec = DirectX::XMVectorScale(Vec, range);
-        // そのベクトルを位置 A （PositionA）からの足した位置に移動
-        Vec = DirectX::XMVectorAdd(PositionA, Vec);
-        // 出力用の位置（outPositionB）に代入する
-        DirectX::XMFLOAT2 resultPos;
-        DirectX::XMStoreFloat2(&resultPos, Vec);
+    // A が B を押し出す（B は下に押し出してはいけない）
 
-        outPositionB.x = resultPos.x;
-        outPositionB.y = positionB.y;
-        outPositionB.z = resultPos.y;
-    }
-    else
-    {
-        Vec = DirectX::XMVectorSubtract(PositionA, PositionB);
-        // Vec 方向の単位ベクトル（Normalize）を取得
-        Vec = DirectX::XMVector2Normalize(Vec);
-        // 上記のベクトルを range 分スケール
-        Vec = DirectX::XMVectorScale(Vec, range);
-        // そのベクトルを位置 A （PositionA）からの足した位置に移動
-        Vec = DirectX::XMVectorAdd(PositionB, Vec);
-        // 出力用の位置（outPositionB）に代入する
-        DirectX::XMFLOAT2 resultPos;
-        DirectX::XMStoreFloat2(&resultPos, Vec);
+    // あたっている場合
 
-        outPositionB.x = resultPos.x;
-        outPositionB.y = positionB.y;
-        outPositionB.z = resultPos.y;
-    }
     // Vec 方向の単位ベクトル（Normalize）を取得
     Vec = DirectX::XMVector2Normalize(Vec);
     // 上記のベクトルを range 分スケール
