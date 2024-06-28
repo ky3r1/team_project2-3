@@ -89,7 +89,6 @@ private:
     Model* model = nullptr;
     float       moveSpeed = 7.0f;
     float       jumpSpeed = 20.0f;
-    int color_count = 0;
     int projectile_shot;
 
     int         jumpCount = 0;
@@ -98,8 +97,9 @@ private:
     DelayTime projectile_auto;
     DelayTime projectile_front;
 
-    DirectX::XMFLOAT3 territoryOrigin = { 0,0,0 };
-    float territoryRange = 5.0f;
+    int nearest_enemy_index = -1;
+    float current_nearest_distance = FLT_MAX;
+    float player_territory = 8.0f;
 
     ProjectileManager projectileManager;
 
