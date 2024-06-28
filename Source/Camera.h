@@ -5,7 +5,6 @@
 //カメラ
 class Camera
 {
-private:
     Camera()   {}
     ~Camera()   {}
 public:
@@ -17,8 +16,7 @@ public:
     }
 
     //指定方向を向く
-    void SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& focus,
-        const DirectX::XMFLOAT3& up);
+    void SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& focus, const DirectX::XMFLOAT3& up);
 
     //パースペクティブ設定
     void SetPerspectiveFov(float fovY, float aspect, float nearZ, float farZ);

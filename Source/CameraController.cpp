@@ -3,39 +3,67 @@
 #include "Camera.h"
 #include "Input/Input.h"
 
+#define MAXANGLE_X 3.14f * 0.5f-0.01f
+#define MINANGLE_X 0.1f
+
 //更新処理
 void CameraController::Update(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
-    //float ax = gamePad.GetAxisRX();
-    //float ay = gamePad.GetAxisRY();
+    Mouse& mouse = Input::Instance().GetMouse();
     //カメラの回転速度
     float speed = rollSpeed * elapsedTime;
-
-    //スティックの入力値に合わせてX軸とY軸を回転
-    //angle.x += speed * ay;
-    //angle.y += speed * ax;
-
-
-    ////X軸のカメラの回転制御
-    //if (angle.x > maxAngleX)
+    // デバッグウインドウ操作中は処理しない
+    //if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
     //{
-    //    angle.x = maxAngleX;
-    //}
-    //if (angle.x < minAngleX)
-    //{
-    //    angle.x = minAngleX;
+    //    return;
     //}
 
-    ////Y軸の回転値を-3.14~3.14
-    //if (angle.y < -DirectX::XM_PI)
-    //{
-    //    angle.y += DirectX::XM_2PI;
-    //}
-    //if (angle.y > DirectX::XM_PI)
-    //{
-    //    angle.y -= DirectX::XM_2PI;
-    //}
+    // IMGUIのマウス入力値を使ってカメラ操作する
+    ImGuiIO io = ImGui::GetIO();
+
+    // マウスカーソルの移動量を求める
+    float moveX = io.MouseDelta.x * 0.02f;
+    float moveY = io.MouseDelta.y * 0.02f;
+    // Y軸回転
+    angle.y += moveX * 0.5f;
+    if (angle.y > DirectX::XM_PI)
+    {
+        angle.y -= DirectX::XM_2PI;
+    }
+    else if (angle.y < -DirectX::XM_PI)
+    {
+        angle.y += DirectX::XM_2PI;
+    }
+    // X軸回転
+    angle.x += moveY * 0.5f;
+    if (angle.x > DirectX::XM_PI)
+    {
+        angle.x -= DirectX::XM_2PI;
+    }
+    else if (angle.x < -DirectX::XM_PI)
+    {
+        angle.x += DirectX::XM_2PI;
+    }
+
+    //Y軸の回転値を-3.14~3.14
+    if (angle.y < -DirectX::XM_PI)
+    {
+        angle.y += DirectX::XM_2PI;
+    }
+    if (angle.y > DirectX::XM_PI)
+    {
+        angle.y -= DirectX::XM_2PI;
+    }
+    //angle.xの制限
+    if (angle.x >= MAXANGLE_X)
+    {
+        angle.x = MAXANGLE_X;
+    }
+    if (angle.x <= MINANGLE_X)
+    {
+        angle.x = MINANGLE_X;
+    }
 
     //カメラ回転値を回転行列に変換
     DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);

@@ -135,11 +135,9 @@ void SceneGame::Finalize()
 void SceneGame::Update(float elapsedTime)
 {
 	//カメラコントローラー更新処理
-#ifdef  ALLPLAYER
 	DirectX::XMFLOAT3 target = Player::Instance().GetPosition();
 	target.y += 0.5f;
 	cameraController->SetTarget(target);
-#endif //  ALLPLAYER
 	cameraController->Update(elapsedTime);
 
 	StageManager::Instance().Update(elapsedTime);
