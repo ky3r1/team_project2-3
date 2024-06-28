@@ -245,6 +245,15 @@
     <ClInclude Include="Source\StageMain.h">
       <Filter>Stage</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Enemy02.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Enemy03.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EnemyBoss.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -411,6 +420,15 @@
     </ClCompile>
     <ClCompile Include="Source\StageMain.cpp">
       <Filter>Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy02.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Enemy03.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EnemyBoss.cpp">
+      <Filter>Character\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

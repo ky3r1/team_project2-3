@@ -4,6 +4,26 @@
 #include "Player.h"
 #include "StateMachine.h"
 
+enum class EnemySlimeAnimation
+{
+	IdleNormal,
+	IdleBattle,
+	Attack01,
+	Attack02,
+	WalkFWD,
+	WalkBWD,
+	WalkLeft,
+	WalkRight,
+	RunFWD,
+	SenseSomethingST,
+	SenseSomethingRPT,
+	Taunt,
+	Victory,
+	GetHit,
+	Dizzy,
+	Die,
+};
+
 //エネミー
 class Enemy : public Character
 {

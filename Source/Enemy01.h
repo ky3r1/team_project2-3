@@ -3,26 +3,6 @@
 #include "Graphics/Model.h"
 #include "Enemy.h"
 
-enum class EnemySlimeAnimation
-{
-	IdleNormal,
-	IdleBattle,
-	Attack01,
-	Attack02,
-	WalkFWD,
-	WalkBWD,
-	WalkLeft,
-	WalkRight,
-	RunFWD,
-	SenseSomethingST,
-	SenseSomethingRPT,
-	Taunt,
-	Victory,
-	GetHit,
-	Dizzy,
-	Die,
-};
-
 //ƒXƒ‰ƒCƒ€
 class Enemy01 : public Enemy
 {

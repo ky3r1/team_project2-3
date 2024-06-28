@@ -6,6 +6,9 @@
 //CharacterInclude
 #include "EnemyManager.h"
 #include "Enemy01.h"
+#include "Enemy02.h"
+#include "Enemy03.h"
+#include "EnemyBoss.h"
 #include "EffectManager.h"
 #include "MouseManager.h"
 
@@ -81,7 +84,7 @@ void SceneGame::Initialize()
 #ifdef ALLENEMY
 #ifdef ENEMYSLIME
 	int index = 0;
-	while (index < 5)
+	while (index < 1)
 	{
 		int color = 0;
 		//if (index < 3)color = 1;
@@ -113,6 +116,30 @@ void SceneGame::Initialize()
   //          break;
 		}
 		EnemyManager::Instance().Register(slime);
+		index++;
+	}
+	index = 0;
+    while (index < 1)
+    {
+        Enemy02* slime = new Enemy02(0);
+        slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 20));
+        EnemyManager::Instance().Register(slime);
+        index++;
+    }
+	index = 0;
+	while (index < 1)
+	{
+		Enemy03* jammo = new Enemy03(0);
+		jammo->SetPosition(DirectX::XMFLOAT3(7.0f, 0, 20));
+		EnemyManager::Instance().Register(jammo);
+		index++;
+	}
+	index = 0;
+	while (index < 1)
+	{
+		EnemyBoss* boss = new EnemyBoss(0);
+		boss->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 20));
+		EnemyManager::Instance().Register(boss);
 		index++;
 	}
 #endif // ENEMYSLIME
