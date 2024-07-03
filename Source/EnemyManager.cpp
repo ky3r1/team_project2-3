@@ -128,3 +128,29 @@ Enemy* EnemyManager::GetEnemyFromId(int id)
     }
     return nullptr;
 }
+
+Enemy* EnemyManager::NearEnemy(DirectX::XMFLOAT3 position)
+{
+    //ç≈Ç‡ãﬂÇ¢ìGÇëçìñÇΩÇËÇ≈íTçı
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    float current_nearest_distance = FLT_MAX;
+    Enemy* c = nullptr;
+    int enemyCount = enemyManager.GetEnemyCount();
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+    for (int index = 0; index < enemyCount; index++)
+    {
+        Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
+        if (position.x == enemy->GetPosition().x && position.y == enemy->GetPosition().y && position.z == enemy->GetPosition().z)continue;
+        DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
+        DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
+        DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
+        float d;
+        DirectX::XMStoreFloat(&d, D);
+        if (d < current_nearest_distance)
+        {
+            current_nearest_distance = d;
+            c = enemy;
+        }
+    }
+    return c;
+}

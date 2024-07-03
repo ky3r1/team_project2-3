@@ -5,6 +5,7 @@
 #include "ProjectileManager.h"
 #include "ProjectileStraight.h"
 #include "ProjectileHoming.h"
+#include "EnemyManager.h"
 
 
 //行列更新処理
@@ -574,16 +575,12 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     ProjectileStraight* projectile{};
     //前方向
     DirectX::XMFLOAT3 dir;
-    DirectX::XMFLOAT3 dis_pos;
-    DirectX::XMVECTOR Dis_pos;
-    DirectX::XMMATRIX Right_;
-    DirectX::XMFLOAT3 r;
     DirectX::XMFLOAT3 axis = { 0,1,0 };
     DirectX::XMVECTOR Axis;
 
-    dir.x = transform._31 * 100.0f;
+    dir.x = vector * transform._31 * 100.0f;
     dir.y = 0.0f;
-    dir.z = transform._33 * 100.0f;
+    dir.z = vector * transform._33 * 100.0f;
     DirectX::XMFLOAT3 right;
     right.x = transform._11 * 100.0f;
     right.y = 0.0f;
@@ -608,4 +605,9 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     dir.z = ep.z;
     projectile = new ProjectileStraight(&ProjectileManager::Instance(), category);
     projectile->Launch(dir, pos);
+}
+
+void Character::ProjectileStraightShotting(float angle, int vector)
+{
+    ProjectileStraightShotting(category, angle, vector);
 }
