@@ -34,8 +34,8 @@ Player::Player()
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
-    scale.x = scale.y = scale.z = 0.1f;
-    //scale.x = scale.y = scale.z = 1.0f;
+    //scale.x = scale.y = scale.z = 0.1f;
+    scale.x = scale.y = scale.z = 1.0f;
 
     weight = 100.0f;
     color = { 1,0,0,1 };
@@ -75,11 +75,11 @@ Player::~Player()
 void Player::Update(float elapsedTime)
 {
     //すべての敵と総当たりで衝突判定
-    int enemyCount = EnemyManager::Instance().GetEnemyCount();
-    for (int i = 0; i < enemyCount; i++)
-    {
-        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-    }
+    //int enemyCount = EnemyManager::Instance().GetEnemyCount();
+    //for (int i = 0; i < enemyCount; i++)
+    //{
+    //    Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+    //}
     //色変え
     //ChangeColor(color, category);
 
@@ -247,19 +247,17 @@ void Player::UpdateVerticalMove(float elapsedTime)
 //プレイヤーと敵の衝突
 void Player::CollisionPlayerVsEnemies()
 {
-    EnemyManager& enemyManager = EnemyManager::Instance();
-
-    //すべての敵と総当たりで衝突判定
-    int enemyCount = enemyManager.GetEnemyCount();
-    for (int i = 0; i < enemyCount; i++)
-    {
-        Enemy* enemy = enemyManager.GetEnemy(i);
-
+    ////すべての敵と総当たりで衝突判定
+    //int enemyCount = enemyManager.GetEnemyCount();
+    //for (int i = 0; i < enemyCount; i++)
+    //{
+    //    Enemy* enemy = enemyManager.GetEnemy(i);
+    Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
         //衝突処理
         DirectX::XMFLOAT3 outPosition;
         if (Collision::IntersectCylinderVsSphere(
-            position, radius,height,weight,
-            enemy->GetPosition(), enemy->GetRadius(),enemy->GetHeight(),enemy->GetWeight(),
+            position, radius, height, weight,
+            enemy->GetPosition(), enemy->GetRadius(), enemy->GetHeight(), enemy->GetWeight(),
             outPosition))
         {
             enemy->SetPosition(outPosition);
@@ -290,7 +288,7 @@ void Player::CollisionPlayerVsEnemies()
             }
 #endif // ENEMYHITTINGDAMAGE
         }
-    }
+    //}
 }
 
 //プレイヤーと弾丸の衝突
@@ -345,18 +343,12 @@ void Player::UpdateIdleState(float elapsedTime)
     //}
     else if (state != State::Attack)
     {
-        EnemyManager& enemyManager = EnemyManager::Instance();
 
         //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
-        int enemyCount = enemyManager.GetEnemyCount();
-        for (int j = 0; j < enemyCount; ++j)
+        Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
+        if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
         {
-            Enemy* enemy = enemyManager.GetEnemy(j);
-            DirectX::XMFLOAT3 enemy_position = enemy->GetPosition();
-            if (Collision::PointInsideCircle(enemy_position, position, attack_range))
-            {
-                TransitionAttackState();
-            }
+            TransitionAttackState();
         }
     }
 
