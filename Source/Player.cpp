@@ -19,7 +19,9 @@ Player& Player::Instance()
 }
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 40
+#define DELAYAUTOTIME 70
+#define DELAYALLANGLETIME 60
+#define DELAYFRONTTIME 60
 
 //TODO:PlayerDamageの当たり判定のDelayTime
 #define DELAYPLAYERVSENEMY 60
@@ -47,6 +49,9 @@ Player::Player()
 
     //state = State::Idle;
 
+    // エフェクト
+    AT_Field=new Effect("Data/Effect/AT_field.efk");
+
     //ヒットエフェクト読み込み
     //hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/Hit.efk"));
     hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/GP3_sample.efk"));
@@ -57,6 +62,10 @@ Player::Player()
 
 Player::~Player()
 {
+    delete AT_Field;
+
+    delete hitEffect;
+    hitEffect = nullptr;
     delete model;
     model = nullptr;
 }
@@ -112,6 +121,8 @@ void Player::Update(float elapsedTime)
 
     //モデルアニメーション更新
     model->UpdateAnimation(elapsedTime);
+
+    AT_Field->Play(position, 10.0f);
 
     //当たり判定のdelay
     //if (!hit_delay.checker)
@@ -305,10 +316,70 @@ void Player::CollisionProjectilesVsEnemies()
     EnemyManager& enemyManager = EnemyManager::Instance();
     //すべての弾丸とすべての敵をそう当たりで衝突判定
     int enemyCount = enemyManager.GetEnemyCount();
-    for (int j = 0; j < enemyCount; ++j)
+    for (int i = 0; i < projectileCount; ++i)
     {
-        Enemy* enemy = enemyManager.GetEnemy(j);
-        Character::CollisionProjectileVsCharacter(enemy, *hitEffect);
+        Projectile* projectile = projectileManager.GetProjectile(i);
+
+        for (int j = 0; j < enemyCount; ++j)
+        {
+            Enemy* enemy = enemyManager.GetEnemy(j);
+
+            //衝突処理
+            DirectX::XMFLOAT3 outPosition;
+            if (Collision::IntersectSphereVsCylinder(
+                projectile->GetPosition(),
+                projectile->GetRadius(),
+                enemy->GetPosition(),
+                enemy->GetRadius(),
+                enemy->GetHeight(),
+                outPosition))
+            {
+                penetration_count--;
+                //弾丸破棄
+                if(penetration_count <= 0)
+                {
+                    projectile->Destroy();
+                }
+                //ProjectileRicochet(WHITE, 0.0f, ricochet_count, j);
+                
+#ifdef PROJECTILEDAMAGE
+                //ダメージを与える
+                if (enemy->ApplyDamage(1, 0.5f))
+                {
+                    //吹き飛ばす
+                    {
+                        DirectX::XMFLOAT3 impulse;
+                        //吹き飛ばす力
+                        const float power = 5.0f;
+
+                        //敵の位置
+                        DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&enemy->GetPosition());
+                        //弾の位置
+                        DirectX::XMVECTOR pVec = DirectX::XMLoadFloat3(&projectile->GetPosition());
+                        //弾から敵への方向ベクトルを計算（敵 - 弾）
+                        auto v = DirectX::XMVectorSubtract(eVec, pVec);
+                        //方向ベクトルを正規化
+                        v = DirectX::XMVector3Normalize(v);
+
+                        DirectX::XMFLOAT3 vec;
+                        DirectX::XMStoreFloat3(&vec, v);
+
+                        impulse.x = power * vec.x;
+                        impulse.y = power * 0.5f;
+                        impulse.z = power * vec.z;
+                        enemy->AddImpulse(impulse);
+                    }
+
+                    //ヒットエフェクト再生
+                    {
+                        DirectX::XMFLOAT3 e = enemy->GetPosition();
+                        e.y += enemy->GetHeight() * 0.5f;
+                        hitEffect->Play(e, 2.0f);
+                    }
+                }
+#endif // PROJECTILEDAMAGE
+            }
+        }
     }
 }
 
@@ -318,15 +389,216 @@ void Player::InputProjectile()
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
 
-    //前方弾丸発射
-    if (projectile_auto.checker)
-    {
-        ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
-        projectile_auto.checker = false;
-    }
+    ////前方弾丸発射
+    //if (mouse.GetButton() & Mouse::BTN_LEFT)
+    //{
+        if (projectile_auto.checker)
+        {
+            ProjectileStraightFront(WHITE, 0.0f);
+            //ProjectileRicochet(WHITE, 0.0f, 5);
+            penetration_count = 10;
+            projectile_auto.checker = false;
+        }
+    //}
+    //if(category!=WHITE)
+    //{
+    //    if (mouse.GetButton() & Mouse::BTN_RIGHT)
+    //    {
+    //        if (projectile_shot == 0)
+    //        {
+    //            if (projectile_front.checker)
+    //            {
+    //                for (int index = 0; index < 3; index++)
+    //                {
+    //                    switch (index)
+    //                    {
+    //                    case 0:
+    //                        ProjectileStraightFront(category, 0.0f);
+    //                        break;
+    //                    case 1:
+    //                        ProjectileStraightFront(category, 0.3f);
+    //                        break;
+    //                    case 2:
+    //                        ProjectileStraightFront(category, -0.3f);
+    //                        break;
+    //                    default:
+    //                        break;
+    //                    }
+    //                }
+    //                projectile_front.checker = false;
+    //            }
+    //        }
+    //    }
+    //        //直進弾丸発射
+    //    if (mouse.GetButton() & Mouse::BTN_LEFT && projectile_allangle.checker)
+    //    {
+    //        if (projectile_shot == 1)
+    //        {
+    //            for (int index = 0; index < 10; index++)
+    //            {
+    //                switch (index)
+    //                {
+    //                case 0:
+    //                    ProjectileStraightFront(category, 0.0f);
+    //                    break;
+    //                case 1:
+    //                    ProjectileStraightFront(category, 0.9);
+    //                    break;
+    //                case 2:
+    //                    ProjectileStraightFront(category, 3.0);
+    //                    break;
+    //                case 3:
+    //                    ProjectileStraightFront(category, -0.9);
+    //                    break;
+    //                case 4:
+    //                    ProjectileStraightFront(category, -3.0);
+    //                    break;
+    //                case 5:
+    //                    ProjectileStraightBack(category, 0.0f);
+    //                    break;
+    //                case 6:
+    //                    ProjectileStraightBack(category, 0.9f);
+    //                    break;
+    //                case 7:
+    //                    ProjectileStraightBack(category, 3.0f);
+    //                    break;
+    //                case 8:
+    //                    ProjectileStraightBack(category, -0.9f);
+    //                    break;
+    //                case 9:
+    //                    ProjectileStraightBack(category, -3.0f);
+    //                    break;
+    //                default:
+    //                    break;
+    //                }
+    //            }
+    //            projectile_allangle.checker = false;
+    //        }
+    //    }
+    //}
 }
 
 
+void Player::ProjectileStraightFront(int category, float angle)//category:弾のタイプ、angle:弾の角度
+{
+    //発射
+    ProjectileStraight* projectile{};
+    //前方向
+    DirectX::XMFLOAT3 dir;
+    DirectX::XMFLOAT3 dis_pos;
+    DirectX::XMVECTOR Dis_pos;
+    DirectX::XMMATRIX Right_;
+    DirectX::XMFLOAT3 r;
+    DirectX::XMFLOAT3 axis = { 0,1,0 };
+    DirectX::XMVECTOR Axis;
+
+    float dist = FLT_MAX;
+    DirectX::XMFLOAT3 enemy_position = {};
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    int enemyCount = enemyManager.GetEnemyCount();
+    for (int index = 0; index < enemyCount; index++)
+    {
+        Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
+        DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
+        DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
+        DirectX::XMVECTOR V = DirectX::XMVectorSubtract(E, P);
+        DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(V);
+        float d;
+        DirectX::XMStoreFloat(&d, D);
+        if (d < dist)
+        {
+            enemy_position = enemy->GetPosition();
+        }
+    }
+    dir.x = transform._31 * 100.0f;
+    dir.y = 0.0f;
+    dir.z = transform._33 * 100.0f;
+    DirectX::XMFLOAT3 right;
+    right.x = transform._11 * 100.0f; 
+    right.y = 0.0f;
+    right.z = transform._13 * 100.0f; 
+    //発射位置（プレイヤーの腰当たり）
+    DirectX::XMFLOAT3 pos;
+    pos.x = position.x;
+    pos.y = position.y + height * 0.5f;
+    pos.z = position.z;
+
+    DirectX::XMVECTOR Right = DirectX::XMLoadFloat3(&right);
+    Right = DirectX::XMVectorScale(Right, angle);
+    DirectX::XMVECTOR Dir = DirectX::XMLoadFloat3(&dir);
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&pos);
+    DirectX::XMVECTOR Ev = DirectX::XMVectorAdd(Dir, Right);
+    DirectX::XMVECTOR Ep = DirectX::XMVectorAdd(Pos, Ev);
+    Ep = DirectX::XMVectorSubtract(Ep, Pos);
+    DirectX::XMFLOAT3 ep;
+    DirectX::XMStoreFloat3(&ep, Ep);
+    dir.x = ep.x;
+    dir.y = 0.0f;
+    dir.z = ep.z;
+    projectile = new ProjectileStraight(&projectileManager, category);
+    projectile->Launch(dir, pos);
+}
+void Player::ProjectileRicochet(int category, float angle, int count, int index)
+{
+    //発射
+    ProjectileStraight* projectile{};
+
+    float dist = FLT_MAX;
+    DirectX::XMFLOAT3 enemy_position = {};
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    int enemyCount = enemyManager.GetEnemyCount();
+    DirectX::XMFLOAT3 dir = {};
+    for (int i = 0; i < enemyCount; i++)
+    {
+        Enemy* enemy1 = EnemyManager::Instance().GetEnemy(index);
+        for (int j = i + 1; j < enemyCount; j++)
+        {
+            Enemy* enemy2 = EnemyManager::Instance().GetEnemy(j);
+            DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
+            DirectX::XMVECTOR E1 = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&enemy1->GetPosition()));
+            DirectX::XMVECTOR E2 = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&enemy2->GetPosition()));
+            DirectX::XMVECTOR V = DirectX::XMVectorSubtract(E1, E2);
+            DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(V);
+            D = DirectX::XMVector3Normalize(D);
+            float d;
+            DirectX::XMStoreFloat(&d, D);
+            if (d < dist)
+            {
+                //DirectX::XMStoreFloat3(&dir, V);
+                enemy_position = enemy1->GetPosition();
+            }
+        }
+    }
+    ricochet_count--;
+    //前方向
+    dir.x= transform._31 * 100.0f;
+    dir.y = 0.0f;
+    dir.z = transform._33 * 100.0f;
+    DirectX::XMFLOAT3 right;
+    right.x = transform._11 * 100.0f;
+    right.y = 0.0f;
+    right.z = transform._13 * 100.0f;
+    //発射位置（プレイヤーの腰当たり）
+    DirectX::XMFLOAT3 pos;
+    pos.x = enemy_position.x;
+    pos.y = enemy_position.y + height * 0.5f;
+    pos.z = enemy_position.z;
+
+    /*DirectX::XMVECTOR Right = DirectX::XMLoadFloat3(&right);
+    Right = DirectX::XMVectorScale(Right, angle);
+    DirectX::XMVECTOR Dir = DirectX::XMLoadFloat3(&dir);
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&pos);
+    DirectX::XMVECTOR Ev = DirectX::XMVectorAdd(Dir, Right);
+    DirectX::XMVECTOR Ep = DirectX::XMVectorAdd(Pos, Ev);
+    Ep = DirectX::XMVectorSubtract(Ep, Pos);
+    DirectX::XMFLOAT3 ep;
+    DirectX::XMStoreFloat3(&ep, Ep);
+    dir.x = ep.x;
+    dir.y = 0.0f;
+    dir.z = ep.z;*/
+    projectile = new ProjectileStraight(&projectileManager, category);
+    projectile->Launch(dir, pos);
+}
 
 //待機ステート
 void Player::TransitionIdleState()
@@ -379,36 +651,47 @@ bool Player::InputMove(float elapsedTime)
 
     //移動処理
     Move(moveVec.x, moveVec.z, moveSpeed);
-    EnemyManager& enemyManager = EnemyManager::Instance();
 
     //すべての弾丸とすべての敵をそう当たりで衝突処理
-    int projectileCount = ProjectileManager::Instance().GetProjectileCount();
-    int enemyCount = enemyManager.GetEnemyCount();
+    int projectileCount = projectileManager.GetProjectileCount();
 
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    int enemyCount = enemyManager.GetEnemyCount();
+    current_nearest_distance = FLT_MAX;
 
     DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-    for (int index = 0; index < enemyCount; index++)
+    
+    DirectX::XMFLOAT3 ND{ moveVec };
+
+    if(enemyCount)
     {
-        Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
-        DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
-        DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
-        DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
-        float d;
-        DirectX::XMStoreFloat(&d, D);
-        if (d < current_nearest_distance)
+        for (int index = 0; index < enemyCount; index++)
         {
-            current_nearest_distance = d;
-            nearest_enemy_index = index;
-        }      
+            Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
+            DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
+            DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
+            DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
+            float d;
+            DirectX::XMStoreFloat(&d, D);
+            if (d < current_nearest_distance)
+            {
+                if (enemyCount >= index)
+                {
+                    current_nearest_distance = d;
+                    nearest_enemy_index = index;
+                }
+            }
+        }
+        Enemy* ne = enemyManager.GetEnemy(nearest_enemy_index);
+        DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
+        DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+        
+        DirectX::XMStoreFloat3(&ND, Vec);
     }
-    Enemy* ne= enemyManager.GetEnemy(nearest_enemy_index);
-    DirectX::XMVECTOR NE= DirectX::XMLoadFloat3(&ne->GetPosition());
-    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
-    DirectX::XMFLOAT3 ND;
-    DirectX::XMStoreFloat3(&ND, Vec);
 
     //旋回処理
     Turn(elapsedTime, ND.x, ND.z, turnSpeed);
+
     if (moveVec.x != 0 /*|| moveVec.y != 0 */ || moveVec.z != 0)return true;
     return false;
 }

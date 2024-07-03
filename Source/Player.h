@@ -42,7 +42,13 @@ private:
     void InputProjectile();
 
 private:
-    /////////////////////ステート//////////////////////////
+    //前方弾発射
+    void ProjectileStraightFront(int category,float angle);
+
+    //後方弾発射
+    void ProjectileRicochet(int category, float angle,int count, int index);
+
+private:
     //待機ステートへ遷移
     void TransitionIdleState();
     //待機ステート更新処理
@@ -97,10 +103,13 @@ private:
 
     int nearest_enemy_index = -1;
     float current_nearest_distance = FLT_MAX;
+    int penetration_count = 10;
+    int ricochet_count = 30;
 
     //ProjectileManager& projectile_manager;
 
-    //Effect*     hitEffect = nullptr;
+    Effect*     hitEffect = nullptr;
+    Effect*     AT_Field = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 
