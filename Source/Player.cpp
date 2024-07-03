@@ -54,7 +54,7 @@ Player::Player()
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/bullet.efk");
-    category = WHITE;
+    //category = WHITE;
     projectile_shot = 0;
     turnSpeed = DirectX::XMConvertToRadians(720);
     ProjectileManager& projectile_manager = ProjectileManager::Instance();
@@ -314,6 +314,7 @@ void Player::CollisionPlayerVsEnemies()
 void Player::CollisionProjectilesVsEnemies()
 {
     EnemyManager& enemyManager = EnemyManager::Instance();
+    int projectileCount = projectileManager.GetProjectileCount();
     //すべての弾丸とすべての敵をそう当たりで衝突判定
     int enemyCount = enemyManager.GetEnemyCount();
     for (int i = 0; i < projectileCount; ++i)
@@ -394,7 +395,7 @@ void Player::InputProjectile()
     //{
         if (projectile_auto.checker)
         {
-            ProjectileStraightFront(WHITE, 0.0f);
+            ProjectileStraightFront(1, 0.0f);
             //ProjectileRicochet(WHITE, 0.0f, 5);
             penetration_count = 10;
             projectile_auto.checker = false;

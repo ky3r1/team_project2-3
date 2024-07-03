@@ -4,6 +4,7 @@
 #include "Graphics/Model.h"
 #include "Character.h"
 #include "ProjectileManager.h"
+#include "Effect.h"
 #include "Graphics/sprite.h"
 
 
@@ -43,10 +44,10 @@ private:
 
 private:
     //前方弾発射
-    void ProjectileStraightFront(int category,float angle);
+    void ProjectileStraightFront(int category, float angle);
 
     //後方弾発射
-    void ProjectileRicochet(int category, float angle,int count, int index);
+    void ProjectileRicochet(int category, float angle, int count, int index);
 
 private:
     //待機ステートへ遷移
@@ -92,24 +93,26 @@ public:
         return sub_attack_range;
     }
 private:
-    //Model* model = nullptr;
+    Model* model = nullptr;
     float       moveSpeed = 7.0f;
-    //float       jumpSpeed = 20.0f;
-    //int projectile_shot;
+    float       jumpSpeed = 20.0f;
+    int projectile_shot;
 
-    //int         jumpCount = 0;
-    //int         jumpLimit = 2;
+    int         jumpCount = 0;
+    int         jumpLimit = 2;
+    DelayTime projectile_allangle;
     DelayTime projectile_auto;
+    DelayTime projectile_front;
 
     int nearest_enemy_index = -1;
     float current_nearest_distance = FLT_MAX;
     int penetration_count = 10;
     int ricochet_count = 30;
 
-    //ProjectileManager& projectile_manager;
+    ProjectileManager projectileManager;
 
-    Effect*     hitEffect = nullptr;
-    Effect*     AT_Field = nullptr;
+    Effect* hitEffect = nullptr;
+    Effect* AT_Field = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 
