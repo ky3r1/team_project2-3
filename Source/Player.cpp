@@ -48,7 +48,8 @@ Player::Player()
     //state = State::Idle;
 
     //ヒットエフェクト読み込み
-    hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/Hit.efk"));
+    //hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/Hit.efk"));
+    hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/GP3_sample.efk"));
     category = PLAYERCATEGORY;
     turnSpeed = DirectX::XMConvertToRadians(720);
     ProjectileManager& projectile_manager = ProjectileManager::Instance();

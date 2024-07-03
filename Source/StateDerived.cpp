@@ -38,7 +38,7 @@ void SearchState::Exit()
 void DeathState::Enter()
 {
 #ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Die), false);
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Death), false);
 #endif // ENEMYANIMATION
 }
 // 実行中
@@ -62,7 +62,7 @@ void DeathState::Exit()
 void IdleState::Enter()
 {
 #ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::IdleNormal), true);
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Idle), true);
 #endif // ENEMYANIMATION
 }
 //実行中
@@ -119,7 +119,8 @@ void BattleState::Exit()
 void PursuitState::Enter()
 {
 #ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::RunFWD), true);
+	//TODO:アニメーション一時挿入してるため要修正
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Idle), true);
 #endif // ENEMYANIMATION
 	owner->SetStateTimer(Mathf::RandomRange(3.0f, 5.0f));
 }
@@ -139,6 +140,19 @@ void PursuitState::Execute(float elapsedTime)
 	if (distSq < radius * radius)
 	{
 		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Battle::Attack));
+		//if (owner->GetEnemyCategory() == EnemyBoss_Num)
+		//{
+		//	switch (rand() % 3)
+		//	{
+		//	case 0:
+
+		//		break;
+		//	case 1:
+		//		break;
+		//	case 2:
+		//		break;
+		//	}
+		//}
 	}
 	if (Player::Instance().GetHealth() <= 0)
 	{
@@ -148,6 +162,7 @@ void PursuitState::Execute(float elapsedTime)
 	owner->OutMove();
 	// 目的地点へ移動
 	owner->MoveToTarget(elapsedTime, 0.5f);
+
 }
 //出ていくとき
 void PursuitState::Exit()

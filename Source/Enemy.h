@@ -6,22 +6,20 @@
 
 enum class EnemySlimeAnimation
 {
-	IdleNormal,
-	IdleBattle,
+	Idle,
+	Walk,
 	Attack01,
+	Death,
 	Attack02,
-	WalkFWD,
-	WalkBWD,
-	WalkLeft,
-	WalkRight,
-	RunFWD,
-	SenseSomethingST,
-	SenseSomethingRPT,
-	Taunt,
-	Victory,
-	GetHit,
-	Dizzy,
-	Die,
+	Attack03,
+};
+
+enum
+{
+	Enemy01_Num,
+	Enemy02_Num,
+	Enemy03_Num,
+	EnemyBoss_Num,
 };
 
 //エネミー
@@ -104,6 +102,9 @@ public:
 
 	//delaytime.flgのゲッター
     bool GetProjectileAttackFlg() { return projectile_auto.checker; }
+
+	//敵のカテゴリーのゲッター・セッター
+	int GetEnemyCategory() { return enemy_categry; }
 protected:
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
@@ -113,6 +114,7 @@ protected:
 	std::vector<DirectX::XMFLOAT2> moving_roots;
 	int id = 0;
 	int category_id = 0;
+	int enemy_categry = -1;
 	DelayTime projectile_auto;
 	std::string name = "";
 };

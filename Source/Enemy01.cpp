@@ -10,10 +10,11 @@
 Enemy01::Enemy01(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Enemy/enemy01.mdl");
+    model = new Model("Data/Model/Enemy/enemy1_walk.mdl");
     static int id_enemy01 = 0;
     id_enemy01++;
     category_id = id_enemy01;
+    enemy_categry = Enemy01_Num;
     name = std::string("Enemy01:") + std::to_string(category_id);
     //表示サイズを調整
     scale.x = scale.y = scale.z = 0.02f;

@@ -14,6 +14,7 @@ EnemyBoss::EnemyBoss(int category)
     static int id_enemyboss = 0;
     id_enemyboss++;
     category_id = id_enemyboss;
+    enemy_categry = EnemyBoss_Num;
     name = std::string("EnemyBoss:") + std::to_string(category_id);
 
     //表示サイズを調整
