@@ -41,14 +41,6 @@ private:
 
     //弾丸入力処理
     void InputProjectile();
-
-private:
-    //前方弾発射
-    void ProjectileStraightFront(int category, float angle);
-
-    //後方弾発射
-    void ProjectileRicochet(int category, float angle, int count, int index);
-
 private:
     //待機ステートへ遷移
     void TransitionIdleState();

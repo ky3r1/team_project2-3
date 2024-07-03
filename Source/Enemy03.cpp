@@ -15,6 +15,7 @@ Enemy03::Enemy03(int category)
     static int id_enemy03= 0;
     id_enemy03++;
     category_id = id_enemy03;
+    enemy_categry = Enemy03_Num;
     name = std::string("Enemy03:") + std::to_string(category_id);
     //表示サイズを調整
     scale.x = scale.y = scale.z = 0.01f;

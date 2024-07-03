@@ -82,8 +82,8 @@ void SceneGame::Initialize()
 	//カメラコントローラー初期化
 	cameraController = std::unique_ptr<CameraController>(new CameraController());
 #ifdef ALLENEMY
-#ifdef ENEMYSLIME
 	int index = 0;
+#ifdef ENEMY01
 	while (index < 1)
 	{
 		//if (index < 3)color = 1;
@@ -103,29 +103,33 @@ void SceneGame::Initialize()
 			slime->SetWeight(2.0f);
 			break;
 		case 3:
-			slime->SetPosition(DirectX::XMFLOAT3(-10.0f, 0,25));
+			slime->SetPosition(DirectX::XMFLOAT3(-10.0f, 0, 25));
 			slime->SetWeight(3.0f);
 			break;
 		case 4:
 			slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 25));
 			slime->SetWeight(4.0f);
 			break;
-		//default:
-		//	slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));
-  //          break;
+			//default:
+			//	slime->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 5));
+	  //          break;
 		}
 		EnemyManager::Instance().Register(slime);
 		index++;
 	}
 	index = 0;
-    while (index < 1)
-    {
-        Enemy02* slime = new Enemy02(ENEMYCATEGORY);
-        slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 20));
-        EnemyManager::Instance().Register(slime);
-        index++;
-    }
+#endif // ENEMY01
+#ifdef ENEMY02
+	while (index < 1)
+	{
+		Enemy02* slime = new Enemy02(ENEMYCATEGORY);
+		slime->SetPosition(DirectX::XMFLOAT3(10.0f, 0, 20));
+		EnemyManager::Instance().Register(slime);
+		index++;
+	}
 	index = 0;
+#endif // ENEMY02
+#ifdef ENEMY03
 	while (index < 1)
 	{
 		Enemy03* jammo = new Enemy03(ENEMYCATEGORY);
@@ -134,6 +138,8 @@ void SceneGame::Initialize()
 		index++;
 	}
 	index = 0;
+#endif // ENEMY03
+#ifdef ENEMYBOSS
 	while (index < 1)
 	{
 		EnemyBoss* boss = new EnemyBoss(ENEMYCATEGORY);
@@ -141,9 +147,7 @@ void SceneGame::Initialize()
 		EnemyManager::Instance().Register(boss);
 		index++;
 	}
-#endif // ENEMYSLIME
-
-
+#endif // ENEMYBOSS
 #endif // ALLENEMY
 }
 
