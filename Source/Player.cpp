@@ -40,6 +40,8 @@ Player::Player()
     color = { 1,0,0,1 };
 
     projectile_auto.time = DELAYAUTOTIME;
+    projectile_allangle.time = DELAYALLANGLETIME;
+    projectile_front.time = DELAYFRONTTIME;
 
     hit_delay.time = DELAYPLAYERVSENEMY;
     moveSpeed = 7.0f;
@@ -50,14 +52,13 @@ Player::Player()
     //state = State::Idle;
 
     // エフェクト
-    AT_Field=new Effect("Data/Effect/AT_field.efk");
+    //AT_Field = new Effect("Data/Effect/AT_field.efk");
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/bullet.efk");
-    //category = WHITE;
+    category = PLAYERCATEGORY;
     projectile_shot = 0;
     turnSpeed = DirectX::XMConvertToRadians(720);
-    ProjectileManager& projectile_manager = ProjectileManager::Instance();
 }
 
 Player::~Player()
@@ -105,7 +106,7 @@ void Player::Update(float elapsedTime)
     UpdateVelocity(elapsedTime);
 
     //弾丸更新処理
-    ProjectileManager::Instance().Update(elapsedTime);
+    projectileManager.Update(elapsedTime);
 
     //プレイヤーと敵との衝突処理
     CollisionPlayerVsEnemies();
@@ -122,31 +123,51 @@ void Player::Update(float elapsedTime)
     //モデルアニメーション更新
     model->UpdateAnimation(elapsedTime);
 
-    AT_Field->Play(position, 10.0f);
+    //AT_Field->Play(position);
 
     //当たり判定のdelay
-    //if (!hit_delay.checker)
-    //{
-    //    hit_delay.time--;
-    //}
-    //if (hit_delay.time < 0)
-    //{
-    //    hit_delay.checker = true;
-    //    hit_delay.time = DELAYAUTOTIME;
-    //}
+    if (!hit_delay.checker)
+    {
+        hit_delay.time--;
+    }
+    if (hit_delay.time < 0)
+    {
+        hit_delay.checker = true;
+        hit_delay.time = DELAYAUTOTIME;
+    }
 
-    UpdateDelayTime(hit_delay.checker, hit_delay.time, DELAYPLAYERVSENEMY);
     //オートで出てる弾のdelay
-    //if (!projectile_auto.checker)
-    //{
-    //    projectile_auto.time--;
-    //}
-    //if (projectile_auto.time < 0)
-    //{
-    //    projectile_auto.checker = true;
-    //    projectile_auto.time = DELAYAUTOTIME;
-    //}
-    UpdateDelayTime(projectile_auto.checker, projectile_auto.time, DELAYAUTOTIME);
+    if (!projectile_auto.checker)
+    {
+        projectile_auto.time--;
+    }
+    if (projectile_auto.time < 0)
+    {
+        projectile_auto.checker = true;
+        projectile_auto.time = DELAYAUTOTIME;
+    }
+
+    //前方の弾のdelay
+    if (!projectile_front.checker)
+    {
+        projectile_front.time--;
+    }
+    if (projectile_front.time < 0)
+    {
+        projectile_front.checker = true;
+        projectile_front.time = DELAYFRONTTIME;
+    }
+
+    //周囲に出す弾のdelay
+    if (!projectile_allangle.checker)
+    {
+        projectile_allangle.time--;
+    }
+    if (projectile_allangle.time < 0)
+    {
+        projectile_allangle.checker = true;
+        projectile_allangle.time = DELAYALLANGLETIME;
+    }
 }
 
 void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
@@ -154,7 +175,7 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
     shader->Draw(dc, model, color);
 
     //弾丸描画処理
-    ProjectileManager::Instance().Render(dc, shader);
+    projectileManager.Render(dc, shader);
 }
 
 //デバッグプリミティブ描画
@@ -163,14 +184,15 @@ void Player::DrawDebugPrimitive()
     DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
     //衝突判定用のデバッグ円柱を描画
     debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
-    
+
     //衝突判定用のデバッグ立方体を描画
     //debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
     // 攻撃範囲をデバッグ円柱描画
     debugRenderer->DrawCylinder(position, attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.0f, 0.5f, 1.0f));
     debugRenderer->DrawCylinder(position, sub_attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.3f, 0.3f, 1.0f));
     //弾丸デバッグプリミティブ描画
-    ProjectileManager::Instance().DrawDebugPrimitive();
+    projectileManager.DrawDebugPrimitive();
+
 }
 //デバッグGUI
 void Player::DrawDebugGUI()
@@ -191,13 +213,15 @@ void Player::DrawDebugGUI()
             ImGui::SliderFloat("movespeed", &moveSpeed, 0.0f, 20.0f);
 
             ImGui::SliderInt("delay_auto_time", &projectile_auto.time, 0.0f, DELAYAUTOTIME);
+            ImGui::SliderInt("delay_front_time", &projectile_front.time, 0.0f, DELAYFRONTTIME);
+            ImGui::SliderInt("delay_allangle_time", &projectile_allangle.time, 0.0f, DELAYALLANGLETIME);
 
             ImGui::TreePop();
         }
     }
     ImGui::End();
 
-    ProjectileManager::Instance().DrawDebugGUI();
+    projectileManager.DrawDebugGUI();
 }
 
 //プレイヤーの移動方向を取得
@@ -276,8 +300,8 @@ void Player::CollisionPlayerVsEnemies()
         //衝突処理
         DirectX::XMFLOAT3 outPosition;
         if (Collision::IntersectCylinderVsSphere(
-            position, radius,height,weight,
-            enemy->GetPosition(), enemy->GetRadius(),enemy->GetHeight(),enemy->GetWeight(),
+            position, radius, height, weight,
+            enemy->GetPosition(), enemy->GetRadius(), enemy->GetHeight(), enemy->GetWeight(),
             outPosition))
         {
             enemy->SetPosition(outPosition);
@@ -305,8 +329,31 @@ void Player::CollisionPlayerVsEnemies()
                     velocity.y += power * 0.5f;
                     velocity.z += power * vec.z;
                 }
+
+                /*if (category == WHITE)
+                {
+                    category = enemy->GetCategory();
+                    color_count = 5;
+                }
+
+                if (category == enemy->GetCategory())
+                {
+                }
+                else
+                {
+                    health--;
+                    hitEffect->Play(position,2.0f);
+                }*/
+                hit_delay.checker = false;
             }
 #endif // ENEMYHITTINGDAMAGE
+            if (position.y >= (enemy->GetPosition().y + enemy->GetHeight()) - 0.1f)
+            {
+                Jump(jumpSpeed);
+#ifdef JUMPDAMAGE
+                enemy->ApplyDamage(1, 0.5f);
+#endif//JUMPDAMAGE
+            }
         }
     }
 }
@@ -314,8 +361,9 @@ void Player::CollisionPlayerVsEnemies()
 void Player::CollisionProjectilesVsEnemies()
 {
     EnemyManager& enemyManager = EnemyManager::Instance();
+
+    //すべての弾丸とすべての敵をそう当たりで衝突処理
     int projectileCount = projectileManager.GetProjectileCount();
-    //すべての弾丸とすべての敵をそう当たりで衝突判定
     int enemyCount = enemyManager.GetEnemyCount();
     for (int i = 0; i < projectileCount; ++i)
     {
@@ -337,12 +385,12 @@ void Player::CollisionProjectilesVsEnemies()
             {
                 penetration_count--;
                 //弾丸破棄
-                if(penetration_count <= 0)
+                if (penetration_count <= 0)
                 {
                     projectile->Destroy();
                 }
-                //ProjectileRicochet(WHITE, 0.0f, ricochet_count, j);
-                
+                ProjectileRicochet(PLAYERCATEGORY, 0.0f, ricochet_count, j);
+
 #ifdef PROJECTILEDAMAGE
                 //ダメージを与える
                 if (enemy->ApplyDamage(1, 0.5f))
@@ -393,13 +441,13 @@ void Player::InputProjectile()
     ////前方弾丸発射
     //if (mouse.GetButton() & Mouse::BTN_LEFT)
     //{
-        if (projectile_auto.checker)
-        {
-            ProjectileStraightFront(1, 0.0f);
-            //ProjectileRicochet(WHITE, 0.0f, 5);
-            penetration_count = 10;
-            projectile_auto.checker = false;
-        }
+    if (projectile_auto.checker)
+    {
+        ProjectileStraightFront(PLAYERCATEGORY, 0.0f);
+        //ProjectileRicochet(PLAYERCATEGORY, 0.0f, 5);
+        penetration_count = 10;
+        projectile_auto.checker = false;
+    }
     //}
     //if(category!=WHITE)
     //{
@@ -515,9 +563,9 @@ void Player::ProjectileStraightFront(int category, float angle)//category:弾の
     dir.y = 0.0f;
     dir.z = transform._33 * 100.0f;
     DirectX::XMFLOAT3 right;
-    right.x = transform._11 * 100.0f; 
+    right.x = transform._11 * 100.0f;
     right.y = 0.0f;
-    right.z = transform._13 * 100.0f; 
+    right.z = transform._13 * 100.0f;
     //発射位置（プレイヤーの腰当たり）
     DirectX::XMFLOAT3 pos;
     pos.x = position.x;
@@ -572,7 +620,7 @@ void Player::ProjectileRicochet(int category, float angle, int count, int index)
     }
     ricochet_count--;
     //前方向
-    dir.x= transform._31 * 100.0f;
+    dir.x = transform._31 * 100.0f;
     dir.y = 0.0f;
     dir.z = transform._33 * 100.0f;
     DirectX::XMFLOAT3 right;
@@ -661,10 +709,10 @@ bool Player::InputMove(float elapsedTime)
     current_nearest_distance = FLT_MAX;
 
     DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-    
+
     DirectX::XMFLOAT3 ND{ moveVec };
 
-    if(enemyCount)
+    if (enemyCount)
     {
         for (int index = 0; index < enemyCount; index++)
         {
@@ -686,7 +734,7 @@ bool Player::InputMove(float elapsedTime)
         Enemy* ne = enemyManager.GetEnemy(nearest_enemy_index);
         DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
         DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
-        
+
         DirectX::XMStoreFloat3(&ND, Vec);
     }
 
@@ -743,9 +791,7 @@ void Player::UpdateAttackState(float elapsedTime)
     float animationTime = 0.138;
     //attackCollisionFlag = animationTime ? true : false;
     //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
-#ifdef PLAYERATTACK
     InputProjectile();
-#endif // PLAYERATTACK
     //攻撃モーションが終わったら待機モーションに移動
     if (InputMove(elapsedTime))
     {
