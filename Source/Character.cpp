@@ -555,15 +555,15 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     //DirectX::XMFLOAT3 axis = { 0,1,0 };
     //DirectX::XMVECTOR Axis;
     //DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
-    DirectX::XMFLOAT3 s = { 0.1f/scale.x,0.1f / scale.y ,0.1f / scale.z };
+    DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
 
-    dir.x = vector * transform._31 * 100.0f*s.x;
+    dir.x = vector * transform._31 * 100.0f * s.x;
     dir.y = 0.0f;
-    dir.z = vector * transform._33 * 100.0f*s.z;
+    dir.z = vector * transform._33 * 100.0f * s.z;
     DirectX::XMFLOAT3 right;
-    right.x = transform._11 * 100.0f*s.x;
+    right.x = transform._11 * 100.0f * s.x;
     right.y = 0.0f;
-    right.z = transform._13 * 100.0f*s.z;
+    right.z = transform._13 * 100.0f * s.z;
     //発射位置（プレイヤーの腰当たり）
     DirectX::XMFLOAT3 pos;
     pos.x = position.x;
