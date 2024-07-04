@@ -52,7 +52,7 @@ Player::Player()
     //state = State::Idle;
 
     // エフェクト
-    //AT_Field = new Effect("Data/Effect/AT_field.efk");
+    AT_Field = new Effect("Data/Effect/efk/at.efk");
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
