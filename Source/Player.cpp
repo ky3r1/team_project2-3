@@ -34,7 +34,8 @@ Player::Player()
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
-    scale.x = scale.y = scale.z = 0.1f;
+    //scale.x = scale.y = scale.z = 0.1f;
+    scale.x = scale.y = scale.z = 1.0f;
 
     weight = 100.0f;
     color = { 1,0,0,1 };
@@ -75,11 +76,11 @@ Player::~Player()
 void Player::Update(float elapsedTime)
 {
     //すべての敵と総当たりで衝突判定
-    int enemyCount = EnemyManager::Instance().GetEnemyCount();
-    for (int i = 0; i < enemyCount; i++)
-    {
-        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-    }
+    //int enemyCount = EnemyManager::Instance().GetEnemyCount();
+    //for (int i = 0; i < enemyCount; i++)
+    //{
+    //    Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+    //}
     //色変え
     //ChangeColor(color, category);
 
@@ -126,26 +127,8 @@ void Player::Update(float elapsedTime)
     //AT_Field->Play(position);
 
     //当たり判定のdelay
-    //if (!hit_delay.checker)
-    //{
-    //    hit_delay.time--;
-    //}
-    //if (hit_delay.time < 0)
-    //{
-    //    hit_delay.checker = true;
-    //    hit_delay.time = DELAYAUTOTIME;
-    //}
-
+    UpdateDelayTime(hit_delay.checker, hit_delay.time, DELAYPLAYERVSENEMY);
     //オートで出てる弾のdelay
-    //if (!projectile_auto.checker)
-    //{
-    //    projectile_auto.time--;
-    //}
-    //if (projectile_auto.time < 0)
-    //{
-    //    projectile_auto.checker = true;
-    //    projectile_auto.time = DELAYAUTOTIME;
-    //}
     UpdateDelayTime(projectile_auto.checker, projectile_auto.time, DELAYAUTOTIME);
 }
 
@@ -265,14 +248,12 @@ void Player::UpdateVerticalMove(float elapsedTime)
 //プレイヤーと敵の衝突
 void Player::CollisionPlayerVsEnemies()
 {
-    EnemyManager& enemyManager = EnemyManager::Instance();
-
-    //すべての敵と総当たりで衝突判定
-    int enemyCount = enemyManager.GetEnemyCount();
-    for (int i = 0; i < enemyCount; i++)
-    {
-        Enemy* enemy = enemyManager.GetEnemy(i);
-
+    ////すべての敵と総当たりで衝突判定
+    //int enemyCount = enemyManager.GetEnemyCount();
+    //for (int i = 0; i < enemyCount; i++)
+    //{
+    //    Enemy* enemy = enemyManager.GetEnemy(i);
+    Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
         //衝突処理
         DirectX::XMFLOAT3 outPosition;
         if (Collision::IntersectCylinderVsSphere(
@@ -305,42 +286,17 @@ void Player::CollisionPlayerVsEnemies()
                     velocity.y += power * 0.5f;
                     velocity.z += power * vec.z;
                 }
-
-                /*if (category == WHITE)
-                {
-                    category = enemy->GetCategory();
-                    color_count = 5;
-                }
-
-                if (category == enemy->GetCategory())
-                {
-                }
-                else
-                {
-                    health--;
-                    hitEffect->Play(position,2.0f);
-                }*/
-                hit_delay.checker = false;
             }
 #endif // ENEMYHITTINGDAMAGE
-            if (position.y >= (enemy->GetPosition().y + enemy->GetHeight()) - 0.1f)
-            {
-                Jump(jumpSpeed);
-#ifdef JUMPDAMAGE
-                enemy->ApplyDamage(1, 0.5f);
-#endif//JUMPDAMAGE
-            }
         }
-    }
+    //}
 }
 
 //プレイヤーと弾丸の衝突
 void Player::CollisionProjectilesVsEnemies()
 {
     EnemyManager& enemyManager = EnemyManager::Instance();
-
-    //すべての弾丸とすべての敵をそう当たりで衝突処理
-    int projectileCount = projectileManager.GetProjectileCount();
+    //すべての弾丸とすべての敵をそう当たりで衝突判定
     int enemyCount = enemyManager.GetEnemyCount();
     for (int j = 0; j < enemyCount; ++j)
     {
@@ -349,7 +305,6 @@ void Player::CollisionProjectilesVsEnemies()
     }
 }
 
-//弾入力処理
 //弾入力処理
 void Player::InputProjectile()
 {
@@ -373,6 +328,7 @@ void Player::TransitionIdleState()
     model->PlayAnimation(Anim_Idle, true);
 #endif // PLAYERANIMATION
 }
+
 void Player::UpdateIdleState(float elapsedTime)
 {
     //移動入力処理
@@ -388,18 +344,12 @@ void Player::UpdateIdleState(float elapsedTime)
     //}
     else if (state != State::Attack)
     {
-        EnemyManager& enemyManager = EnemyManager::Instance();
 
         //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
-        int enemyCount = enemyManager.GetEnemyCount();
-        for (int j = 0; j < enemyCount; ++j)
+        Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
+        if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
         {
-            Enemy* enemy = enemyManager.GetEnemy(j);
-            DirectX::XMFLOAT3 enemy_position = enemy->GetPosition();
-            if (Collision::PointInsideCircle(enemy_position, position, attack_range))
-            {
-                TransitionAttackState();
-            }
+            TransitionAttackState();
         }
     }
 
@@ -415,36 +365,18 @@ bool Player::InputMove(float elapsedTime)
 
     //移動処理
     Move(moveVec.x, moveVec.z, moveSpeed);
-    EnemyManager& enemyManager = EnemyManager::Instance();
-
-    //すべての弾丸とすべての敵をそう当たりで衝突処理
-    int projectileCount = ProjectileManager::Instance().GetProjectileCount();
-    int enemyCount = enemyManager.GetEnemyCount();
 
 
-    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-    for (int index = 0; index < enemyCount; index++)
-    {
-        Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
-        DirectX::XMVECTOR Epos = DirectX::XMLoadFloat3(&enemy->GetPosition());
-        DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(Epos, Pos);
-        DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(Vec);
-        float d;
-        DirectX::XMStoreFloat(&d, D);
-        if (d < current_nearest_distance)
-        {
-            current_nearest_distance = d;
-            nearest_enemy_index = index;
-        }
-    }
-    Enemy* ne = enemyManager.GetEnemy(nearest_enemy_index);
-    DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
-    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
-    DirectX::XMFLOAT3 ND;
-    DirectX::XMStoreFloat3(&ND, Vec);
+    ////最も近い敵を総当たりで探索
+    //Enemy* ne = EnemyManager::Instance().NearEnemy(position);
+    //DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+    //DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
+    //DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+    //DirectX::XMFLOAT3 ND;
+    //DirectX::XMStoreFloat3(&ND, Vec);
 
-    //旋回処理
-    Turn(elapsedTime, ND.x, ND.z, turnSpeed);
+    ////旋回処理
+    //Turn(elapsedTime, ND.x, ND.z, turnSpeed);
     if (moveVec.x != 0 /*|| moveVec.y != 0 */ || moveVec.z != 0)return true;
     return false;
 }
@@ -456,6 +388,8 @@ void Player::TransitionMoveState()
 }
 void Player::UpdateMoveState(float elapsedTime)
 {
+    Turn(elapsedTime, GetMoveVec().x, GetMoveVec().z, turnSpeed);
+
     //移動入力処理
     if (!InputMove(elapsedTime))
     {
@@ -491,11 +425,32 @@ void Player::TransitionAttackState()
 }
 void Player::UpdateAttackState(float elapsedTime)
 {
+    static float Yangle = 0;
+    //最も近い敵を総当たりで探索
+    Enemy* ne = EnemyManager::Instance().NearEnemy(position);
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+    DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
+    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+    DirectX::XMFLOAT3 ND;
+    DirectX::XMStoreFloat3(&ND, Vec);
+
+    //旋回処理
+    Turn(elapsedTime, ND.x, ND.z, DirectX::XMConvertToRadians(360));
+
     //任意のアニメーション区間でのみ衝突処理
     float animationTime = 0.138;
     //attackCollisionFlag = animationTime ? true : false;
     //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
-    InputProjectile();
+#ifdef PLAYERATTACK
+    if (Yangle < angle.y + 0.01f && Yangle > angle.y - 0.01f)
+    {
+        InputProjectile();
+    }
+    else
+    {
+        Yangle = angle.y;
+    }
+#endif // PLAYERATTACK
     //攻撃モーションが終わったら待機モーションに移動
     if (InputMove(elapsedTime))
     {

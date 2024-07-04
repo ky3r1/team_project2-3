@@ -5,6 +5,7 @@
 #include "ProjectileManager.h"
 #include "ProjectileStraight.h"
 #include "ProjectileHoming.h"
+#include "EnemyManager.h"
 
 
 //行列更新処理
@@ -12,6 +13,7 @@ void Character::UpdateTransform()
 {
     //スケール行列を作成
     DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
+    //DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.1, 0.1, 0.1);
     //回転行列を作成
     DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
     //位置行列を作成
@@ -145,30 +147,6 @@ void Character::AddImpulse(const DirectX::XMFLOAT3& impulse)
 
 void Character::DrawDebugGUI()
 {
-    //// デバッグ文字列表示の変更
-    //std::string str = "";
-    //// 現在のステート番号に合わせてデバッグ文字列をstrに格納
-    //switch (StageMapChip::Instance().GetOnCategory(position))
-    //{
-    //case NONE:
-    //    str = "None";
-    //    break;
-    //case WALL:
-    //    str = "Wall";
-    //    break;
-    //case FLOOR:
-    //    str = "Floor";
-    //    break;
-    //case HOLE:
-    //    str = "Hole";
-    //    break;
-    //case SPIKE:
-    //    str = "Spike";
-    //    break;
-    //}
-    //ImGui::Text(u8"MapChip　%s", str.c_str());
-    //ImGui::Text(u8"MapCost　%s", std::to_string(StageMapChip::Instance().GetOnCost(position)).c_str());
-    //ImGui::Text(u8"MapID　%s", std::to_string(StageMapChip::Instance().GetOnId(position)).c_str());
 }
 
 //初期化
@@ -574,20 +552,18 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     ProjectileStraight* projectile{};
     //前方向
     DirectX::XMFLOAT3 dir;
-    DirectX::XMFLOAT3 dis_pos;
-    DirectX::XMVECTOR Dis_pos;
-    DirectX::XMMATRIX Right_;
-    DirectX::XMFLOAT3 r;
-    DirectX::XMFLOAT3 axis = { 0,1,0 };
-    DirectX::XMVECTOR Axis;
+    //DirectX::XMFLOAT3 axis = { 0,1,0 };
+    //DirectX::XMVECTOR Axis;
+    //DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
+    DirectX::XMFLOAT3 s = { 0.1f/scale.x,0.1f / scale.y ,0.1f / scale.z };
 
-    dir.x = transform._31 * 100.0f;
+    dir.x = vector * transform._31 * 100.0f*s.x;
     dir.y = 0.0f;
-    dir.z = transform._33 * 100.0f;
+    dir.z = vector * transform._33 * 100.0f*s.z;
     DirectX::XMFLOAT3 right;
-    right.x = transform._11 * 100.0f;
+    right.x = transform._11 * 100.0f*s.x;
     right.y = 0.0f;
-    right.z = transform._13 * 100.0f;
+    right.z = transform._13 * 100.0f*s.z;
     //発射位置（プレイヤーの腰当たり）
     DirectX::XMFLOAT3 pos;
     pos.x = position.x;
@@ -608,4 +584,9 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     dir.z = ep.z;
     projectile = new ProjectileStraight(&ProjectileManager::Instance(), category);
     projectile->Launch(dir, pos);
+}
+
+void Character::ProjectileStraightShotting(float angle, int vector)
+{
+    ProjectileStraightShotting(category, angle, vector);
 }

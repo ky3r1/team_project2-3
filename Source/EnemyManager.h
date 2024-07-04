@@ -52,6 +52,8 @@ public:
 
     // 付与したIDからエネミーを取得
     Enemy* GetEnemyFromId(int id);
+
+    Enemy* NearEnemy(DirectX::XMFLOAT3 position);
 private:
     //エネミー同士の衝突処理
     void CollisionEnemyVsEnemies();

@@ -54,6 +54,7 @@ protected:
 
     //’eŠÛ”­Ëˆ—
     virtual void ProjectileStraightShotting(int category, float angle,int vector);
+    virtual void ProjectileStraightShotting(float angle, int vector);
 public:
     //ù‰ñˆ—
     void Turn(float elapsedTime, float vx, float vz, float speed);
