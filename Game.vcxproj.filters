@@ -468,6 +468,12 @@
     <None Include="Source\Diagram\StateClassDiagram.cd">
       <Filter>ClassDiagram</Filter>
     </None>
+    <None Include="HLSL\Ramp_shader.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\shading_functions.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HLSL\DebugPS.hlsl">
@@ -498,6 +504,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="HLSL\SpritePS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Ramp_shader_ps.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Ramp_shader_vs.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
