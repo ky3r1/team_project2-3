@@ -60,6 +60,9 @@
     <Filter Include="AI\SearchSystem">
       <UniqueIdentifier>{842ef880-36c4-4b2c-8309-da53038747e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\Spawn">
+      <UniqueIdentifier>{591a5449-80c9-465f-af4d-ee8bedf16631}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -254,6 +257,9 @@
     <ClInclude Include="Source\EnemyBoss.h">
       <Filter>Character\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Spown.h">
+      <Filter>AI\Spawn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -429,6 +435,9 @@
     </ClCompile>
     <ClCompile Include="Source\EnemyBoss.cpp">
       <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Spown.cpp">
+      <Filter>AI\Spawn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
