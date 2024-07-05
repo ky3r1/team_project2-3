@@ -55,7 +55,7 @@ sprite_batch::sprite_batch(
         };
 
         hr = create_vs_from_cso(
-            device, "Shader\\SpriteVS.cso",
+            device, "Data\\Shader\\SpriteVS.cso",
             vertex_shader.GetAddressOf(), input_layout.GetAddressOf(),
             input_element_desc, _countof(input_element_desc)
         );
@@ -65,7 +65,7 @@ sprite_batch::sprite_batch(
     //ピクセルシェーダー
     {
         hr = create_ps_from_cso(
-            device, "Shader\\SpritePS.cso",
+            device, "Data\\Shader\\SpritePS.cso",
             pixel_shader[0].GetAddressOf()
         );
     }
