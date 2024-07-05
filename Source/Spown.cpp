@@ -10,27 +10,42 @@
 #include "Enemy03.h"
 #include "EnemyBoss.h"
 
-#define SPOWN01 5*60
+#define SPOWN00 5*60
+#define SPOWN01 20*60
 
 void Spown::Update(float elapsedTime)
 {
     static int timer = 0;
-    Enemy* enemy = nullptr;
-    if (timer > SPOWN01&&flg[0] == false)
+    if (timer > SPOWN00 && !flg[0])
     {
-        for(int i=0;i<4;i++)
+        //MakeWave(1, 4);
+        Enemy* enemy = nullptr;
+        for (int i = 0; i < 4; i++)
         {
-            enemy = SpownEnemyCategory();
-            //enemy = new Enemy01(ENEMYCATEGORY);
+            //enemy = SpownEnemyCategory(1);
+            enemy = new Enemy02(ENEMYCATEGORY);
             enemy->SetPosition(DirectX::XMFLOAT3(Mathf::RandomRange(-5.0f, 5.0f), 5.0f, Mathf::RandomRange(-5.0f, 5.0f)));
             EnemyManager::Instance().Register(enemy);
         }
         flg[0] = true;
     }
+    if (timer > SPOWN01 && !flg[1])
+    {
+        //MakeWave(1, 4);
+        Enemy* enemy = nullptr;
+        for (int i = 0; i < 4; i++)
+        {
+            //enemy = SpownEnemyCategory(2);
+            enemy = new Enemy01(ENEMYCATEGORY);
+            enemy->SetPosition(DirectX::XMFLOAT3(Mathf::RandomRange(10.0f, 20.0f), 5.0f, Mathf::RandomRange(-5.0f, 5.0f)));
+            EnemyManager::Instance().Register(enemy);
+        }
+        flg[1] = true;
+    }
     timer++;
 }
 
-//í—Şƒ‰ƒ“ƒ_ƒ€
+//“Go‚·(category==-1‚È‚çƒ‰ƒ“ƒ_ƒ€)
 Enemy* Spown::SpownEnemyCategory(int category)
 {   
     Enemy* enemy = nullptr;
@@ -121,13 +136,14 @@ Enemy* Spown::SpownEnemyCategory(int category)
     return enemy;
 }
 
-Enemy* Spown::SpownEnemyCategory()
+void Spown::MakeWave(int category, int count)
 {
-    return SpownEnemyCategory(-1);
-}
-
-void Spown::MakeWave(Enemy* enemy, int count, int timer, int flg, int spown_timer)
-{
-
+    Enemy* enemy = nullptr;
+    for (int i = 0; i < count; i++)
+    {
+        enemy = SpownEnemyCategory(category);
+        enemy->SetPosition(DirectX::XMFLOAT3(Mathf::RandomRange(-5.0f, 5.0f), 5.0f, Mathf::RandomRange(-5.0f, 5.0f)));
+        EnemyManager::Instance().Register(enemy);
+    }
 }
 

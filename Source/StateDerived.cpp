@@ -68,11 +68,9 @@ void IdleState::Enter()
 //実行中
 void IdleState::Execute(float elapsedTime)
 {
-	idle_timer++;
 	//1秒経過したら徘徊ステート
-	if (idle_timer > 60)
+	if (owner->GetHealth()<=0)
 	{
-		idle_timer = 0;
 		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Search::Death));
 	}
 	// 攻撃フラグがtrueなら戦闘ステートへ遷移
@@ -137,22 +135,9 @@ void PursuitState::Execute(float elapsedTime)
 
 	// 攻撃範囲内までプレイヤーに近づいた
 	float radius = owner->GetAttackRange();
-	if (distSq < radius * radius)
+	if (distSq < radius * radius&&owner->GetProjectileAttackFlg())
 	{
 		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Battle::Attack));
-		//if (owner->GetEnemyCategory() == EnemyBoss_Num)
-		//{
-		//	switch (rand() % 3)
-		//	{
-		//	case 0:
-
-		//		break;
-		//	case 1:
-		//		break;
-		//	case 2:
-		//		break;
-		//	}
-		//}
 	}
 	if (Player::Instance().GetHealth() <= 0)
 	{
@@ -162,7 +147,6 @@ void PursuitState::Execute(float elapsedTime)
 	owner->OutMove();
 	// 目的地点へ移動
 	owner->MoveToTarget(elapsedTime, 0.5f);
-
 }
 //出ていくとき
 void PursuitState::Exit()

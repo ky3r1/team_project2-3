@@ -526,7 +526,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         impulse.y = power * 0.5f;
                         impulse.z = power * vec.z;
 
-                        character->AddImpulse(impulse);
+                        //character->AddImpulse(impulse);
                     }
                     //ヒットエフェクト再生
                     {

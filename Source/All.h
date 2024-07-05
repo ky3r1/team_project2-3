@@ -30,8 +30,6 @@
 #define ALLPLAYER
 //アニメーション
 #define PLAYERANIMATION
-//Jump
-//#define JUMPFRAG
 //// 攻撃
 //#define PLAYERATTACK
 //Player->Enemy 弾のダメージ
@@ -48,10 +46,10 @@
 ////スポーン
 //#define SPOWNENEMY
 
-////01
-//#define ENEMY01 
+//01
+#define ENEMY01 
 ////02
-#define ENEMY02
+//#define ENEMY02
 ////03
 //#define ENEMY03 
 ////BOSS

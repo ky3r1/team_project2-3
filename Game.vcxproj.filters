@@ -260,6 +260,9 @@
     <ClInclude Include="Source\Spown.h">
       <Filter>AI\Spawn</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Ui.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -438,6 +441,9 @@
     </ClCompile>
     <ClCompile Include="Source\Spown.cpp">
       <Filter>AI\Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Ui.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

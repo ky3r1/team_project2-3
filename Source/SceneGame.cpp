@@ -24,6 +24,7 @@
 //#include "StageMapChip.h"
 
 #include "Input/Input.h"
+#include "Ui.h"
 
 
 // 初期化
@@ -268,6 +269,7 @@ void SceneGame::Render()
 #ifdef ENEMYADD
 		CrickEnemyAdd(dc, rc.view, rc.projection);
 #endif // ENEMYADD
+		Ui::Instance().game(dc);
 	}
 
 #ifdef DEBUGIMGUI

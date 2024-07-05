@@ -19,10 +19,8 @@ public:
 private:
     //エネミーを出す
     Enemy* SpownEnemyCategory(int category);
-    //エネミーをランダムで出す
-    Enemy* SpownEnemyCategory();
 
-    void MakeWave(Enemy* enemy,int count, int timer, int flg,int spown_timer);
+    void MakeWave(int category, int count);
 
-    bool flg[10];
+    bool flg[10] = {};
 };

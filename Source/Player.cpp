@@ -38,7 +38,7 @@ Player::Player()
     scale.x = scale.y = scale.z = 1.0f;
 
     weight = 100.0f;
-    color = { 1,0,0,1 };
+    color = { 1,1,1,1 };
 
     projectile_auto.time = DELAYAUTOTIME;
 
@@ -346,7 +346,10 @@ void Player::UpdateIdleState(float elapsedTime)
         if (enemy == nullptr);
         else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
         {
-            TransitionAttackState();
+            if (projectile_auto.checker)
+            {
+                TransitionAttackState();
+            }
         }
     }
 }
@@ -395,7 +398,7 @@ void Player::TransitionAttackState()
 {
     state = State::Attack;
     //攻撃アニメーション再生
-    model->PlayAnimation(Anim_Attack, true);
+    model->PlayAnimation(Anim_Attack, false);
 }
 void Player::UpdateAttackState(float elapsedTime)
 {
@@ -429,6 +432,10 @@ void Player::UpdateAttackState(float elapsedTime)
     if (InputMove(elapsedTime))
     {
         TransitionMoveState();
+    }
+    if (!model->IsPlayAnimation() && !projectile_auto.checker)
+    {
+        TransitionIdleState();
     }
 }
 
