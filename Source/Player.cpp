@@ -33,12 +33,12 @@ Player::Player()
     //model = new Model("Data/Model/UnitychanSD/UnitychanSD.mdl");
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
-    model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
-    scale.x = scale.y = scale.z = 0.1f;
+    model = new Model("Data/Model/Player/Player.mdl");
+    scale.x = scale.y = scale.z = 0.03f;
     //scale.x = scale.y = scale.z = 1.0f;
 
     weight = 100.0f;
-    color = { 1,0,0,1 };
+    color = { 1,1,1,1 };
 
     projectile_auto.time = DELAYAUTOTIME;
 
