@@ -30,8 +30,13 @@
 #define ALLPLAYER
 //アニメーション
 #define PLAYERANIMATION
-//// 攻撃
-//#define PLAYERATTACK
+//Jump
+//#define JUMPFRAG
+// 攻撃
+#define PLAYERATTACK
+// 弾の種類
+#define PENETRATION 0
+#define RICOCHET 1
 //Player->Enemy 弾のダメージ
 #define PROJECTILEDAMAGE
 //Player->Enemy 踏みつけダメージ
@@ -50,9 +55,9 @@
 //#define ENEMY01 
 //02
 #define ENEMY02
-////03
-//#define ENEMY03 
-////BOSS
+//03
+#define ENEMY03 
+//BOSS
 //#define ENEMYBOSS 
 
 // 攻撃

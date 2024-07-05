@@ -134,7 +134,7 @@ void SceneGame::Initialize()
 	while (index < 1)
 	{
 		Enemy03* jammo = new Enemy03(ENEMYCATEGORY);
-		jammo->SetPosition(DirectX::XMFLOAT3(7.0f, 0, 20));
+		jammo->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 20));
 		EnemyManager::Instance().Register(jammo);
 		index++;
 	}

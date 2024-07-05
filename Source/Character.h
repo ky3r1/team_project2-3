@@ -55,6 +55,9 @@ protected:
     //’eŠÛ”­Ëˆ—
     virtual void ProjectileStraightShotting(int category, float angle,int vector);
     virtual void ProjectileStraightShotting(float angle, int vector);
+
+    virtual void ProjectileRicochetShotting(int category, float angle, int vector);
+
 public:
     //ù‰ñˆ—
     void Turn(float elapsedTime, float vx, float vz, float speed);
@@ -178,6 +181,14 @@ protected:
     float       slopeRate = 1.0f;
     int         category = 0;
     float       turnSpeed = DirectX::XMConvertToRadians(360);
+    int penetration_count = 0;
+    int ricochet_count = 1;
+    bool projectile_category = 0;
+    float       projectile_invincible_timer = 1.0f;
+    bool invincible_check = false;
+
+    bool enemy_rico_check = false;
+
     //UŒ‚”ÍˆÍ
     float				attack_range = 1.5f;
 };
