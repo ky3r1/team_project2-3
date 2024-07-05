@@ -16,6 +16,9 @@ public:
     //•`‰æˆ—
     void Render(ID3D11DeviceContext* dc, Shader* shader) override;
 
+    //’eŠÛ“ü—Íˆ—
+    void InputProjectile()override;
+
 protected:
     //€–S‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
     void OnDead() override;

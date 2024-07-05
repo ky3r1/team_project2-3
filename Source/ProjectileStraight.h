@@ -7,7 +7,8 @@ class ProjectileStraight : public Projectile
 {
 public:
     //ProjectileStraight();
-    ProjectileStraight(ProjectileManager* manager,int category);
+    ProjectileStraight(ProjectileManager* manager,int category, Effect* effect);
+    ProjectileStraight(ProjectileManager* manager, int category);
     ~ProjectileStraight() override;
 
 

@@ -98,7 +98,6 @@ private:
 
     int nearest_enemy_index = -1;
     float current_nearest_distance = FLT_MAX;
-    int penetration_count = 10;
     int ricochet_count = 30;
 
     ProjectileManager projectileManager;

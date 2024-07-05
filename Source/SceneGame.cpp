@@ -24,6 +24,7 @@
 //#include "StageMapChip.h"
 
 #include "Input/Input.h"
+#include "Ui.h"
 
 
 // 初期化
@@ -64,7 +65,6 @@ void SceneGame::Initialize()
 #endif // HPGAUGE
 
 
-
 	//カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
@@ -83,6 +83,7 @@ void SceneGame::Initialize()
 	cameraController = std::unique_ptr<CameraController>(new CameraController());
 #ifdef ALLENEMY
 	int index = 0;
+	spown = std::unique_ptr<Spown>(new Spown());
 #ifdef ENEMY01
 	while (index < 1)
 	{
@@ -133,7 +134,7 @@ void SceneGame::Initialize()
 	while (index < 1)
 	{
 		Enemy03* jammo = new Enemy03(ENEMYCATEGORY);
-		jammo->SetPosition(DirectX::XMFLOAT3(7.0f, 0, 20));
+		jammo->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 20));
 		EnemyManager::Instance().Register(jammo);
 		index++;
 	}
@@ -180,6 +181,11 @@ void SceneGame::Update(float elapsedTime)
 	Player::Instance().Update(elapsedTime);
 	if(Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult));
 #endif //  ALLPLAYER
+
+#ifdef SPOWNENEMY
+    spown->Update(elapsedTime);
+#endif // SPOWNENEMY
+
 
 	//エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
@@ -263,6 +269,7 @@ void SceneGame::Render()
 #ifdef ENEMYADD
 		CrickEnemyAdd(dc, rc.view, rc.projection);
 #endif // ENEMYADD
+		Ui::Instance().game(dc);
 	}
 
 #ifdef DEBUGIMGUI

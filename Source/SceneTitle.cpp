@@ -11,6 +11,7 @@ void SceneTitle::Initialize()
 {
     //スプライト初期化
     sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/Title.png"));
+    ui = std::unique_ptr<Ui>(new Ui);
 }
 
 void SceneTitle::Finalize()
@@ -35,6 +36,7 @@ void SceneTitle::Update(float elapsedTime)
 
 void SceneTitle::Render()
 {
+
     Graphics& graphics = Graphics::Instance();
     ID3D11DeviceContext* dc = graphics.GetDeviceContext();
     ID3D11RenderTargetView* rtv = graphics.GetRenderTargetView();
@@ -57,6 +59,7 @@ void SceneTitle::Render()
             0, 0, screenWidth, screenHeight,
             0, 0, textureWidth, textureHeight,
             0,
-            1, 1, 1, 1);
+            1, 1, 1, 1); 
+        ui.get()->title(dc);
     }
 }

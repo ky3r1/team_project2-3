@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "Player.h"
+#include "Spown.h"
 #include "CameraController.h"
 #include "Graphics/Sprite.h"
 
@@ -30,6 +31,7 @@ private:
 	void CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
 private:
 	std::unique_ptr<Player> player = nullptr;
+	std::unique_ptr<Spown> spown = nullptr;
 	std::unique_ptr<CameraController> cameraController = nullptr;
 	std::unique_ptr<Sprite> gauge = nullptr;
 	int mapcategory = 0;

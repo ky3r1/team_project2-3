@@ -34,6 +34,9 @@
 //#define JUMPFRAG
 // 攻撃
 #define PLAYERATTACK
+// 弾の種類
+#define PENETRATION 0
+#define RICOCHET 1
 //Player->Enemy 弾のダメージ
 #define PROJECTILEDAMAGE
 //Player->Enemy 踏みつけダメージ
@@ -45,14 +48,17 @@
 //Enemy
 //エネミー
 #define ALLENEMY
-//01
-#define ENEMY01 
+////スポーン
+//#define SPOWNENEMY
+
+////01
+//#define ENEMY01 
 //02
 #define ENEMY02
 //03
 #define ENEMY03 
 //BOSS
-#define ENEMYBOSS 
+//#define ENEMYBOSS 
 
 // 攻撃
 #define ENEMYATTACK

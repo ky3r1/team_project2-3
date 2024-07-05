@@ -4,13 +4,14 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 40
+#define DELAYAUTOTIME 5*60
 
 //コンストラクタ
 Enemy02::Enemy02(int category)
 {
     //TODO:エネミースライムのステータス設定
     model = new Model("Data/Model/Slime/Slime.mdl");
+    lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
 
     static int id_enemy02 = 0;
     id_enemy02++;
@@ -39,6 +40,7 @@ Enemy02::Enemy02(int category)
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Search), new IdleState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Battle), new PursuitState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Battle), new AttackState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new BattleIdleState(this));
     // デフォルトステートをセット
     stateMachine->SetState(static_cast<int>(State::Search));
 #endif // ENEMYSTATEMACHINE
@@ -84,6 +86,20 @@ void Enemy02::Render(ID3D11DeviceContext* dc, Shader* shader)
 void Enemy02::OnDead()
 {
     Destroy();
+}
+
+void Enemy02::InputProjectile()
+{
+    GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
+
+    if (projectile_auto.checker)
+    {
+        ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
+        ProjectileStraightShotting(ENEMYCATEGORY, 0.8f, FRONT);
+        ProjectileStraightShotting(ENEMYCATEGORY, -0.8f, FRONT);
+        projectile_auto.checker = false;
+    }
 }
 
 //void Enemy02::DrawDebugGUI()

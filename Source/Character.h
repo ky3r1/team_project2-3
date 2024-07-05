@@ -55,6 +55,9 @@ protected:
     //弾丸発射処理
     virtual void ProjectileStraightShotting(int category, float angle,int vector);
     virtual void ProjectileStraightShotting(float angle, int vector);
+
+    virtual void ProjectileRicochetShotting(int category, float angle, int vector);
+
 public:
     //旋回処理
     void Turn(float elapsedTime, float vx, float vz, float speed);
@@ -132,10 +135,15 @@ public:
     //スクリーン座標のゲッター・セッター
     void SetScreenPos(DirectX::XMFLOAT3 sp) { screen_pos = sp; }
     DirectX::XMFLOAT3 GetScreenPos() { return screen_pos; }
+
+    //lineEffectのゲッター/セッター
+    void SetLineEffect(Effect* e) { lineEffect.reset(e);}
+    Effect* GetLineEffect() { return lineEffect.get(); }
 protected:
     Model* model = nullptr;
     //Effect* hitEffect = nullptr;
     std::unique_ptr<Effect>hitEffect=nullptr;
+    std::unique_ptr<Effect>lineEffect = nullptr;
     DirectX::XMFLOAT3   position = { 0,0,0 };
     DirectX::XMFLOAT3   screen_pos = { 0,0,0 };
     DirectX::XMFLOAT3   angle = { 0,0,0 };
@@ -173,6 +181,14 @@ protected:
     float       slopeRate = 1.0f;
     int         category = 0;
     float       turnSpeed = DirectX::XMConvertToRadians(360);
+    int penetration_count = 0;
+    int ricochet_count = 1;
+    bool projectile_category = 0;
+    float       projectile_invincible_timer = 1.0f;
+    bool invincible_check = false;
+
+    bool enemy_rico_check = false;
+
     //攻撃範囲
     float				attack_range = 1.5f;
 };
