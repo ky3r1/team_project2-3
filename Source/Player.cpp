@@ -51,7 +51,7 @@ Player::Player()
     //state = State::Idle;
 
     // エフェクト
-    AT_Field=new Effect("Data/Effect/AT_field.efk");
+    AT_Field = new Effect("Data/Effect/AT_field.efk");
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
@@ -146,7 +146,7 @@ void Player::DrawDebugPrimitive()
     DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
     //衝突判定用のデバッグ円柱を描画
     debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
-    
+
     //衝突判定用のデバッグ立方体を描画
     //debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
     // 攻撃範囲をデバッグ円柱描画
@@ -264,32 +264,32 @@ void Player::CollisionPlayerVsEnemies()
         {
             enemy->SetPosition(outPosition);
 #ifdef ENEMYHITTINGDAMAGE
-            if (hit_delay.checker)
+        if (hit_delay.checker)
+        {
+            //吹き飛ばす
             {
-                //吹き飛ばす
-                {
-                    //吹き飛ばす力
-                    const float power = 10.0f;
+                //吹き飛ばす力
+                const float power = 10.0f;
 
-                    //敵の位置
-                    DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&enemy->GetPosition());
-                    //プレイヤーの位置
-                    DirectX::XMVECTOR pVec = DirectX::XMLoadFloat3(&position);
-                    //弾から敵への方向ベクトルを計算（敵 - 弾）
-                    auto v = DirectX::XMVectorSubtract(pVec, eVec);
-                    //方向ベクトルを正規化
-                    v = DirectX::XMVector3Normalize(v);
+                //敵の位置
+                DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&enemy->GetPosition());
+                //プレイヤーの位置
+                DirectX::XMVECTOR pVec = DirectX::XMLoadFloat3(&position);
+                //弾から敵への方向ベクトルを計算（敵 - 弾）
+                auto v = DirectX::XMVectorSubtract(pVec, eVec);
+                //方向ベクトルを正規化
+                v = DirectX::XMVector3Normalize(v);
 
-                    DirectX::XMFLOAT3 vec;
-                    DirectX::XMStoreFloat3(&vec, v);
+                DirectX::XMFLOAT3 vec;
+                DirectX::XMStoreFloat3(&vec, v);
 
-                    velocity.x += power * vec.x;
-                    velocity.y += power * 0.5f;
-                    velocity.z += power * vec.z;
-                }
+                velocity.x += power * vec.x;
+                velocity.y += power * 0.5f;
+                velocity.z += power * vec.z;
             }
-#endif // ENEMYHITTINGDAMAGE
         }
+#endif // ENEMYHITTINGDAMAGE
+    }
     //}
 }
 
