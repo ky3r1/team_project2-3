@@ -55,6 +55,7 @@ Player::Player()
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
+    lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/PlayerLine.efkefc"));
     //hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/GP3_sample.efk"));
     category = PLAYERCATEGORY;
     turnSpeed = DirectX::XMConvertToRadians(720);
@@ -255,7 +256,8 @@ void Player::CollisionPlayerVsEnemies()
     Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
         //衝突処理
         DirectX::XMFLOAT3 outPosition;
-        if (Collision::IntersectCylinderVsSphere(
+        if (enemy == nullptr);
+        else if (Collision::IntersectCylinderVsSphere(
             position, radius, height, weight,
             enemy->GetPosition(), enemy->GetRadius(), enemy->GetHeight(), enemy->GetWeight(),
             outPosition))
@@ -335,25 +337,18 @@ void Player::UpdateIdleState(float elapsedTime)
     {
         TransitionMoveState();
     }
-
     //攻撃処理
-    //if (InputAttack())
-    //{
-    //    TransitionAttackState();
-    //}
     else if (state != State::Attack)
     {
 
         //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
         Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
-        if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+        if (enemy == nullptr);
+        else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
         {
             TransitionAttackState();
         }
     }
-
-    //弾丸入力処理
-    //InputProjectile();
 }
 
 //移動ステート
@@ -365,17 +360,6 @@ bool Player::InputMove(float elapsedTime)
     //移動処理
     Move(moveVec.x, moveVec.z, moveSpeed);
 
-
-    ////最も近い敵を総当たりで探索
-    //Enemy* ne = EnemyManager::Instance().NearEnemy(position);
-    //DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-    //DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
-    //DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
-    //DirectX::XMFLOAT3 ND;
-    //DirectX::XMStoreFloat3(&ND, Vec);
-
-    ////旋回処理
-    //Turn(elapsedTime, ND.x, ND.z, turnSpeed);
     if (moveVec.x != 0 /*|| moveVec.y != 0 */ || moveVec.z != 0)return true;
     return false;
 }
@@ -394,15 +378,6 @@ void Player::UpdateMoveState(float elapsedTime)
     {
         TransitionIdleState();
     }
-
-    ////攻撃処理
-    //if (InputAttack())
-    //{
-    //    TransitionAttackState();
-    //}
-
-    //弾丸入力処理
-    //InputProjectile();
 }
 
 //攻撃ステート

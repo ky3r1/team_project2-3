@@ -59,7 +59,7 @@ public:
 	bool InAttackRange();
 
 	//弾丸入力処理
-	void InputProjectile();
+	virtual void InputProjectile();
 
 	//弾VSPlayer
 	void CollisionProjectileVsPlayer();
@@ -104,7 +104,12 @@ public:
     bool GetProjectileAttackFlg() { return projectile_auto.checker; }
 
 	//敵のカテゴリーのゲッター・セッター
-	int GetEnemyCategory() { return enemy_categry; }
+	int GetEnemyCategory() { return category_id; }
+	void SetEnemyCategory(int category_id) { this->category_id = category_id; }
+
+    // 名前のゲッター・セッター
+    std::string GetName() { return name; }
+    void SetName(std::string name) { this->name = name; }
 protected:
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };

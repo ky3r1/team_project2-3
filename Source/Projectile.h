@@ -3,6 +3,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Graphics.h"
 #include "All.h"
+#include "Effect.h"
 
 //前方宣言
 class ProjectileManager;
@@ -59,4 +60,5 @@ protected:
     float                   radius = 0.5f;
     //エネミーの種類
     int category;
+    std::unique_ptr<Effect> lineEffect;
 };

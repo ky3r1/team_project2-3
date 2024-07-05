@@ -11,6 +11,7 @@ EnemyBoss::EnemyBoss(int category)
 {
     //TODO:エネミースライムのステータス設定
     model = new Model("Data/Model/Dragon/dragon.mdl");
+    lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
     static int id_enemyboss = 0;
     id_enemyboss++;
     category_id = id_enemyboss;
@@ -72,6 +73,10 @@ void EnemyBoss::Update(float elapsedTime)
     model->UpdateAnimation(elapsedTime);
 
     UpdateDelayTime(projectile_auto.checker, projectile_auto.time, DELAYAUTOTIME);
+}
+
+void EnemyBoss::InputProjectile()
+{
 }
 
 //描画処理

@@ -33,6 +33,9 @@ public:
 	//XVˆ—
 	void Update(float elapsedTime);
 
+	//’eŠÛ“ü—Íˆ—
+	void InputProjectile()override;
+
 	//•`‰æˆ—
 	void Render(ID3D11DeviceContext* dc, Shader* shader) override;
 

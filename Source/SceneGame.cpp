@@ -64,7 +64,6 @@ void SceneGame::Initialize()
 #endif // HPGAUGE
 
 
-
 	//カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
@@ -83,6 +82,7 @@ void SceneGame::Initialize()
 	cameraController = std::unique_ptr<CameraController>(new CameraController());
 #ifdef ALLENEMY
 	int index = 0;
+	spown = std::unique_ptr<Spown>(new Spown());
 #ifdef ENEMY01
 	while (index < 1)
 	{
@@ -180,6 +180,11 @@ void SceneGame::Update(float elapsedTime)
 	Player::Instance().Update(elapsedTime);
 	if(Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult));
 #endif //  ALLPLAYER
+
+#ifdef SPOWNENEMY
+    spown->Update(elapsedTime);
+#endif // SPOWNENEMY
+
 
 	//エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);

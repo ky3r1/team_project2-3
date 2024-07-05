@@ -4,13 +4,14 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 40
+#define DELAYAUTOTIME 3*60
 
 //コンストラクタ
 Enemy03::Enemy03(int category)
 {
     //TODO:エネミースライムのステータス設定
     model = new Model("Data/Model/Jammo/Jammo.mdl");
+    lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
 
     static int id_enemy03= 0;
     id_enemy03++;
@@ -84,6 +85,22 @@ void Enemy03::Render(ID3D11DeviceContext* dc, Shader* shader)
 void Enemy03::OnDead()
 {
     Destroy();
+}
+
+void Enemy03::InputProjectile()
+{
+    if (projectile_auto.checker)
+    {
+        ProjectileStraightShotting(ENEMYCATEGORY, -1.0f, FRONT);
+        ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
+        ProjectileStraightShotting(ENEMYCATEGORY, 1.0f, FRONT);
+
+        ProjectileStraightShotting(ENEMYCATEGORY, -1.0f, BACK);
+        ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, BACK);
+        ProjectileStraightShotting(ENEMYCATEGORY, 1.0f, BACK);
+
+        projectile_auto.checker = false;
+    }
 }
 
 //void Enemy03::DrawDebugGUI()
