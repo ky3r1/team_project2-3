@@ -501,7 +501,36 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
             if (category == projectile->GetCategory())
             {
                 //弾丸破棄
-                projectile->Destroy();
+                if (category == PLAYERCATEGORY && penetration_count == 0)
+                {
+                    projectile->Destroy();
+                }
+                if (invincible_check == true) {}
+                if (projectile_category == RICOCHET && invincible_check == false)
+                {
+                    EnemyManager& enemyManager = EnemyManager::Instance();
+                    Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
+                    int enemyCount = enemyManager.GetEnemyCount();
+                    for (int i = 0; i < enemyCount; i++)
+                    {
+                        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                        if(Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+                        {
+                            enemy_rico_check = true;
+                            invincible_check = true;
+                            ProjectileRicochetShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                        }
+                        if(enemy_rico_check == true)
+                        {
+                            break;
+                        }
+                    }
+                    //invincible_check = true;
+                    if (category == PLAYERCATEGORY && ricochet_count == 0)
+                    {
+                        projectile->Destroy();
+                    }
+                }
                 if (/*character->ApplyDamage(1, 0.5f)*/true)
                 {
                     //吹き飛ばす
@@ -525,7 +554,8 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         impulse.x = power * vec.x;
                         impulse.y = power * 0.5f;
                         impulse.z = power * vec.z;
-
+                        penetration_count--;
+                        ricochet_count--;
                         character->AddImpulse(impulse);
                     }
                     //ヒットエフェクト再生
@@ -569,6 +599,57 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     pos.x = position.x;
     pos.y = position.y + height * 0.5f;
     pos.z = position.z;
+
+    DirectX::XMVECTOR Right = DirectX::XMLoadFloat3(&right);
+    Right = DirectX::XMVectorScale(Right, angle);
+    DirectX::XMVECTOR Dir = DirectX::XMLoadFloat3(&dir);
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&pos);
+    DirectX::XMVECTOR Ev = DirectX::XMVectorAdd(Dir, Right);
+    DirectX::XMVECTOR Ep = DirectX::XMVectorAdd(Pos, Ev);
+    Ep = DirectX::XMVectorSubtract(Ep, Pos);
+    DirectX::XMFLOAT3 ep;
+    DirectX::XMStoreFloat3(&ep, Ep);
+    dir.x = ep.x;
+    dir.y = 0.0f;
+    dir.z = ep.z;
+    projectile = new ProjectileStraight(&ProjectileManager::Instance(), category);
+    projectile->Launch(dir, pos);
+}
+
+void Character::ProjectileRicochetShotting(int category, float angle, int vector)
+{
+    //発射
+    ProjectileStraight* projectile{};
+    //前方向
+    DirectX::XMFLOAT3 dir;
+    //DirectX::XMFLOAT3 axis = { 0,1,0 };
+    //DirectX::XMVECTOR Axis;
+    //DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
+    DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
+
+
+    Enemy* ne = EnemyManager::Instance().NearEnemy(position);
+    
+    Enemy* ne2 = EnemyManager::Instance().NearEnemy(ne->GetPosition());
+
+    DirectX::XMVECTOR NE1 = DirectX::XMLoadFloat3(&ne->GetPosition());
+    DirectX::XMVECTOR NE2 = DirectX::XMLoadFloat3(&ne2->GetPosition());
+    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE2, NE1));
+    DirectX::XMFLOAT3 ND;
+    DirectX::XMStoreFloat3(&ND, Vec);
+
+    dir.x = vector * ND.x * 100.0f * s.x;
+    dir.y = 0.0f;
+    dir.z = vector * ND.z * 100.0f * s.z;
+    DirectX::XMFLOAT3 right;
+    right.x = transform._11 * 100.0f * s.x;
+    right.y = 0.0f;
+    right.z = transform._13 * 100.0f * s.z;
+    //発射位置（プレイヤーの腰当たり）
+    DirectX::XMFLOAT3 pos;
+    pos.x = ne->GetPosition().x;
+    pos.y = ne->GetPosition().y + height * 0.5f;
+    pos.z = ne->GetPosition().z;
 
     DirectX::XMVECTOR Right = DirectX::XMLoadFloat3(&right);
     Right = DirectX::XMVectorScale(Right, angle);

@@ -48,6 +48,7 @@ Player::Player()
     position = { 0.0001f,2,0 };
     attack_range = 9.0f;
 
+    projectile_category = RICOCHET;
     //state = State::Idle;
 
     // エフェクト
@@ -124,6 +125,15 @@ void Player::Update(float elapsedTime)
     model->UpdateAnimation(elapsedTime);
 
     AT_Field->Play(position, 10.0f);
+
+    if(invincible_check == true)
+    {
+        projectile_invincible_timer--;
+    }
+    if (projectile_invincible_timer <= 0)
+    {
+        invincible_check = false;
+    }
 
     //当たり判定のdelay
     UpdateDelayTime(hit_delay.checker, hit_delay.time, DELAYPLAYERVSENEMY);
@@ -313,8 +323,20 @@ void Player::InputProjectile()
     //前方弾丸発射
     if (projectile_auto.checker)
     {
-        ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
-        projectile_auto.checker = false;
+        if (projectile_category == PENETRATION)
+        {
+            penetration_count = 2;
+            ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+            projectile_auto.checker = false;
+        }
+        if (projectile_category == RICOCHET)
+        {
+            penetration_count = 0;
+            //ricochet_count = 5;
+            projectile_invincible_timer = 5.0f;
+            ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+            projectile_auto.checker = false;
+        }
     }
 }
 
