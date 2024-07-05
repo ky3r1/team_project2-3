@@ -71,12 +71,12 @@ void IdleState::Execute(float elapsedTime)
 	//1秒経過したら徘徊ステート
 	if (owner->GetHealth()<=0)
 	{
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Search::Death));
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Search::Death));
 	}
 	// 攻撃フラグがtrueなら戦闘ステートへ遷移
 	if (owner->GetProjectileAttackFlg())
 	{
-		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy01::State::Battle));
+		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy::State::Battle));
 	}
 }
 //出ていくとき
@@ -135,13 +135,13 @@ void PursuitState::Execute(float elapsedTime)
 
 	// 攻撃範囲内までプレイヤーに近づいた
 	float radius = owner->GetAttackRange();
-	if (distSq < radius * radius&&owner->GetProjectileAttackFlg())
+	if (distSq < radius * radius)
 	{
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Battle::Attack));
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Attack));
 	}
 	if (Player::Instance().GetHealth() <= 0)
 	{
-		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy01::State::Search));
+		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy::State::Search));
 	}
 	owner->MoveSystem();
 	owner->OutMove();
@@ -173,7 +173,10 @@ void AttackState::Execute(float elapsedTime)
 	float distSq = vx * vx + vz * vz;
 	if (distSq > owner->GetAttackRange() * owner->GetAttackRange())
 	{
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy01::Battle::Pursuit));
+		if (!owner->GetModel()->IsPlayAnimation())
+		{
+			owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Pursuit));
+		}
 	}
 	else
 	{
@@ -181,11 +184,18 @@ void AttackState::Execute(float elapsedTime)
 		owner->InputProjectile();
 #endif // ENEMYATTACK
 	}
-	if (Player::Instance().GetHealth() <= 0 || !owner->GetProjectileAttackFlg())
+	if (Player::Instance().GetHealth() <= 0)
 	{
 		if (!owner->GetModel()->IsPlayAnimation())
 		{
-			owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy01::State::Search));
+			owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy::State::Search));
+		}
+	}
+	if (!owner->GetProjectileAttackFlg())
+	{
+		if (!owner->GetModel()->IsPlayAnimation())
+		{
+			owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Idle));
 		}
 	}
 	owner->Turn(elapsedTime, vx, vz, owner->GetTurnSpeed());
@@ -194,6 +204,36 @@ void AttackState::Execute(float elapsedTime)
 //出ていくとき
 void AttackState::Exit()
 {
-
 }
+
+void BattleIdleState::Enter()
+{
+#ifdef ENEMYANIMATION
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Idle), true);
+#endif // ENEMYANIMATION
+}
+
+void BattleIdleState::Execute(float elapsedTime)
+{
+	if (owner->GetProjectileAttackFlg())
+	{
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Attack));
+	}
+
+	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
+	DirectX::XMFLOAT3 enemy_position = owner->GetPosition();
+	owner->SetTargetPosition(player_position);
+	float vx = player_position.x - enemy_position.x;
+	float vz = player_position.z - enemy_position.z;
+	float distSq = vx * vx + vz * vz;
+	if (distSq > owner->GetAttackRange() * owner->GetAttackRange())
+	{
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Pursuit));
+	}
+}
+
+void BattleIdleState::Exit()
+{
+}
+
 #endif // BATTLESTATE

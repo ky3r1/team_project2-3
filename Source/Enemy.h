@@ -81,6 +81,7 @@ public:
 	{
 		Pursuit,
 		Attack,
+		Idle,
 	};
 
 public:

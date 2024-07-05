@@ -4,7 +4,7 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 2*60
+#define DELAYAUTOTIME 5*60
 
 //コンストラクタ
 Enemy02::Enemy02(int category)
@@ -40,6 +40,7 @@ Enemy02::Enemy02(int category)
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Search), new IdleState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Battle), new PursuitState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Battle), new AttackState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new BattleIdleState(this));
     // デフォルトステートをセット
     stateMachine->SetState(static_cast<int>(State::Search));
 #endif // ENEMYSTATEMACHINE

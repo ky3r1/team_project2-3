@@ -46,10 +46,10 @@
 ////ÉXÉ|Å[Éì
 //#define SPOWNENEMY
 
-//01
-#define ENEMY01 
-////02
-//#define ENEMY02
+////01
+//#define ENEMY01 
+//02
+#define ENEMY02
 ////03
 //#define ENEMY03 
 ////BOSS

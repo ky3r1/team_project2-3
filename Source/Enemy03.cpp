@@ -40,6 +40,7 @@ Enemy03::Enemy03(int category)
     stateMachine->RegisterSubState(static_cast<int>(Enemy03::State::Search), new IdleState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy03::State::Battle), new PursuitState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy03::State::Battle), new AttackState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new BattleIdleState(this));
     // デフォルトステートをセット
     stateMachine->SetState(static_cast<int>(State::Search));
 #endif // ENEMYSTATEMACHINE

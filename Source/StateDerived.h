@@ -107,4 +107,22 @@ public:
 	// ステートから出ていくときのメソッド
 	void Exit()override;
 };
+
+// 戦闘待機ステートオブジェクト
+class BattleIdleState : public State
+{
+public:
+	// コンストラクタ
+	BattleIdleState(Enemy* enemy) :State(enemy) {};
+	// デストラクタ
+	~BattleIdleState() {}
+	// ステートに入った時のメソッド
+	void Enter()override;
+	// ステートで実行するメソッド
+	void Execute(float elapsedTime)override;
+	// ステートから出ていくときのメソッド
+	void Exit()override;
+private:
+	int idle_timer = 0;
+};
 #endif // BATTLESTATE
