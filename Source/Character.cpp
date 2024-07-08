@@ -618,6 +618,7 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     dir.x = ep.x;
     dir.y = 0.0f;
     dir.z = ep.z;
+    //projectile = new ProjectileStraight(&ProjectileManager::Instance(), category,lineEffect.get());
     projectile = new ProjectileStraight(&ProjectileManager::Instance(), category);
     projectile->Launch(dir, pos);
 }

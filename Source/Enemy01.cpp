@@ -4,13 +4,14 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 40
+#define DELAYAUTOTIME 1*60
 
 //コンストラクタ
 Enemy01::Enemy01(int category)
 {
     //TODO:エネミースライムのステータス設定
     model = new Model("Data/Model/Enemy/enemy1_walk.mdl");
+    lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
     static int id_enemy01 = 0;
     id_enemy01++;
     category_id = id_enemy01;
@@ -38,6 +39,7 @@ Enemy01::Enemy01(int category)
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Search), new IdleState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new PursuitState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new AttackState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new BattleIdleState(this));
     // デフォルトステートをセット
     stateMachine->SetState(static_cast<int>(State::Search));
 #endif // ENEMYSTATEMACHINE
@@ -79,28 +81,23 @@ void Enemy01::Render(ID3D11DeviceContext* dc, Shader* shader)
     shader->Draw(dc, model, color);
 }
 
+void Enemy01::InputProjectile()
+{
+    GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
+
+    if (projectile_auto.checker)
+    {
+        ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
+        projectile_auto.checker = false;
+    }
+}
+
 //死亡したときに呼ばれる
 void Enemy01::OnDead()
 {
     Destroy();
 }
-
-//void Enemy01::DrawDebugGUI()
-//{
-//    //name = std::string("Enemy01:") + std::to_string(category_id);
-//
-//    //if (ImGui::TreeNode(name.c_str()))
-//    //{
-//    //    Enemy::DrawDebugGUI();
-//    //    std::string p = std::string("position") + std::to_string(category_id);
-//    //    ImGui::SliderFloat3(p.c_str(), &position.x, -5, 5);
-//    //    std::string s = std::string("scale") + std::to_string(category_id);
-//    //    ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
-//    //    std::string a = std::string("angle") + std::to_string(category_id);
-//    //    ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
-//    //    ImGui::TreePop();
-//    //}
-//}
 
 void Enemy01::DrewDebugPrimitive()
 {

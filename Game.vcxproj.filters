@@ -260,6 +260,9 @@
     <ClInclude Include="Source\Spown.h">
       <Filter>AI\Spawn</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Ui.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -439,6 +442,9 @@
     <ClCompile Include="Source\Spown.cpp">
       <Filter>AI\Spawn</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Ui.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">
@@ -467,6 +473,12 @@
     </None>
     <None Include="Source\Diagram\StateClassDiagram.cd">
       <Filter>ClassDiagram</Filter>
+    </None>
+    <None Include="HLSL\Ramp_shader.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\shading_functions.hlsli">
+      <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -498,6 +510,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="HLSL\SpritePS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Ramp_shader_ps.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Ramp_shader_vs.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

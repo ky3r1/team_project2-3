@@ -8,6 +8,8 @@
 #include "SceneManager.h"
 #include "SceneLoading.h"
 
+#include "Ui.h"
+
 //#include "StageMapChip.h"
 
 float enemy_score[5];
@@ -66,5 +68,7 @@ void SceneResult::Render()
             0, 0, textureWidth, textureHeight,
             0,
             1, 1, 0, 1);
+
+        Ui::Instance().result(dc);
     }
 }

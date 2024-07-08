@@ -1,5 +1,20 @@
 #include "ProjectileStraight.h"
 
+ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category, Effect* effect)
+    : Projectile(manager)
+{
+    //model = new Model("Data/Model/SpikeBall/SpikeBall.mdl");
+    model = new Model("Data/Model/Bullet/Bullet.mdl");
+
+    color = { 0,1,0,1 };
+
+    //表示サイズを調整
+    scale.x = scale.y = scale.z = 0.006f;
+    radius = 0.5f;
+    this->category = category;
+    this->lineEffect.reset(effect);
+}
+
 ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category)
     : Projectile(manager)
 {
@@ -37,7 +52,10 @@ void ProjectileStraight::Update(float elapsedTime)
 
     //オブジェクト行列を更新
     UpdateTransform();
-
+    if (lineEffect.get() != nullptr)
+    {
+        lineEffect.get()->Play(position, 0.5f);
+    }
     //モデル行列更新
     model->UpdateTransform(transform);
 }

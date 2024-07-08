@@ -59,7 +59,7 @@ public:
 	bool InAttackRange();
 
 	//弾丸入力処理
-	void InputProjectile();
+	virtual void InputProjectile();
 
 	//弾VSPlayer
 	void CollisionProjectileVsPlayer();
@@ -83,6 +83,7 @@ public:
 	{
 		Pursuit,
 		Attack,
+		Idle,
 	};
 
 public:
@@ -105,9 +106,13 @@ public:
 	//delaytime.flgのゲッター
     bool GetProjectileAttackFlg() { return projectile_auto.checker; }
 
-	bool Rico_Checker(int enemy) { return enemy_rico_check; }
-
 	//敵のカテゴリーのゲッター・セッター
+	int GetEnemyCategory() { return category_id; }
+	void SetEnemyCategory(int category_id) { this->category_id = category_id; }
+
+    // 名前のゲッター・セッター
+    std::string GetName() { return name; }
+    void SetName(std::string name) { this->name = name; }
 	int GetEnemyCategory() { return enemy_categry; }
 
 public:
@@ -123,7 +128,6 @@ protected:
 	int id = 0;
 	int category_id = 0;
 	int enemy_categry = -1;
-	bool enemy_rico_check = false;
 	DelayTime projectile_auto;
 	std::string name = "";
 };
