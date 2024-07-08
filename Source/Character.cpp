@@ -512,34 +512,27 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                     }
                 }
                 if(projectile_category == RICOCHET)
-                {
-                    if (invincible_check) {}
-                    if (invincible_check == false)
+                {                    
+                    for (int i = 0; i < enemyCount; i++)
                     {
-                        for (int i = 0; i < enemyCount; i++)
+                        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                        if (enemy->IsHitCheck())break;
+                        if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
                         {
-                            Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-                            if (enemy->IsHitCheck(i))break;
-                            if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
-                            {
-                                //enemy->isAlreadyHit = true;
-                                enemy_rico_check = true;
-                                enemy->isHit = true;
-                                ProjectileRicochetShotting(PLAYERCATEGORY, 0.0f, FRONT);
-                            }
+                            enemy->isHit = true;
+                            ProjectileRicochetShotting(PLAYERCATEGORY, 0.0f, FRONT);
                         }
-                        invincible_check = true;
                     }
-                    if (ricochet_count == 0 || penetration_count == 0)
+                }
+                if (ricochet_count == 0 || penetration_count == 0)
+                {
+                    projectile->Destroy();
+                    for (int i = 0; i < enemyCount; i++)
                     {
-                        projectile->Destroy();
-                        for (int i = 0; i < enemyCount; i++)
+                        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                        if (enemy->IsHitCheck())
                         {
-                            Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-                            if (enemy->IsHitCheck(i))
-                            {
-                                enemy->isHit = false;
-                            }
+                            enemy->isHit = false;
                         }
                     }
                 }
