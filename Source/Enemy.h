@@ -64,6 +64,8 @@ public:
 	//弾VSPlayer
 	void CollisionProjectileVsPlayer();
 
+	bool IsHitCheck(int enemy) { return isHit; }
+
 	//行動State
 	enum class State
 	{
@@ -103,8 +105,14 @@ public:
 	//delaytime.flgのゲッター
     bool GetProjectileAttackFlg() { return projectile_auto.checker; }
 
+	bool Rico_Checker(int enemy) { return enemy_rico_check; }
+
 	//敵のカテゴリーのゲッター・セッター
 	int GetEnemyCategory() { return enemy_categry; }
+
+public:
+	bool isAlreadyHit = false;
+	bool isHit = false;
 protected:
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
@@ -115,6 +123,7 @@ protected:
 	int id = 0;
 	int category_id = 0;
 	int enemy_categry = -1;
+	bool enemy_rico_check = false;
 	DelayTime projectile_auto;
 	std::string name = "";
 };

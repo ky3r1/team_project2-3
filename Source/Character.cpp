@@ -486,6 +486,8 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
     {
         //íeä€éÊìæ
         Projectile* projectile = ProjectileManager::Instance().GetProjectile(i);
+         EnemyManager& enemyManager = EnemyManager::Instance();
+         int enemyCount = enemyManager.GetEnemyCount();
 
         //è’ìÀîªíË
         DirectX::XMFLOAT3 outPosition;
@@ -501,34 +503,44 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
             if (category == projectile->GetCategory())
             {
                 //íeä€îjä¸
-                if (category == PLAYERCATEGORY && penetration_count == 0)
+                if (projectile_category == PENETRATION)
                 {
-                    projectile->Destroy();
-                }
-                if (invincible_check == true) {}
-                if (projectile_category == RICOCHET && invincible_check == false)
-                {
-                    EnemyManager& enemyManager = EnemyManager::Instance();
-                    Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
-                    int enemyCount = enemyManager.GetEnemyCount();
-                    for (int i = 0; i < enemyCount; i++)
-                    {
-                        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-                        if(Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
-                        {
-                            enemy_rico_check = true;
-                            invincible_check = true;
-                            ProjectileRicochetShotting(PLAYERCATEGORY, 0.0f, FRONT);
-                        }
-                        if(enemy_rico_check == true)
-                        {
-                            break;
-                        }
-                    }
-                    //invincible_check = true;
-                    if (category == PLAYERCATEGORY && ricochet_count == 0)
+
+                    if (category == PLAYERCATEGORY && penetration_count == 0)
                     {
                         projectile->Destroy();
+                    }
+                }
+                if(projectile_category == RICOCHET)
+                {
+                    if (invincible_check) {}
+                    if (invincible_check == false)
+                    {
+                        for (int i = 0; i < enemyCount; i++)
+                        {
+                            Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                            if (enemy->IsHitCheck(i))break;
+                            if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+                            {
+                                //enemy->isAlreadyHit = true;
+                                enemy_rico_check = true;
+                                enemy->isHit = true;
+                                ProjectileRicochetShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                            }
+                        }
+                        invincible_check = true;
+                    }
+                    if (ricochet_count == 0 || penetration_count == 0)
+                    {
+                        projectile->Destroy();
+                        for (int i = 0; i < enemyCount; i++)
+                        {
+                            Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                            if (enemy->IsHitCheck(i))
+                            {
+                                enemy->isHit = false;
+                            }
+                        }
                     }
                 }
                 if (/*character->ApplyDamage(1, 0.5f)*/true)
@@ -537,7 +549,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                     {
                         DirectX::XMFLOAT3 impulse;
                         //êÅÇ´îÚÇŒÇ∑óÕ
-                        const float power = 10.0f;
+                        const float power = 5.0f;
 
                         //ìGÇÃà íu
                         DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&character->GetPosition());
@@ -556,6 +568,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         impulse.z = power * vec.z;
                         penetration_count--;
                         ricochet_count--;
+                        
                         character->AddImpulse(impulse);
                     }
                     //ÉqÉbÉgÉGÉtÉFÉNÉgçƒê∂

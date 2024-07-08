@@ -15,6 +15,7 @@ Enemy::Enemy()
 {
     //ヒットエフェクト読み込み
     hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/Hit.efk"));
+
 }
 
 void Enemy::Update(float elapsedTime)

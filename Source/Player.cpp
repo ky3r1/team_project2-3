@@ -325,15 +325,15 @@ void Player::InputProjectile()
     {
         if (projectile_category == PENETRATION)
         {
-            penetration_count = 2;
+            penetration_count = 3;
             ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
             projectile_auto.checker = false;
         }
         if (projectile_category == RICOCHET)
         {
             penetration_count = 0;
-            //ricochet_count = 5;
-            projectile_invincible_timer = 5.0f;
+            ricochet_count = 3;
+            projectile_invincible_timer = 10.0f;
             ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
             projectile_auto.checker = false;
         }
