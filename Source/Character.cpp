@@ -523,16 +523,16 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                             ProjectileRicochetShotting(PLAYERCATEGORY, 0.0f, FRONT);
                         }
                     }
-                }
-                if (ricochet_count == 0 || penetration_count == 0)
-                {
-                    projectile->Destroy();
-                    for (int i = 0; i < enemyCount; i++)
+                    if (ricochet_count == 0 || penetration_count == 0)
                     {
-                        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-                        if (enemy->IsHitCheck())
+                        projectile->Destroy();
+                        for (int i = 0; i < enemyCount; i++)
                         {
-                            enemy->isHit = false;
+                            Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                            if (enemy->IsHitCheck())
+                            {
+                                enemy->isHit = false;
+                            }
                         }
                     }
                 }
