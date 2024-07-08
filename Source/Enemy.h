@@ -113,7 +113,7 @@ public:
     // 名前のゲッター・セッター
     std::string GetName() { return name; }
     void SetName(std::string name) { this->name = name; }
-	int GetEnemyCategory() { return enemy_categry; }
+	//int GetEnemyCategory() { return enemy_categry; }
 
 public:
 	bool isAlreadyHit = false;
