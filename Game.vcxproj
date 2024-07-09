@@ -244,6 +244,8 @@
     <None Include="HLSL\ImGui.hlsli" />
     <None Include="HLSL\Lambert.hlsli" />
     <None Include="HLSL\Line.hlsli" />
+    <None Include="HLSL\Ramp_shader.hlsli" />
+    <None Include="HLSL\shading_functions.hlsli" />
     <None Include="HLSL\Sprite.hlsli" />
     <None Include="Source\Diagram\CharacterClassDiagram.cd" />
     <None Include="Source\Diagram\SceneClassDiagram.cd" />
@@ -346,6 +348,14 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Data\Shader\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyCode</AssemblerOutput>
       <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Data\Shader\%(Filename).cod</AssemblerOutputFile>
+    </FxCompile>
+    <FxCompile Include="HLSL\Ramp_shader_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\Ramp_shader_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="HLSL\SpritePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

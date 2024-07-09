@@ -34,6 +34,28 @@ private:
 	};
 
 
+
+	struct scene_constants
+	{
+		DirectX::XMFLOAT4X4 view_projection;
+		DirectX::XMFLOAT4 options;	//	xy : マウスの座標値, z : タイマー, w : フラグ
+		DirectX::XMFLOAT4 camera_position;
+	};
+	Microsoft::WRL::ComPtr<ID3D11Buffer> scene_constant_buffer;
+
+	struct light_constants
+	{
+		DirectX::XMFLOAT4 ambient_color;
+		DirectX::XMFLOAT4 directional_light_direction;
+		DirectX::XMFLOAT4 directional_light_color;
+	};
+	Microsoft::WRL::ComPtr<ID3D11Buffer> light_constant_buffer;
+
+	D3D11_TEXTURE2D_DESC ramp_texture2dDesc;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> ramp_texture;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> ramp_sampler_state;
+
+
 	Microsoft::WRL::ComPtr<ID3D11Buffer>			sceneConstantBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>			meshConstantBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>			subsetConstantBuffer;

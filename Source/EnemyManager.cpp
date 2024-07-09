@@ -154,3 +154,12 @@ Enemy* EnemyManager::NearEnemy(DirectX::XMFLOAT3 position)
     }
     return c;
 }
+
+bool EnemyManager::IsAllEnemyAlrealyHit()
+{
+    for (Enemy* enemy : enemies)
+    {
+        if (!enemy->isAlreadyHit)return false;
+    }
+    return true;
+}

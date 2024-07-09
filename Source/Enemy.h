@@ -64,6 +64,8 @@ public:
 	//弾VSPlayer
 	void CollisionProjectileVsPlayer();
 
+	bool IsHitCheck() { return isHit; }
+
 	//行動State
 	enum class State
 	{
@@ -111,6 +113,11 @@ public:
     // 名前のゲッター・セッター
     std::string GetName() { return name; }
     void SetName(std::string name) { this->name = name; }
+	//int GetEnemyCategory() { return enemy_categry; }
+
+public:
+	bool isAlreadyHit = false;
+	bool isHit = false;
 protected:
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
