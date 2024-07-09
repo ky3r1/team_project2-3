@@ -638,7 +638,7 @@ void Character::ProjectileRicochetShotting(int category, float angle, int vector
     Enemy* ne = EnemyManager::Instance().NearEnemy(position);
     
     Enemy* ne2 = EnemyManager::Instance().NearEnemy(ne->GetPosition());
-
+    if (ne2 == nullptr)return;
     DirectX::XMVECTOR NE1 = DirectX::XMLoadFloat3(&ne->GetPosition());
     DirectX::XMVECTOR NE2 = DirectX::XMLoadFloat3(&ne2->GetPosition());
     DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE2, NE1));

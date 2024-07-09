@@ -75,7 +75,7 @@ dcl_temps 9
 //   v4.x <- pin.texcoord.x; v4.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 10 "C:\Users\2230121\Desktop\2年チE᭣制作\team_project2-3\HLSL\Ramp_shader_ps.hlsl"
+#line 10 "C:\Users\2230345\Desktop\team_project2-3\HLSL\Ramp_shader_ps.hlsl"
 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v4.xyxx, t0.xyzw, s0  // r0.x <- diffuse_color.x; r0.y <- diffuse_color.y; r0.z <- diffuse_color.z; r0.w <- diffuse_color.w
 
 #line 12
@@ -116,7 +116,7 @@ mov r2.xyz, r2.xyzx
 mov r7.xyz, cb3[2].xyzx
 mov r5.xyz, r5.xyzx
 
-#line 68 "C:\Users\2230121\Desktop\2年チーム制作\team_project2-3\HLSL\shading_functions.hlsli"
+#line 68 "C:\Users\2230345\Desktop\team_project2-3\HLSL\shading_functions.hlsli"
 mov r8.xyz, -r2.xyzx
 dp3 r1.w, r3.xyzx, r8.xyzx
 mul r1.w, r1.w, l(0.500000)
@@ -133,7 +133,7 @@ mov r1.w, r1.w  // r1.w <- Ramp
 mul r7.xyz, r1.wwww, r7.xyzx
 mul r5.xyz, r5.xyzx, r7.xyzx  // r5.x <- <CalcRampShading return value>.x; r5.y <- <CalcRampShading return value>.y; r5.z <- <CalcRampShading return value>.z
 
-#line 21 "C:\Users\2230121\Desktop\2年チEム制作\team_project2-3\HLSL\Ramp_shader_ps.hlsl"
+#line 21 "C:\Users\2230345\Desktop\team_project2-3\HLSL\Ramp_shader_ps.hlsl"
 mov r5.xyz, r5.xyzx  // r5.x <- directional_diffuse.x; r5.y <- directional_diffuse.y; r5.z <- directional_diffuse.z
 
 #line 23
@@ -144,7 +144,7 @@ mov r1.xyz, r1.xyzx
 mov r7.xyz, cb3[2].xyzx
 mov r6.xyz, r6.xyzx
 
-#line 24 "C:\Users\2230121\Desktop\2年チーム制作\team_project2-3\HLSL\shading_functions.hlsli"
+#line 24 "C:\Users\2230345\Desktop\team_project2-3\HLSL\shading_functions.hlsli"
 dp3 r1.w, r2.xyzx, r3.xyzx
 add r1.w, r1.w, r1.w
 mov r1.w, -r1.w
@@ -167,7 +167,7 @@ exp r1.x, r1.x  // r1.x <- power
 mul r1.xyz, r1.xxxx, r7.xyzx
 mul r1.xyz, r6.xyzx, r1.xyzx  // r1.x <- <CalcPhongSpecular return value>.x; r1.y <- <CalcPhongSpecular return value>.y; r1.z <- <CalcPhongSpecular return value>.z
 
-#line 23 "C:\Users\2230121\Desktop\2年チEム制作\team_project2-3\HLSL\Ramp_shader_ps.hlsl"
+#line 23 "C:\Users\2230345\Desktop\team_project2-3\HLSL\Ramp_shader_ps.hlsl"
 mov r1.xyz, r1.xyzx  // r1.x <- directional_sprcular.x; r1.y <- directional_sprcular.y; r1.z <- directional_sprcular.z
 
 #line 25
