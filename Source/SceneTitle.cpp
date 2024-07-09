@@ -11,6 +11,7 @@ void SceneTitle::Initialize()
 {
     //スプライト初期化
     sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/Title.png"));
+    test=std::unique_ptr<Sprite>(new Sprite("Data/Sprite/check.png"));
     ui = std::unique_ptr<Ui>(new Ui);
 }
 
