@@ -35,7 +35,7 @@ Player::Player()
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
     //scale.x = scale.y = scale.z = 0.1f;
-    scale.x = scale.y = scale.z = 1.0f;
+    scale.x = scale.y = scale.z = 5.0f;
 
     weight = 100.0f;
     color = { 1,1,1,1 };
@@ -441,7 +441,7 @@ void Player::UpdateAttackState(float elapsedTime)
     //attackCollisionFlag = animationTime ? true : false;
     //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
 #ifdef PLAYERATTACK
-    if (Yangle < angle.y + 0.01f && Yangle > angle.y - 0.01f)
+    if (Yangle < angle.y + 0.001f && Yangle > angle.y - 0.001f)
     {
         InputProjectile();
     }
