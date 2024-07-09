@@ -444,7 +444,10 @@ void Player::UpdateAttackState(float elapsedTime)
 #ifdef PLAYERATTACK
     if (Yangle < angle.y + 0.001f && Yangle > angle.y - 0.001f)
     {
-        InputProjectile();
+        if (model->IsPlayAnimation())
+        {
+            InputProjectile();
+        }
     }
     else
     {
@@ -456,7 +459,7 @@ void Player::UpdateAttackState(float elapsedTime)
     {
         TransitionMoveState();
     }
-    if (!model->IsPlayAnimation() && !projectile_auto.checker)
+    if (!model->IsPlayAnimation())
     {
         TransitionIdleState();
     }

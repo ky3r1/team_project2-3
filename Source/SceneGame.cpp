@@ -270,6 +270,9 @@ void SceneGame::Render()
 		CrickEnemyAdd(dc, rc.view, rc.projection);
 #endif // ENEMYADD
 		Ui::Instance().game(dc);
+#ifdef SPOWNENEMY
+		spown->render(dc);
+#endif // SPOWNENEMY
 	}
 
 #ifdef DEBUGIMGUI

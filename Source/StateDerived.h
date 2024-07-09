@@ -40,22 +40,6 @@ public:
 };
 
 #ifdef SEARCHSTATE
-// 死亡ステートオブジェクト
-class DeathState : public State
-{
-public:
-	// コンストラクタ
-	DeathState(Enemy* enemy) :State(enemy) {};
-	// デストラクタ
-	~DeathState() {}
-	// ステートに入った時のメソッド
-	void Enter()override;
-	// ステートで実行するメソッド
-	void Execute(float elapsedTime)override;
-	// ステートから出ていくときのメソッド
-	void Exit()override;
-};
-
 // 待機ステートオブジェクト
 class IdleState : public State
 {
@@ -124,5 +108,21 @@ public:
 	void Exit()override;
 private:
 	int idle_timer = 0;
+};
+
+// HitDamageステートオブジェクト
+class HitDamageState : public State
+{
+public:
+	// コンストラクタ
+	HitDamageState(Enemy* enemy) :State(enemy) {};
+	// デストラクタ
+	~HitDamageState() {}
+	// ステートに入った時のメソッド
+	void Enter()override;
+	// ステートで実行するメソッド
+	void Execute(float elapsedTime)override;
+	// ステートから出ていくときのメソッド
+	void Exit()override;
 };
 #endif // BATTLESTATE

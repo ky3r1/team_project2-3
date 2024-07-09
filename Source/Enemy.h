@@ -6,12 +6,10 @@
 
 enum class EnemySlimeAnimation
 {
-	Idle,
+	Hit,
 	Walk,
 	Attack01,
 	Death,
-	Attack02,
-	Attack03,
 };
 
 enum
@@ -75,7 +73,6 @@ public:
 	//’TõState
 	enum class Search
 	{
-		Death,
 		Idle,
 	};
 	//í“¬State
@@ -84,6 +81,7 @@ public:
 		Pursuit,
 		Attack,
 		Idle,
+		Hit,
 	};
 
 public:
@@ -114,11 +112,11 @@ public:
     std::string GetName() { return name; }
     void SetName(std::string name) { this->name = name; }
 	//int GetEnemyCategory() { return enemy_categry; }
-
 public:
 	bool isAlreadyHit = false;
 	bool isHit = false;
 protected:
+	std::unique_ptr<Effect> death_effect = std::unique_ptr<Effect>(new Effect("Data/Effect/enemy_death.efkefc"));
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
 	float				moveSpeed = 3.0f;

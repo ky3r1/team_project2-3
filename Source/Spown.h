@@ -1,6 +1,7 @@
 #pragma once
 #include "All.h"
 #include "Enemy.h"
+#include "Effect.h"
 
 class Spown
 {
@@ -17,10 +18,12 @@ public:
 
     void Update(float elapsedTime);
 
-    void render(ID3D11DeviceContext* dc, Shader* shader);
+    void render(ID3D11DeviceContext* dc);
 private:
 
     void MakeWave(int category, int count, Enemy* enemy,DirectX::XMFLOAT2 top, DirectX::XMFLOAT2 middle);
-
-    bool flg[10] = {};
+    int timer = 0;
+    int spown_delay_timer = 0;
+    bool flg[10][2] = {};
+    std::unique_ptr<Effect> warning = std::unique_ptr<Effect>(new Effect("Data/Effect/Warning.efkefc"));
 };

@@ -57,9 +57,6 @@ void Enemy::DrawDebugGUI()
             str = "Search";
             switch (stateMachine->GetState()->GetSubStateIndex())
             {
-            case static_cast<int>(Enemy::Search::Death):
-                subStr = "Death";
-                break;
             case static_cast<int>(Enemy::Search::Idle):
                 subStr = "Idle";
                 break;
@@ -75,20 +72,23 @@ void Enemy::DrawDebugGUI()
             case static_cast<int>(Enemy::Battle::Attack):
                 subStr = "Attack";
                 break;
+            case static_cast<int>(Enemy::Battle::Idle):
+                subStr = "BattleIdle";
+                break;
+            case static_cast<int>(Enemy::Battle::Hit):
+                subStr = "Hit";
+                break;
             }
             break;
         }
         ImGui::Text(u8"State:%s", str.c_str());
         ImGui::Text(u8"SubState:%s", subStr.c_str());
         ImGui::Text(u8"ID:%d", id);
-        std::string p = std::string("position") + std::to_string(category_id);
-        ImGui::SliderFloat3(p.c_str(), &position.x, -5, 5);
-        std::string s = std::string("scale") + std::to_string(category_id);
-        ImGui::SliderFloat3(s.c_str(), &scale.x, 0.01f, 4.0f);
-        std::string a = std::string("angle") + std::to_string(category_id);
-        ImGui::SliderFloat3(a.c_str(), &angle.x, -3.14f, 3.14f);
-        std::string b = std::string("attack_range") + std::to_string(category_id);
-        ImGui::SliderFloat(b.c_str(), &attack_range, 1.0f, 10.0f);
+        ImGui::SliderFloat3("position", &position.x, -5, 5);
+        ImGui::SliderFloat3("scale", &scale.x, 0.01f, 4.0f);
+        ImGui::SliderFloat3("angle", &angle.x, -3.14f, 3.14f);
+        ImGui::SliderFloat("attack_range", &attack_range, 1.0f, 10.0f);
+        if (ImGui::Button("delete", ImVec2(100, 30)))Destroy();
         ImGui::TreePop();
     }
 #endif // ENEMYSTATEMACHINE
@@ -115,6 +115,9 @@ void Enemy::OutMove()
 //”jŠü
 void Enemy::Destroy()
 {
+
+        death_effect.get()->Play(position, 1.0f);
+
     EnemyManager::Instance().Remove(this);
 }
 
