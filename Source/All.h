@@ -45,10 +45,10 @@
 
 ////01
 #define ENEMY01 
-////02
-//#define ENEMY02
-////03
-//#define ENEMY03 
+//02
+#define ENEMY02
+//03
+#define ENEMY03 
 //BOSS
 //#define ENEMYBOSS 
 

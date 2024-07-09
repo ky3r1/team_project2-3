@@ -95,9 +95,9 @@ void Enemy02::InputProjectile()
 
     if (projectile_auto.checker)
     {
-        ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
-        ProjectileStraightShotting(ENEMYCATEGORY, 0.8f, FRONT);
-        ProjectileStraightShotting(ENEMYCATEGORY, -0.8f, FRONT);
+        //ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
+        //ProjectileStraightShotting(ENEMYCATEGORY, 0.8f, FRONT);
+        //ProjectileStraightShotting(ENEMYCATEGORY, -0.8f, FRONT);
         projectile_auto.checker = false;
     }
 }

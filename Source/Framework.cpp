@@ -119,7 +119,7 @@ int Framework::Run()
 			timer.Tick();
 			CalculateFrameStats();
 
-			float elapsedTime = syncInterval == 0
+			float elapsedTime = syncInterval == 1
 				? timer.TimeInterval()
 				: syncInterval / 60.0f
 				;
