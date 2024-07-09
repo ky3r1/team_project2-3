@@ -54,6 +54,9 @@ public:
     Enemy* GetEnemyFromId(int id);
 
     Enemy* NearEnemy(DirectX::XMFLOAT3 position);
+
+    bool IsAllEnemyAlrealyHit();
+
 private:
     //エネミー同士の衝突処理
     void CollisionEnemyVsEnemies();

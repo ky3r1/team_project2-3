@@ -35,21 +35,21 @@ Player::Player()
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
     //scale.x = scale.y = scale.z = 0.1f;
-    scale.x = scale.y = scale.z = 5.0f;
-
+    scale.x = scale.y = scale.z = 1.0f;
+    turnSpeed = DirectX::XMConvertToRadians(720);
     weight = 100.0f;
     color = { 1,1,1,1 };
 
     projectile_auto.time = DELAYAUTOTIME;
 
     hit_delay.time = DELAYPLAYERVSENEMY;
-    moveSpeed = 7.0f;
+    moveSpeed = 15.0f;
 
     position = { 0.0001f,2,0 };
     attack_range = 9.0f;
 
     projectile_category = RICOCHET;
-    //state = State::Idle;
+    state = State::Idle;
 
     // エフェクト
     AT_Field = new Effect("Data/Effect/AT_field.efk");
@@ -327,15 +327,15 @@ void Player::InputProjectile()
     {
         if (projectile_category == PENETRATION)
         {
-            penetration_count = 2;
+            penetration_count = 3;
             ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
             projectile_auto.checker = false;
         }
         if (projectile_category == RICOCHET)
         {
             penetration_count = 0;
-            //ricochet_count = 5;
-            projectile_invincible_timer = 5.0f;
+            ricochet_count = 3;
+            projectile_invincible_timer = 10.0f;
             ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
             projectile_auto.checker = false;
         }
@@ -434,7 +434,7 @@ void Player::UpdateAttackState(float elapsedTime)
     DirectX::XMStoreFloat3(&ND, Vec);
 
     //旋回処理
-    Turn(elapsedTime, ND.x, ND.z, DirectX::XMConvertToRadians(360));
+    Turn(elapsedTime, ND.x, ND.z, turnSpeed);
 
     //任意のアニメーション区間でのみ衝突処理
     float animationTime = 0.138;
