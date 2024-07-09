@@ -642,12 +642,12 @@ void Character::Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2, int vecto
     DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
 
 
-    Enemy* ne1 = EnemyManager::Instance().NearEnemy(ne);
-
-    Enemy* ne2 = EnemyManager::Instance().NearEnemy(pos2);
-    if (ne1 == nullptr)return;
+    Enemy* ne1 = EnemyManager::Instance().NearEnemy(position);
+    
+    Enemy* ne2 = EnemyManager::Instance().NearEnemy(ne);
+    if (ne2 == nullptr)return;
     DirectX::XMVECTOR NE1 = DirectX::XMLoadFloat3(&ne);
-    DirectX::XMVECTOR NE2 = DirectX::XMLoadFloat3(&ne1->GetPosition());
+    DirectX::XMVECTOR NE2 = DirectX::XMLoadFloat3(&ne2->GetPosition());
     DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE2, NE1));
     DirectX::XMFLOAT3 ND;
     DirectX::XMStoreFloat3(&ND, Vec);

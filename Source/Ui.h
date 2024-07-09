@@ -21,4 +21,5 @@ public:
 private:
     std::unique_ptr<Sprite> sprite01 = nullptr;
     std::unique_ptr<Sprite> sprite02 = nullptr;
+    std::unique_ptr<Sprite> sprite03 = nullptr;
 };

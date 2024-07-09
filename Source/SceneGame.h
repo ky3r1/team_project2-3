@@ -5,6 +5,7 @@
 #include "Spown.h"
 #include "CameraController.h"
 #include "Graphics/Sprite.h"
+#include "Graphics/Font.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class SceneGame : public Scene
@@ -34,5 +35,7 @@ private:
 	std::unique_ptr<Spown> spown = nullptr;
 	std::unique_ptr<CameraController> cameraController = nullptr;
 	std::unique_ptr<Sprite> gauge = nullptr;
+	std::unique_ptr<Font> font;
+
 	int mapcategory = 0;
 };

@@ -266,6 +266,9 @@
     <ClInclude Include="Source\Easing.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\Font.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -448,6 +451,9 @@
     <ClCompile Include="Source\Ui.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\Font.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">
@@ -481,6 +487,9 @@
       <Filter>HLSL</Filter>
     </None>
     <None Include="HLSL\shading_functions.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="Data\Shader\Font.hlsli">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
@@ -519,6 +528,12 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="HLSL\Ramp_shader_vs.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Data\Shader\Font_PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Data\Shader\Font_VS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

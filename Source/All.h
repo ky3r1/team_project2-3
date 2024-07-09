@@ -9,16 +9,8 @@
 #include <imgui.h>
 
 ///////////////////デバッグ用define////////////////////////
-
 //ImGui
 #define DEBUGIMGUI
-
-///////////////////Stage////////////////////////
-
-//全ステージ
-#define ALLSTAGE
-//動く床
-//#define STAGEMOVE
 
 ///////////////////Camera////////////////////////
 #define MOUSECAMERA
@@ -48,7 +40,7 @@
 //Enemy
 //エネミー
 #define ALLENEMY
-////スポーン
+//スポーン
 //#define SPOWNENEMY
 
 ////01
@@ -61,7 +53,7 @@
 //#define ENEMYBOSS 
 
 // 攻撃
-#define ENEMYATTACK
+//#define ENEMYATTACK
 
 //ステートマシン
 #define ENEMYSTATEMACHINE
@@ -78,3 +70,16 @@
 ///////////////////CATEGORY////////////////////////
 #define PLAYERCATEGORY 0       //Player
 #define ENEMYCATEGORY 1     //Enemy
+
+///////////////////Stage////////////////////////
+
+//全ステージ
+#define ALLSTAGE
+//動く床
+//#define STAGEMOVE
+
+//Stageの最大値
+#define StageTopMax_X 40
+#define StageTopMax_Y 40
+#define StageBottomMax_X -40
+#define StageBottomMax_Y -40
