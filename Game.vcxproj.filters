@@ -263,6 +263,9 @@
     <ClInclude Include="Source\Ui.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Easing.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">

@@ -4,8 +4,8 @@
 StageMain::StageMain()
 {
     //ステージモデルの読み込み
-    model = new Model("Data/Model/Cube/Cube.mdl");
-    scale = { 100.0f,2.0f,100.0f };
+    model = new Model("Data/Model/Stage/stage01.mdl");
+    scale = { 0.10f,0.10f,0.10f };
     color = { 1,1,1,1 };
     UpdateTransform();
     model->UpdateTransform(transform);
