@@ -198,6 +198,8 @@ void SceneGame::Update(float elapsedTime)
 	//{
 	//	SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 	//}
+
+	//font = std::make_unique<Font>(graphics.GetDevice(), ".\\Data\\Font\\MS_Gothic.fnt", 1024);
 }
 
 // 描画処理
@@ -270,6 +272,10 @@ void SceneGame::Render()
 		CrickEnemyAdd(dc, rc.view, rc.projection);
 #endif // ENEMYADD
 		Ui::Instance().game(dc);
+
+		/*font->Begin(dc);
+		font->Draw(100, 200, L"ばか");
+		font->End(dc);*/
 	}
 
 #ifdef DEBUGIMGUI

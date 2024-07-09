@@ -25,6 +25,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     float4 color = float4(ambient, diffuse_color.a);
     color.rgb += diffuse_color.rgb * directional_diffuse;
     color.rgb += directional_sprcular;
+    //color.rgb *= color.a;
     return color;
 
 }

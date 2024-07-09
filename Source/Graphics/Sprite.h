@@ -3,6 +3,7 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <iostream>
 
 // スプライト
 class Sprite
@@ -36,6 +37,10 @@ public:
 		DirectX::XMFLOAT2 endsize,
 		float angle,
 		DirectX::XMFLOAT4 color ) const;
+
+
+	void textout(ID3D11DeviceContext* immediate_context, std::string s,
+		float x, float y, float w, float h, DirectX::XMFLOAT4 color);
 
 	// テクスチャ幅取得
 	int GetTextureWidth() const { return textureWidth; }
