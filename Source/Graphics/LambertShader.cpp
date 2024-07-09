@@ -189,7 +189,7 @@ LambertShader::LambertShader(ID3D11Device* device)
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 
-	load_texture_from_file(device, L".\\Data\\Sprite\\ramp.png",
+	load_texture_from_file(device, L".\\Data\\Sprite\\ranp.png",
 		ramp_texture.GetAddressOf(), &ramp_texture2dDesc);
 }
 

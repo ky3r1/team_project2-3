@@ -119,7 +119,7 @@ Sprite::Sprite(const char* filename)
 		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
@@ -342,6 +342,7 @@ void Sprite::Render(ID3D11DeviceContext *immediate_context,
 		immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		immediate_context->IASetInputLayout(inputLayout.Get());
 
+		immediate_context->OMSetBlendState(blendState.Get(), nullptr, 0xFFFFFFFF);
 		immediate_context->RSSetState(rasterizerState.Get());
 
 		immediate_context->VSSetShader(vertexShader.Get(), nullptr, 0);
