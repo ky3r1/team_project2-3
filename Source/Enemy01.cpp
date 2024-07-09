@@ -88,7 +88,7 @@ void Enemy01::InputProjectile()
 
     if (projectile_auto.checker)
     {
-        ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
+        //ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
         projectile_auto.checker = false;
     }
 }

@@ -1,18 +1,17 @@
 #include "ProjectileStraight.h"
 
-ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category, Effect* effect)
+ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category, DirectX::XMFLOAT4 color)
     : Projectile(manager)
 {
     //model = new Model("Data/Model/SpikeBall/SpikeBall.mdl");
     model = new Model("Data/Model/Bullet/Bullet.mdl");
 
-    color = { 0,1,0,1 };
+    color = { color.x, color.y, color.z, color.w };
 
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.006f;
+    scale.x = scale.y = scale.z = 1.0f;
     radius = 0.5f;
     this->category = category;
-    this->lineEffect.reset(effect);
 }
 
 ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category)
@@ -22,9 +21,18 @@ ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category)
     model = new Model("Data/Model/Bullet/Bullet.mdl");
 
     color = { 0,1,0,1 };
+    switch (category)
+    {
+    case PLAYERCATEGORY:
+        color = { 1,1,1,1};
+        break;
+    case ENEMYCATEGORY:
+        color = { 0,0,1,1 };
+        break;
+    }
 
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.006f;
+    scale.x = scale.y = scale.z = 0.25f;
     radius = 0.5f;
     this->category = category;
 }

@@ -56,7 +56,9 @@ protected:
     virtual void ProjectileStraightShotting(int category, float angle,int vector);
     virtual void ProjectileStraightShotting(float angle, int vector);
 
-    virtual void ProjectileRicochetShotting(int category, float angle, int vector);
+    virtual void ProjectileRicochetShotting(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2,int category, float angle, int vector);
+
+    void Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2,int vector);
 
 public:
     //ê˘âÒèàóù

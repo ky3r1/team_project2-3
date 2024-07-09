@@ -16,11 +16,11 @@ public:
     }
 
     void Update(float elapsedTime);
-private:
-    //エネミーを出す
-    Enemy* SpownEnemyCategory(int category);
 
-    void MakeWave(int category, int count);
+    void render(ID3D11DeviceContext* dc, Shader* shader);
+private:
+
+    void MakeWave(int category, int count, Enemy* enemy,DirectX::XMFLOAT2 top, DirectX::XMFLOAT2 middle);
 
     bool flg[10] = {};
 };

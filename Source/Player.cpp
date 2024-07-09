@@ -35,7 +35,7 @@ Player::Player()
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
     //scale.x = scale.y = scale.z = 0.1f;
-    scale.x = scale.y = scale.z = 5.0f;
+    scale.x = scale.y = scale.z = 1.0f;
     turnSpeed = DirectX::XMConvertToRadians(720);
     weight = 100.0f;
     color = { 1,1,1,1 };
@@ -334,7 +334,7 @@ void Player::InputProjectile()
         if (projectile_category == RICOCHET)
         {
             penetration_count = 0;
-            ricochet_count = 3;
+            ricochet_count = 1;
             projectile_invincible_timer = 10.0f;
             ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
             projectile_auto.checker = false;
@@ -427,6 +427,7 @@ void Player::UpdateAttackState(float elapsedTime)
     static float Yangle = 0;
     //最も近い敵を総当たりで探索
     Enemy* ne = EnemyManager::Instance().NearEnemy(position);
+    if(ne == nullptr)return;
     DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
     DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
     DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
