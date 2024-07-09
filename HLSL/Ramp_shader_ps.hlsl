@@ -7,7 +7,7 @@ SamplerState ramp_sampler_state : register(s2);
 
 float4 main(VS_OUT pin) : SV_TARGET
 {
-    float4 diffuse_color = color_map.Sample(color_sampler_state, pin.texcoord);
+    float4 diffuse_color = color_map.Sample(color_sampler_state, pin.texcoord) * pin.color;
 
     float3 E = normalize(pin.world_position.xyz - camera_position.xyz);
     float3 L = normalize(directional_light_direction.xyz);
