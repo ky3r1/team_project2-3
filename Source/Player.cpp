@@ -127,15 +127,6 @@ void Player::Update(float elapsedTime)
 
     AT_Field->Play(position, 10.0f);
 
-    if(invincible_check == true)
-    {
-        projectile_invincible_timer--;
-    }
-    if (projectile_invincible_timer <= 0)
-    {
-        invincible_check = false;
-    }
-
     //当たり判定のdelay
     UpdateDelayTime(hit_delay.checker, hit_delay.time, DELAYPLAYERVSENEMY);
     //オートで出てる弾のdelay
