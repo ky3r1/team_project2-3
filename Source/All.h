@@ -41,12 +41,12 @@
 //エネミー
 #define ALLENEMY
 //スポーン
-//#define SPOWNENEMY
+#define SPOWNENEMY
 
 ////01
 //#define ENEMY01 
-//02
-#define ENEMY02
+////02
+//#define ENEMY02
 ////03
 //#define ENEMY03 
 //BOSS

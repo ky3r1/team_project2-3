@@ -179,11 +179,12 @@ void SceneGame::Update(float elapsedTime)
 
 #ifdef  ALLPLAYER
 	Player::Instance().Update(elapsedTime);
-	if(Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult));
+	if(Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult(false)));
 #endif //  ALLPLAYER
 
 #ifdef SPOWNENEMY
     spown->Update(elapsedTime);
+	if(spown.get()->GetStageClear())SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult(true)));
 #endif // SPOWNENEMY
 
 
@@ -283,6 +284,7 @@ void SceneGame::Render()
 	cameraController->DrawDebugGUI();
 	EnemyManager::Instance().DrawDebugGUI();
 	StageManager::Instance().DrawDebugGUI();
+	spown->DrawDebugGUI();
 #endif // DebugImGui
 }
 

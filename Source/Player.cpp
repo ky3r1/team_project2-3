@@ -34,6 +34,8 @@ Player::Player()
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
+    area = new Model("Data/Model/Player/Area.mdl");
+    area_scale = { 0.1f,1.0f,0.1f };
     //scale.x = scale.y = scale.z = 0.1f;
     scale.x = scale.y = scale.z = 1.0f;
     turnSpeed = DirectX::XMConvertToRadians(720);
@@ -71,6 +73,8 @@ Player::~Player()
     hitEffect = nullptr;
     delete model;
     model = nullptr;
+    delete area;
+    area = nullptr;
 }
 
 
@@ -121,7 +125,6 @@ void Player::Update(float elapsedTime)
 
     //モデル行列更新
     model->UpdateTransform(transform);
-
     //モデルアニメーション更新
     model->UpdateAnimation(elapsedTime);
 
@@ -136,6 +139,18 @@ void Player::Update(float elapsedTime)
 void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
     shader->Draw(dc, model, color);
+
+    ////攻撃範囲行列を更新01
+    //area_scale = { 0.1f,1.0f,0.1f };
+    //AreaTransform();
+    //area->UpdateTransform(transform);
+    //shader->Draw(dc, area, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f));
+
+    ////攻撃範囲行列を更新02
+    //area_scale = { 0.5f,0.9f,0.5f };
+    //AreaTransform();
+    //area->UpdateTransform(transform);
+    //shader->Draw(dc, area, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.5f));
 
     //弾丸描画処理
     ProjectileManager::Instance().Render(dc, shader);
@@ -333,6 +348,21 @@ void Player::InputProjectile()
     }
 }
 
+void Player::AreaTransform()
+{
+    //スケール行列を作成
+    DirectX::XMMATRIX S = DirectX::XMMatrixScaling(area_scale.x, area_scale.y, area_scale.z);
+    //DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.1, 0.1, 0.1);
+    //回転行列を作成
+    DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
+    //位置行列を作成
+    DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+    //3つの行列を組み合わせ、ワールド行列を作成
+    DirectX::XMMATRIX W = S * R * T;
+    //計算したワールド行列を取り出す
+    DirectX::XMStoreFloat4x4(&transform, W);
+}
+
 //待機ステート
 void Player::TransitionIdleState()
 {
@@ -351,20 +381,17 @@ void Player::UpdateIdleState(float elapsedTime)
         TransitionMoveState();
     }
     //攻撃処理
-    else if (state != State::Attack)
+    //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
+    Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
+    if (enemy == nullptr);
+    else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
     {
-
-        //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
-        Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
-        if (enemy == nullptr);
-        else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+        if (projectile_auto.checker)
         {
-            if (projectile_auto.checker)
-            {
-                TransitionAttackState();
-            }
+            TransitionAttackState();
         }
     }
+
 }
 
 //移動ステート

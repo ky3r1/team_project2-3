@@ -8,7 +8,7 @@
 class SceneResult : public Scene
 {
 public:
-    SceneResult() {}
+    SceneResult(bool oc) { outcome = oc; }
     ~SceneResult() override {}
 
     //‰Šú‰»
@@ -25,4 +25,5 @@ public:
 
 private:
     std::unique_ptr<Sprite> sprite = nullptr;
+    bool outcome = false;
 };
