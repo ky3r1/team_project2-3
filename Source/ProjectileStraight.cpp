@@ -1,19 +1,5 @@
 #include "ProjectileStraight.h"
 
-ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category, DirectX::XMFLOAT4 color)
-    : Projectile(manager)
-{
-    //model = new Model("Data/Model/SpikeBall/SpikeBall.mdl");
-    model = new Model("Data/Model/Bullet/Bullet.mdl");
-
-    color = { color.x, color.y, color.z, color.w };
-
-    //表示サイズを調整
-    scale.x = scale.y = scale.z = 1.0f;
-    radius = 0.5f;
-    this->category = category;
-}
-
 ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category)
     : Projectile(manager)
 {

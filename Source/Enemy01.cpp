@@ -18,11 +18,10 @@ Enemy01::Enemy01(int category)
     enemy_categry = Enemy01_Num;
     name = std::string("Enemy01:") + std::to_string(category_id);
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.02f;
+    scale.x = scale.y = scale.z = 0.03f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
-    health = 10.0f;//体力
 
     attack_range = 5.0f;
     this->category = category;
@@ -35,11 +34,11 @@ Enemy01::Enemy01(int category)
     stateMachine->RegisterState(new SearchState(this));
     stateMachine->RegisterState(new BattleState(this));
     // 各親ステートにサブステートを登録
-    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Search), new DeathState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Search), new IdleState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new PursuitState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new AttackState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new BattleIdleState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new HitDamageState(this));
     // デフォルトステートをセット
     stateMachine->SetState(static_cast<int>(State::Search));
 #endif // ENEMYSTATEMACHINE
@@ -78,6 +77,8 @@ void Enemy01::Update(float elapsedTime)
 //描画処理
 void Enemy01::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
+    Enemy::Render(dc, shader);
+    //モデル描画
     shader->Draw(dc, model, color);
 }
 

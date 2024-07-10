@@ -33,51 +33,23 @@ void SearchState::Exit()
 }
 
 #ifdef SEARCHSTATE
-////////////////////////死亡ステート//////////////////////////
-// 入った時
-void DeathState::Enter()
-{
-#ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Death), false);
-#endif // ENEMYANIMATION
-}
-// 実行中
-void DeathState::Execute(float elapsedTime)
-{
-#ifdef ENEMYANIMATION
-	if (!owner->GetModel()->IsPlayAnimation())
-	{
-		owner->Destroy();
-	}
-#endif // ENEMYANIMATION
-}
-//出ていくとき
-void DeathState::Exit()
-{
-}
-
-
 ////////////////////////待機ステート//////////////////////////
 //入った時
 void IdleState::Enter()
 {
 #ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Idle), true);
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Walk), true);
 #endif // ENEMYANIMATION
 }
 //実行中
 void IdleState::Execute(float elapsedTime)
 {
-	//1秒経過したら徘徊ステート
-	if (owner->GetHealth()<=0)
-	{
-		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Search::Death));
-	}
 	// 攻撃フラグがtrueなら戦闘ステートへ遷移
 	if (owner->GetProjectileAttackFlg())
 	{
 		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy::State::Battle));
 	}
+	health = owner->GetHealth();
 }
 //出ていくとき
 void IdleState::Exit()
@@ -118,7 +90,7 @@ void PursuitState::Enter()
 {
 #ifdef ENEMYANIMATION
 	//TODO:アニメーション一時挿入してるため要修正
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Idle), true);
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Walk), true);
 #endif // ENEMYANIMATION
 	owner->SetStateTimer(Mathf::RandomRange(3.0f, 5.0f));
 }
@@ -147,6 +119,11 @@ void PursuitState::Execute(float elapsedTime)
 	owner->OutMove();
 	// 目的地点へ移動
 	owner->MoveToTarget(elapsedTime, 0.5f);
+	if (health != owner->GetHealth())
+	{
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Hit));
+	}
+	health = owner->GetHealth();
 }
 //出ていくとき
 void PursuitState::Exit()
@@ -199,7 +176,11 @@ void AttackState::Execute(float elapsedTime)
 		}
 	}
 	owner->Turn(elapsedTime, vx, vz, owner->GetTurnSpeed());
-
+	if (health != owner->GetHealth())
+	{
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Hit));
+	}
+	health = owner->GetHealth();
 }
 //出ていくとき
 void AttackState::Exit()
@@ -209,7 +190,7 @@ void AttackState::Exit()
 void BattleIdleState::Enter()
 {
 #ifdef ENEMYANIMATION
-	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Idle), true);
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Walk), true);
 #endif // ENEMYANIMATION
 }
 
@@ -230,10 +211,34 @@ void BattleIdleState::Execute(float elapsedTime)
 	{
 		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Pursuit));
 	}
+	if (health != owner->GetHealth())
+	{
+		owner->GetStateMachine()->ChangeSubState(static_cast<int>(Enemy::Battle::Hit));
+	}
+	health = owner->GetHealth();
+    owner->Turn(elapsedTime, vx, vz, owner->GetTurnSpeed());
 }
 
 void BattleIdleState::Exit()
 {
 }
 
+void HitDamageState::Enter()
+{
+#ifdef ENEMYANIMATION
+	owner->GetModel()->PlayAnimation(static_cast<int>(EnemySlimeAnimation::Hit), false);
+#endif // ENEMYANIMATION
+}
+
+void HitDamageState::Execute(float elapsedTime)
+{
+	if (!owner->GetModel()->IsPlayAnimation())
+	{
+		owner->GetStateMachine()->ChangeState(static_cast<int>(Enemy::State::Search));
+	}
+}
+
+void HitDamageState::Exit()
+{
+}
 #endif // BATTLESTATE

@@ -140,12 +140,13 @@ public:
 
     //lineEffectのゲッター/セッター
     void SetLineEffect(Effect* e) { lineEffect.reset(e);}
-    Effect* GetLineEffect() { return lineEffect.get(); }
+    Effect* GetLineEffect() { return lineEffect.get(); } 
 protected:
     Model* model = nullptr;
     //Effect* hitEffect = nullptr;
     std::unique_ptr<Effect>hitEffect=nullptr;
     std::unique_ptr<Effect>lineEffect = nullptr;
+
     DirectX::XMFLOAT3   position = { 0,0,0 };
     DirectX::XMFLOAT3   screen_pos = { 0,0,0 };
     DirectX::XMFLOAT3   angle = { 0,0,0 };

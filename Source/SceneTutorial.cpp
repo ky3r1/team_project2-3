@@ -133,7 +133,7 @@ void SceneTutorial::Update(float elapsedTime)
 
 #ifdef  ALLPLAYER
 	Player::Instance().Update(elapsedTime);
-	if (Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult));
+	if (Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult(false)));
 #endif //  ALLPLAYER
 
 	Graphics& graphics = Graphics::Instance();

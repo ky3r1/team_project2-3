@@ -62,12 +62,15 @@ void SceneResult::Render()
         float screenHeight = static_cast<float>(graphics.GetScreenHeight());
         float textureWidth = static_cast<float>(sprite->GetTextureWidth());
         float textureHeight = static_cast<float>(sprite->GetTextureHeight());
+        DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+        if (outcome)color = DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f);
+        else color = DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f);
         //タイトルスプライト描画
         sprite->Render(dc,
             0, 0, screenWidth, screenHeight,
             0, 0, textureWidth, textureHeight,
             0,
-            1, 1, 0, 1);
+            color.x, color.y, color.z, color.w);
 
         Ui::Instance().result(dc);
     }

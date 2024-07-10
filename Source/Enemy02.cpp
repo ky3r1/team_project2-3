@@ -10,7 +10,7 @@
 Enemy02::Enemy02(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Slime/Slime.mdl");
+    model = new Model("Data/Model/Enemy/Enemy02/enemy2.mdl");
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
 
     static int id_enemy02 = 0;
@@ -19,11 +19,10 @@ Enemy02::Enemy02(int category)
     enemy_categry = Enemy02_Num;
     name = std::string("Enemy02:") + std::to_string(category_id);
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.01f;
+    scale.x = scale.y = scale.z = 0.05f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
-    health = 10.0f;//体力
 
     attack_range = 5.0f;
     this->category = category;
@@ -36,11 +35,11 @@ Enemy02::Enemy02(int category)
     stateMachine->RegisterState(new SearchState(this));
     stateMachine->RegisterState(new BattleState(this));
     // 各親ステートにサブステートを登録
-    stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Search), new DeathState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Search), new IdleState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Battle), new PursuitState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy02::State::Battle), new AttackState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new BattleIdleState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new HitDamageState(this));
     // デフォルトステートをセット
     stateMachine->SetState(static_cast<int>(State::Search));
 #endif // ENEMYSTATEMACHINE
@@ -79,6 +78,7 @@ void Enemy02::Update(float elapsedTime)
 //描画処理
 void Enemy02::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
+    Enemy::Render(dc, shader);
     shader->Draw(dc, model, color);
 }
 
