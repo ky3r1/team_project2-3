@@ -513,31 +513,35 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                 }
                 if(projectile_category == RICOCHET)
                 {
-
+                    //if(invincible==true){}
                     for (int i = 0; i < enemyCount; i++)
                     {
                         Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                        Enemy* ne = EnemyManager::Instance().NearEnemy(enemy->GetPosition());
                         if (enemy->isHit)break;
-                        /*if (!Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
-                        {
-                        }*/
                         enemy->isHit = true;
-                        ProjectileRicochetShotting(character->GetPosition(), enemy->GetPosition(), PLAYERCATEGORY, 0.0f, FRONT);
+                        
+                        if (invincible == true)break;
+                        invincible = true;
+                        ProjectileRicochetShotting(character->GetPosition(), PLAYERCATEGORY, 0.0f, FRONT);
                     }
-                    if (ricochet_count == 0 || penetration_count == 0)
+                    if(invincible==false)
                     {
-                        projectile->Destroy();
-                        for (int i = 0; i < enemyCount; i++)
+                        if (penetration_count == 0)
                         {
-                            Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-                            if (enemy->isHit)
+                            projectile->Destroy();
+                            for (int i = 0; i < enemyCount; i++)
                             {
-                                enemy->isHit = false;
+                                Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                                if (enemy->isHit)
+                                {
+                                    enemy->isHit = false;
+                                }
                             }
                         }
                     }
                 }
-                if (character->ApplyDamage(1, 0.5f),true)
+                if (/*character->ApplyDamage(1, 0.5f),*/true)
                 {
                     //‚«”ò‚Î‚·
                     {
@@ -624,13 +628,13 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     projectile->Launch(dir, pos);
 }
 
-void Character::ProjectileRicochetShotting(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2,int category, float angle, int vector)
+void Character::ProjectileRicochetShotting(DirectX::XMFLOAT3 ne,int category, float angle, int vector)
 {
-    Ricochet(ne, pos2, vector);
+    Ricochet(ne, vector);
 }
 
 
-void Character::Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2, int vector)
+void Character::Ricochet(DirectX::XMFLOAT3 ne, int vector)
 {
     //”­ŽË
     ProjectileStraight* projectile{};
@@ -643,8 +647,9 @@ void Character::Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2, int vecto
 
 
     Enemy* ne1 = EnemyManager::Instance().NearEnemy(position);
-    
+
     Enemy* ne2 = EnemyManager::Instance().NearEnemy(ne);
+
     if (ne2 == nullptr)return;
     DirectX::XMVECTOR NE1 = DirectX::XMLoadFloat3(&ne);
     DirectX::XMVECTOR NE2 = DirectX::XMLoadFloat3(&ne2->GetPosition());

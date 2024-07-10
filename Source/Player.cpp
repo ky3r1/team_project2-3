@@ -104,6 +104,19 @@ void Player::Update(float elapsedTime)
         break;
     }
 
+    if (invincible == true)
+    {        
+        invincible_timer -= elapsedTime;
+
+        if (invincible_timer <= 0.0f)
+        {
+            invincible = false;
+            invincible_timer = 0.1f;
+        }
+    }
+
+    //GamePad gamePad=
+
     //速力処理更新
     UpdateVelocity(elapsedTime);
 
@@ -351,8 +364,8 @@ void Player::UpdateIdleState(float elapsedTime)
         TransitionMoveState();
     }
     //攻撃処理
-    else if (state != State::Attack)
-    {
+    /*else if (state != State::Attack)
+    {*/
 
         //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
         Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
@@ -364,7 +377,7 @@ void Player::UpdateIdleState(float elapsedTime)
                 TransitionAttackState();
             }
         }
-    }
+    //}
 }
 
 //移動ステート

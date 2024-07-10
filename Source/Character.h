@@ -56,9 +56,9 @@ protected:
     virtual void ProjectileStraightShotting(int category, float angle,int vector);
     virtual void ProjectileStraightShotting(float angle, int vector);
 
-    virtual void ProjectileRicochetShotting(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2,int category, float angle, int vector);
+    virtual void ProjectileRicochetShotting(DirectX::XMFLOAT3 ne,int category, float angle, int vector);
 
-    void Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2,int vector);
+    void Ricochet(DirectX::XMFLOAT3 ne,int vector);
 
 public:
     //ê˘âÒèàóù
@@ -184,9 +184,12 @@ protected:
     int         category = 0;
     float       turnSpeed = DirectX::XMConvertToRadians(360);
     int penetration_count = 0;
-    int ricochet_count = 1;
+    int ricochet_count = 0;
     bool projectile_category = 0;
 
+    float invincible_timer = 0.1f;
+    bool invincible = false;
+    int count = 0;
     bool enemy_rico_check = false;
 
     //çUåÇîÕàÕ
