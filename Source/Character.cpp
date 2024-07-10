@@ -518,9 +518,9 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                     {
                         Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
                         if (enemy->isHit)break;
-                        if (!Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+                        /*if (!Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
                         {
-                        }
+                        }*/
                         enemy->isHit = true;
                         ProjectileRicochetShotting(character->GetPosition(), enemy->GetPosition(), PLAYERCATEGORY, 0.0f, FRONT);
                     }

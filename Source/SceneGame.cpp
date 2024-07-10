@@ -198,6 +198,8 @@ void SceneGame::Update(float elapsedTime)
 	//{
 	//	SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 	//}
+
+	//font = std::make_unique<Font>(graphics.GetDevice(), ".\\Data\\Font\\MS_Gothic.fnt", 1024);
 }
 
 // 描画処理

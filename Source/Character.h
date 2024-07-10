@@ -187,8 +187,6 @@ protected:
     int penetration_count = 0;
     int ricochet_count = 1;
     bool projectile_category = 0;
-    float       projectile_invincible_timer = 1.0f;
-    bool invincible_check = false;
 
     bool enemy_rico_check = false;
 
