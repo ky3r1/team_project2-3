@@ -503,6 +503,14 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
             if (category == projectile->GetCategory())
             {
                 //弾丸破棄
+                /*if(pro_type == NORMAL)
+                {
+                    if (category == PLAYERCATEGORY)
+                    {
+                        projectile->Destroy();
+                    }
+                }*/
+
                 if (projectile_category == PENETRATION)
                 {
 
@@ -511,7 +519,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         projectile->Destroy();
                     }
                 }
-                if(projectile_category == RICOCHET)
+                if (projectile_category == RICOCHET)
                 {
                     //if(invincible==true){}
                     for (int i = 0; i < enemyCount; i++)
@@ -520,14 +528,14 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         Enemy* ne = EnemyManager::Instance().NearEnemy(enemy->GetPosition());
                         if (enemy->isHit)break;
                         enemy->isHit = true;
-                        
+
                         if (invincible == true)break;
                         invincible = true;
                         ProjectileRicochetShotting(character->GetPosition(), PLAYERCATEGORY, 0.0f, FRONT);
                     }
-                    if(invincible==false)
+                    if (invincible == false)
                     {
-                        if (penetration_count == 0)
+                        if (ricochet_count < 0)
                         {
                             projectile->Destroy();
                             for (int i = 0; i < enemyCount; i++)
@@ -540,6 +548,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                             }
                         }
                     }
+
                 }
                 if (/*character->ApplyDamage(1, 0.5f),*/true)
                 {
@@ -566,7 +575,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         impulse.z = power * vec.z;
                         penetration_count--;
                         ricochet_count--;
-                        
+
                         character->AddImpulse(impulse);
                     }
                     //ヒットエフェクト再生

@@ -64,8 +64,6 @@ public:
 	//íeVSPlayer
 	void CollisionProjectileVsPlayer();
 
-	//bool IsHitCheck() { return isHit; }
-
 	//çsìÆState
 	enum class State
 	{

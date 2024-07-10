@@ -107,8 +107,6 @@ private:
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    float sub_attack_range = 3.0f;
-
     ////アニメーション:Jammo
     //enum Animation
     //{

@@ -47,8 +47,9 @@ Player::Player()
 
     position = { 0.0001f,2,0 };
     attack_range = 9.0f;
+    sub_attack_range = 5.0f;
 
-    projectile_category = RICOCHET;
+    projectile_category = 0;;
     state = State::Idle;
 
     // エフェクト
@@ -114,7 +115,24 @@ void Player::Update(float elapsedTime)
             invincible_timer = 0.1f;
         }
     }
+    Mouse& mouse = Input::Instance().GetMouse();
 
+    if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
+    {
+        projectile_type++;
+    }
+    if (projectile_type == 0)
+    {
+        projectile_category = PENETRATION;
+    }
+    if (projectile_type == 1)
+    {
+        projectile_category = RICOCHET;
+    }
+    if (projectile_type >= 2)
+    {
+        projectile_type = 0;
+    }
     //GamePad gamePad=
 
     //速力処理更新
@@ -325,23 +343,26 @@ void Player::InputProjectile()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
-
-    //前方弾丸発射
-    if (projectile_auto.checker)
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    int enemyCount = enemyManager.GetEnemyCount();
+    for (int i = 0; i < enemyCount; i++)
     {
-        if (projectile_category == PENETRATION)
+        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+        //前方弾丸発射
+        if (projectile_auto.checker)
         {
-            penetration_count = 30;
-            ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
-            projectile_auto.checker = false;
-        }
-        if (projectile_category == RICOCHET)
-        {
-            penetration_count = 0;
-            ricochet_count = 1;
-            //projectile_invincible_timer = 10.0f;
-            ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
-            projectile_auto.checker = false;
+            if (Collision::PointInsideCircle(enemy->GetPosition(), position, sub_attack_range))
+            {
+                penetration_count = 30;
+                ricochet_count = 1;
+                ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                projectile_auto.checker = false;
+            }
+            else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+            {
+                ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                projectile_auto.checker = false;
+            }
         }
     }
 }

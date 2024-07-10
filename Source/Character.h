@@ -183,15 +183,19 @@ protected:
     float       slopeRate = 1.0f;
     int         category = 0;
     float       turnSpeed = DirectX::XMConvertToRadians(360);
-    int penetration_count = 0;
-    int ricochet_count = 0;
-    bool projectile_category = 0;
+    int         penetration_count = 0;
+    int         ricochet_count = 0;
+    int         projectile_category = 0;
+    int         projectile_type = 0;
+    int         pro_type = NORMAL;
 
-    float invincible_timer = 0.1f;
-    bool invincible = false;
-    int count = 0;
-    bool enemy_rico_check = false;
+    float       invincible_timer = 0.1f;
+    bool        invincible = false;
+    int         count = 0;
+    bool        enemy_rico_check = false;
 
     //çUåÇîÕàÕ
-    float				attack_range = 1.5f;
+    float		attack_range = 1.5f;
+    float       sub_attack_range = 5.0f;
+
 };
