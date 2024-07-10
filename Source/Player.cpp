@@ -191,11 +191,33 @@ void Player::DrawDebugGUI()
     ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
+    // デバッグ文字列表示の変更
+    std::string str = "";
+    // 現在のステート番号に合わせてデバッグ文字列をstrに格納
+    switch (state)
+    {
+    case State::Idle:
+        str="Idle";
+        break;
+    case State::Move:
+        str = "Move";
+        break;
+    case State::Attack:
+        str = "Attack";
+        break;
+    case State::Damage:
+        str = "Damage";
+        break;
+    case State::Death:
+        str = "Death";
+        break;
+    }
     if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
     {
         Character::DrawDebugGUI();
         if (ImGui::TreeNode("Transform"))
         {
+            ImGui::Text(u8"State:%s", str.c_str());
             ImGui::SliderFloat3("position", &position.x, -5, 5);
             ImGui::SliderFloat3("scale", &scale.x, 0.01f, 4.0f);
             ImGui::SliderFloat3("angle", &angle.x, -3.14f, 3.14f);
@@ -476,31 +498,34 @@ void Player::UpdateAttackState(float elapsedTime)
 {
     //最も近い敵を総当たりで探索
     Enemy* ne = EnemyManager::Instance().NearEnemy(position);
-    if (ne == nullptr)return;
-    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-    DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
-    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
-    DirectX::XMFLOAT3 ND;
-    DirectX::XMStoreFloat3(&ND, Vec);
+    if (ne == nullptr)TransitionIdleState();
+    else
+    {
+        DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+        DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
+        DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+        DirectX::XMFLOAT3 ND;
+        DirectX::XMStoreFloat3(&ND, Vec);
 
-    //旋回処理
-    Turn(elapsedTime, ND.x, ND.z, turnSpeed);
+        //旋回処理
+        Turn(elapsedTime, ND.x, ND.z, turnSpeed);
 
-    //任意のアニメーション区間でのみ衝突処理
-    float animationTime = 0.138;
-    //attackCollisionFlag = animationTime ? true : false;
-    //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
+        //任意のアニメーション区間でのみ衝突処理
+        float animationTime = 0.138;
+        //attackCollisionFlag = animationTime ? true : false;
+        //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
 #ifdef PLAYERATTACK
-    InputProjectile();
+        InputProjectile();
 #endif // PLAYERATTACK
-    //攻撃モーションが終わったら待機モーションに移動
-    if (InputMove(elapsedTime))
-    {
-        TransitionMoveState();
-    }
-    if (!model->IsPlayAnimation())
-    {
-        TransitionIdleState();
+        //攻撃モーションが終わったら待機モーションに移動
+        if (InputMove(elapsedTime))
+        {
+            TransitionMoveState();
+        }
+        if (!model->IsPlayAnimation())
+        {
+            TransitionIdleState();
+        }
     }
 }
 
