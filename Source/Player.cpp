@@ -108,6 +108,19 @@ void Player::Update(float elapsedTime)
         break;
     }
 
+    if (invincible == true)
+    {        
+        invincible_timer -= elapsedTime;
+
+        if (invincible_timer <= 0.0f)
+        {
+            invincible = false;
+            invincible_timer = 0.1f;
+        }
+    }
+
+    //GamePad gamePad=
+
     //速力処理更新
     UpdateVelocity(elapsedTime);
 
