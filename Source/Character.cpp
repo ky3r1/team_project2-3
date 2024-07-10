@@ -541,12 +541,8 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         }
                     }
                 }
-                if (/*character->ApplyDamage(1, 0.5f),*/true)
+                if (character->ApplyDamage(1, 0.5f))
                 {
-                    //if (character->health <= 0)
-                    //{
-                    //    character->death_effect.get()->Play(character->GetPosition(), 1.0f);
-                    //}
                     //‚«”ò‚Î‚·
                     {
                         DirectX::XMFLOAT3 impulse;

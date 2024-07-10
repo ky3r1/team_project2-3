@@ -19,11 +19,10 @@ Enemy02::Enemy02(int category)
     enemy_categry = Enemy02_Num;
     name = std::string("Enemy02:") + std::to_string(category_id);
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.1f;
+    scale.x = scale.y = scale.z = 0.05f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
-    health = 10.0f;//体力
 
     attack_range = 5.0f;
     this->category = category;
@@ -79,6 +78,7 @@ void Enemy02::Update(float elapsedTime)
 //描画処理
 void Enemy02::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
+    Enemy::Render(dc, shader);
     shader->Draw(dc, model, color);
 }
 

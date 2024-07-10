@@ -23,7 +23,6 @@ Enemy03::Enemy03(int category)
 
     radius = 0.5f;//“–‚½‚è”»’è‚Ì•A”¼Œa
     height = 1.0f;//“–‚½‚è”»’è‚Ì‚‚³
-    health = 10.0f;//‘Ì—Í
 
     attack_range = 5.0f;
     this->category = category;
@@ -79,6 +78,7 @@ void Enemy03::Update(float elapsedTime)
 //•`‰æˆ—
 void Enemy03::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
+    Enemy::Render(dc, shader);
     shader->Draw(dc, model, color);
 }
 

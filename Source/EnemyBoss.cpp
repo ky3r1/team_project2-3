@@ -83,6 +83,7 @@ void EnemyBoss::InputProjectile()
 //•`‰æˆ—
 void EnemyBoss::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
+    Enemy::Render(dc, shader);
     shader->Draw(dc, model, color);
 }
 

@@ -15,13 +15,60 @@ Enemy::Enemy()
 {
     //ヒットエフェクト読み込み
     hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/Hit.efk"));
-
+    //死亡エフェクト
+    death_effect = std::unique_ptr<Effect>(new Effect("Data/Effect/enemy_death.efkefc"));
+    //HPbar
+    HPbar_model= std::unique_ptr<Model>(new Model("Data/Model/Cube/Cube.mdl"));
+    HPbar_scale = { 1.0f,1.0f,1.0f };
+    health = 5;
 }
 
 void Enemy::Update(float elapsedTime)
 {
     UpdateDelayTime(projectile_auto.checker, projectile_auto.time, DELAYAUTOTIME);
     CollisionProjectileVsPlayer();
+}
+
+void Enemy::Render(ID3D11DeviceContext* dc, Shader* shader)
+{
+    DirectX::XMFLOAT4 HP_color = {};
+    switch (health)
+    {
+    case 1:
+        //Red
+        HP_color = { 1.0f,0.0f,0.0f,1.0f };
+        break;
+    case 2:
+        //Orange
+        HP_color = { 1.0f,0.5f,0.0f,1.0f };
+        break;
+    case 3:
+        //Yellow
+        HP_color = { 1.0f,1.0f,0.0f,1.0f };
+        break;
+    case 4:
+        //LightGreen
+        HP_color = { 0.5f,1.0f,0.0f,1.0f };
+        break;
+    case 5:
+        //Green
+        HP_color = { 0.0f,1.0f,0.0f,1.0f };
+        break;
+    }
+    DirectX::XMFLOAT4X4 transform_HP;
+    //スケール行列を作成
+    DirectX::XMMATRIX S = DirectX::XMMatrixScaling(HPbar_scale.x, HPbar_scale.y, HPbar_scale.z);
+    //DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.1, 0.1, 0.1);
+    //回転行列を作成
+    DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
+    //位置行列を作成
+    DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y + 4.5f, position.z);
+    //3つの行列を組み合わせ、ワールド行列を作成
+    DirectX::XMMATRIX W = S * R * T;
+    //計算したワールド行列を取り出す
+    DirectX::XMStoreFloat4x4(&transform_HP, W);
+    HPbar_model.get()->UpdateTransform(transform_HP);
+    shader->Draw(dc, HPbar_model.get(), { HP_color.x,HP_color.y,HP_color.z,1});
 }
 
 //デバッグプリミティブ描画

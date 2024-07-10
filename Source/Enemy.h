@@ -31,7 +31,7 @@ public:
     virtual void Update(float elapsedTime);
 
     //描画処理
-    virtual void Render(ID3D11DeviceContext* dc, Shader* shader) = 0;
+	virtual void Render(ID3D11DeviceContext* dc, Shader* shader);
 
 	//debugオブジェクト描画
     virtual void DrewDebugPrimitive();
@@ -116,7 +116,9 @@ public:
 	bool isAlreadyHit = false;
 	bool isHit = false;
 protected:
-	std::unique_ptr<Effect> death_effect = std::unique_ptr<Effect>(new Effect("Data/Effect/enemy_death.efkefc"));
+	std::unique_ptr<Model> HPbar_model = nullptr;
+	DirectX::XMFLOAT3 HPbar_scale = {};
+	std::unique_ptr<Effect> death_effect = nullptr;
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
 	float				moveSpeed = 3.0f;

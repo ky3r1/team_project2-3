@@ -61,7 +61,7 @@ Player::Player()
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/PlayerLine.efkefc"));
     //hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/GP3_sample.efk"));
     category = PLAYERCATEGORY;
-    turnSpeed = DirectX::XMConvertToRadians(720);
+    turnSpeed = DirectX::XMConvertToRadians(900);
     ProjectileManager& projectile_manager = ProjectileManager::Instance();
 }
 
@@ -388,6 +388,8 @@ void Player::TransitionIdleState()
 
 void Player::UpdateIdleState(float elapsedTime)
 {
+    static float Yangle = 0;
+    static DirectX::XMFLOAT3 e_pos = {};
     //移動入力処理
     if (InputMove(elapsedTime))
     {
@@ -396,15 +398,32 @@ void Player::UpdateIdleState(float elapsedTime)
     //攻撃処理
     //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
     Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
-    if (enemy == nullptr);
-    else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+    if (enemy == nullptr)e_pos=position;
+    else
     {
-        if (projectile_auto.checker)
+        e_pos=enemy->GetPosition();
+        if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
         {
-            TransitionAttackState();
+            if (projectile_auto.checker)
+            {
+                if (Yangle < angle.y + 0.006f && Yangle > angle.y - 0.006f)
+                {
+                    TransitionAttackState();
+                }
+                else
+                {
+                    Yangle = angle.y;
+                }
+            }
         }
     }
-
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+    DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&e_pos);
+    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+    DirectX::XMFLOAT3 ND;
+    DirectX::XMStoreFloat3(&ND, Vec);
+    //旋回処理
+    Turn(elapsedTime, ND.x, ND.z, turnSpeed);
 }
 
 //移動ステート
@@ -455,10 +474,9 @@ void Player::TransitionAttackState()
 }
 void Player::UpdateAttackState(float elapsedTime)
 {
-    static float Yangle = 0;
     //最も近い敵を総当たりで探索
     Enemy* ne = EnemyManager::Instance().NearEnemy(position);
-    if(ne == nullptr)return;
+    if (ne == nullptr)return;
     DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
     DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
     DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
@@ -473,17 +491,7 @@ void Player::UpdateAttackState(float elapsedTime)
     //attackCollisionFlag = animationTime ? true : false;
     //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
 #ifdef PLAYERATTACK
-    if (Yangle < angle.y + 0.001f && Yangle > angle.y - 0.001f)
-    {
-        if (model->IsPlayAnimation())
-        {
-            InputProjectile();
-        }
-    }
-    else
-    {
-        Yangle = angle.y;
-    }
+    InputProjectile();
 #endif // PLAYERATTACK
     //攻撃モーションが終わったら待機モーションに移動
     if (InputMove(elapsedTime))

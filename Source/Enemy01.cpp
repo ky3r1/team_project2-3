@@ -18,11 +18,10 @@ Enemy01::Enemy01(int category)
     enemy_categry = Enemy01_Num;
     name = std::string("Enemy01:") + std::to_string(category_id);
     //•\Ž¦ƒTƒCƒY‚ð’²®
-    scale.x = scale.y = scale.z = 0.02f;
+    scale.x = scale.y = scale.z = 0.03f;
 
     radius = 0.5f;//“–‚½‚è”»’è‚Ì•A”¼Œa
     height = 1.0f;//“–‚½‚è”»’è‚Ì‚‚³
-    health = 10.0f;//‘Ì—Í
 
     attack_range = 5.0f;
     this->category = category;
@@ -78,6 +77,8 @@ void Enemy01::Update(float elapsedTime)
 //•`‰æˆ—
 void Enemy01::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
+    Enemy::Render(dc, shader);
+    //ƒ‚ƒfƒ‹•`‰æ
     shader->Draw(dc, model, color);
 }
 

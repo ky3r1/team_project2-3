@@ -24,7 +24,7 @@ Spown::Spown()
     spown_delay_timer = SPOWNDERAY;
     stage_clear = false;
     warning = std::unique_ptr<Effect>(new Effect("Data/Effect/Warning.efkefc"));
-    text = std::unique_ptr<Sprite>(new Sprite("Data/Font/font6.png"));
+    text = std::unique_ptr<Sprite>(new Sprite("Data/Font/font4.png"));
 }
 
 void Spown::Update(float elapsedTime)
@@ -123,23 +123,23 @@ void Spown::render(ID3D11DeviceContext* dc)
         {
             if (!flg[4][0] && flg[3][0])
             {
-                TextEasing(dc, "Wave 5/5", { 0.0f, 5.0f, 0.0f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 1,1,1,1 }, flg[4][0]);
+                TextEasing(dc, "Wave 5/5", { 0.0f, 5.0f, 0.0f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 0,1,0.49603,1 }, flg[4][0]);
             }
             if (!flg[3][0] && flg[2][0])
             {
-                TextEasing(dc, "Wave 4/5", { -20.0f, 5.0f, -5.0f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 1,1,1,1 }, flg[3][0]);
+                TextEasing(dc, "Wave 4/5", { -20.0f, 5.0f, -5.0f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 0,1,0.49603,1 }, flg[3][0]);
             }
             if (!flg[2][0] && flg[1][0])
             {
-                TextEasing(dc, "Wave 3/5", { -25.0f, 5.0f, 15.0f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 1,1,1,1 }, flg[2][0]);
+                TextEasing(dc, "Wave 3/5", { -25.0f, 5.0f, 15.0f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 0,1,0.49603,1 }, flg[2][0]);
             }
             if (!flg[1][0] && flg[0][0])
             {
-                TextEasing(dc, "Wave 2/5", { 15.0f, 5.0f, 0.0f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 1,1,1,1 }, flg[1][0]);
+                TextEasing(dc, "Wave 2/5", { 15.0f, 5.0f, 0.0f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 0,1,0.49603,1 }, flg[1][0]);
             }
             if (!flg[0][0])
             {
-                TextEasing(dc, "Wave 1/5", { 0.0f, 5.0f, 7.5f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 1,1,1,1 }, flg[0][0]);
+                TextEasing(dc, "Wave 1/5", { 0.0f, 5.0f, 7.5f }, { -500.0f,200.0f }, { 200.0f,-500.0f }, { 0,1,0.49603,1 }, flg[0][0]);
             }
         }
     }
