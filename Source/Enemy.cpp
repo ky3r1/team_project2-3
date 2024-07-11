@@ -20,7 +20,7 @@ Enemy::Enemy()
     //HPbar
     HPbar_model= std::unique_ptr<Model>(new Model("Data/Model/Cube/Cube.mdl"));
     HPbar_scale = { 1.0f,1.0f,1.0f };
-    health = 1;
+    health = 5;
 }
 
 void Enemy::Update(float elapsedTime)

@@ -15,7 +15,7 @@
 
 #define SPOWNDERAY 3*60
 
-#define TEXTTIME 0.0f*60.0f
+#define TEXTTIME 3.0f*60.0f
 #define TEXTDELAY 1*60
 
 

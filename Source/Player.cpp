@@ -49,7 +49,7 @@ Player::Player()
 
     position = { 0.0001f,2,0 };
     attack_range = 9.0f;
-    sub_attack_range = 5.0f;
+    sub_attack_range = 1.0f;
 
     projectile_category = 0;;
     state = State::Idle;

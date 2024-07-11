@@ -693,7 +693,6 @@ void Character::Ricochet(DirectX::XMFLOAT3 ne, int vector)
     dir.z = ep.z;
     projectile = new ProjectileStraight(&ProjectileManager::Instance(), category);
     projectile->Launch(dir, pos);
-
 }
 
 
