@@ -48,9 +48,9 @@ Player::Player()
     moveSpeed = 15.0f;
 
     position = { 0.0001f,2,0 };
-    attack_range = 9.0f;
+    attack_range = 10.0f;
     sub_attack_range = 5.0f;
-
+    enemy__check = false;
     projectile_category = 0;;
     state = State::Idle;
 
@@ -392,11 +392,20 @@ void Player::InputProjectile()
             {
                 penetration_count = 30;
                 ricochet_count = 1;
-                ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                enemy__check = true;
+                if(projectile_category==PENETRATION)
+                {
+                    ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                }
+                if(projectile_category==RICOCHET)
+                {
+                    ProjectileRicochetShotting(position, PLAYERCATEGORY, 0.0f, FRONT);
+                }
                 projectile_auto.checker = false;
             }
             else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
             {
+                enemy__check = false;
                 ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
                 projectile_auto.checker = false;
             }

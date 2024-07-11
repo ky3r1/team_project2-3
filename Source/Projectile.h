@@ -45,7 +45,7 @@ public:
 
     virtual void DrawDebugGUI() = 0;
 
-    virtual void ChangeColor(DirectX::XMFLOAT4& color, int category);
+    virtual void ChangeColor(DirectX::XMFLOAT4& color, int category, int projectile_category);
 protected:
     //行列更新処理
     void UpdateTransform();
@@ -60,5 +60,6 @@ protected:
     float                   radius = 0.5f;
     //エネミーの種類
     int category;
+    int projectile_category;
     std::unique_ptr<Effect> lineEffect;
 };

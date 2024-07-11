@@ -193,7 +193,7 @@ protected:
     float       invincible_timer = 0.1f;
     bool        invincible = false;
     int         count = 0;
-    bool        enemy_rico_check = false;
+    bool        enemy__check = false;
 
     //UŒ‚”ÍˆÍ
     float		attack_range = 1.5f;

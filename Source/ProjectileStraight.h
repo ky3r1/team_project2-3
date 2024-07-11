@@ -6,7 +6,7 @@
 class ProjectileStraight : public Projectile
 {
 public:
-    ProjectileStraight(ProjectileManager* manager, int category);
+    ProjectileStraight(ProjectileManager* manager, int categoryconst, const DirectX::XMFLOAT3& direction, const DirectX::XMFLOAT3& position,int color);
     ~ProjectileStraight() override;
 
     //XVˆ—
