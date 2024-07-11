@@ -16,6 +16,7 @@ public:
 
     void DrawDebugGUI();
 
+    DirectX::XMFLOAT3 GetAngle() { return angle; }
 private:
     DirectX::XMFLOAT3       target = { 0,0,0 };
     DirectX::XMFLOAT3       angle = { /*1.59f*/0.981f,0,0 };

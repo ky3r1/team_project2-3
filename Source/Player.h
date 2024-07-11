@@ -26,13 +26,15 @@ public:
     void DrawDebugPrimitive();
 
     //デバッグ用GUI
-    void DrawDebugGUI() override;
+    void DrawDebugGUI() override; 
+    
+    //スティック入力値から移動ベクトルを取得
+    DirectX::XMFLOAT3 GetMoveVec() const;
 private:
     //垂直移動更新処理
     void UpdateVerticalMove(float elapsedTime)override;
 
-    //スティック入力値から移動ベクトルを取得
-    DirectX::XMFLOAT3 GetMoveVec() const;
+
 
     //プレイヤーとエネミーとの衝突処理
     void CollisionPlayerVsEnemies();

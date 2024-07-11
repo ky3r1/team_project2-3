@@ -378,7 +378,6 @@ void Player::CollisionProjectilesVsEnemies()
 //弾入力処理
 void Player::InputProjectile()
 {
-    GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
     EnemyManager& enemyManager = EnemyManager::Instance();
     int enemyCount = enemyManager.GetEnemyCount();
