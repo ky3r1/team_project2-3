@@ -1,22 +1,23 @@
 #include "ProjectileStraight.h"
 
-ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category)
+ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int categoryconst, const DirectX::XMFLOAT3& direction,const DirectX::XMFLOAT3& position, int color)
     : Projectile(manager)
 {
     //model = new Model("Data/Model/SpikeBall/SpikeBall.mdl");
     model = new Model("Data/Model/Bullet/Bullet.mdl");
 
-    color = { 0,1,0,1 };
     switch (category)
     {
     case PLAYERCATEGORY:
-        color = { 1,1,1,1};
+        this->color = { 1,1,1,1};
         break;
     case ENEMYCATEGORY:
-        color = { 0,0,1,1 };
+        this->color = { 0,0,1,1 };
         break;
     }
-
+    projectile_category = color;
+    this->direction = direction;
+    this->position = position;
     //表示サイズを調整
     scale.x = scale.y = scale.z = 0.25f;
     radius = 0.5f;
@@ -30,7 +31,7 @@ ProjectileStraight::~ProjectileStraight()
 
 void ProjectileStraight::Update(float elapsedTime)
 {
-    ChangeColor(color, category);
+    ChangeColor(color, category, projectile_category);
     //寿命処理
     lifeTimer -= elapsedTime;
     if (lifeTimer <= 0)
