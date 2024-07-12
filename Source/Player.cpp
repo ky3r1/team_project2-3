@@ -199,6 +199,7 @@ void Player::DrawDebugPrimitive()
 
     //衝突判定用のデバッグ立方体を描画
     //debugRenderer->DrawCube({ -12,-10,29 }, { 12,-5,31 }, { 1,0,0,1 });
+    //debugRenderer->DrawCube({ 0,0,0 }, { 10,10,0 }, { 1,0,0,1 });
     // 攻撃範囲をデバッグ円柱描画
     debugRenderer->DrawCylinder(position, attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.0f, 0.5f, 1.0f));
     debugRenderer->DrawCylinder(position, sub_attack_range, 1.0f, DirectX::XMFLOAT4(0.5f, 0.3f, 0.3f, 1.0f));
