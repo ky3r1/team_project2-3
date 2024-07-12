@@ -106,7 +106,7 @@ void Framework::CalculateFrameStats()
 int Framework::Run()
 {
 	MSG msg = {};
-
+	HDC hDC = GetDC(hWnd);
 	while (WM_QUIT != msg.message)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -119,14 +119,15 @@ int Framework::Run()
 			timer.Tick();
 			CalculateFrameStats();
 
-			float elapsedTime = syncInterval == 1
+			float elapsedTime = syncInterval == 0
 				? timer.TimeInterval()
-				: syncInterval / 60.0f
-				;
+				: syncInterval / static_cast<float>(GetDeviceCaps(hDC, VREFRESH));
+			;
 			Update(elapsedTime);
 			Render(elapsedTime);
 		}
 	}
+	ReleaseDC(hWnd, hDC);
 	return static_cast<int>(msg.wParam);
 }
 

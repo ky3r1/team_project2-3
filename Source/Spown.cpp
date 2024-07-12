@@ -60,10 +60,10 @@ void Spown::Update(float elapsedTime)
     {
         //MakeWave(1, 4);
         Enemy* enemy = nullptr;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
         {
             enemy = new Enemy03(ENEMYCATEGORY);
-            enemy->SetPosition(DirectX::XMFLOAT3(Mathf::RandomRange(-30.0f, -10.0f), 5.0f, Mathf::RandomRange(10.0f, 20.0f)));
+            enemy->SetPosition(DirectX::XMFLOAT3(Mathf::RandomRange(-30.0f, -10.0f), 5.0f, Mathf::RandomRange(-10.0f, 20.0f)));
             EnemyManager::Instance().Register(enemy);
         }
         flg[2][1] = true;

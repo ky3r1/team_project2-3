@@ -46,10 +46,10 @@ Player::Player()
 
     hit_delay.time = DELAYPLAYERVSENEMY;
     moveSpeed = 15.0f;
-
+    health = 10;
     position = { 0.0001f,2,0 };
     attack_range = 9.0f;
-    sub_attack_range = 5.0f;
+    sub_attack_range = 5.5f;
     enemy__check = false;
     projectile_category = 0;;
     state = State::Idle;
@@ -401,7 +401,7 @@ void Player::InputProjectile()
                 }
                 if(projectile_category==RICOCHET)
                 {
-                    ricochet_count = 0;
+                    ricochet_count = 3;
                     ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
                 }
                 projectile_auto.checker = false;

@@ -4,7 +4,7 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 3*60
+#define DELAYAUTOTIME 5*60
 
 //コンストラクタ
 Enemy03::Enemy03(int category)
@@ -24,10 +24,10 @@ Enemy03::Enemy03(int category)
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
 
-    attack_range = 5.0f;
+    attack_range = 10.0f;
     this->category = category;
     //ChangeColor(color, category);
-
+    health = 5;
 #ifdef ENEMYSTATEMACHINE
     // StateMachineを生成し、階層型ステートマシンに対応するように登録ステートを変更していく。
     stateMachine = new StateMachine();

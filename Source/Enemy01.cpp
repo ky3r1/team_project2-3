@@ -22,7 +22,7 @@ Enemy01::Enemy01(int category)
 
     radius = 0.5f;//“–‚½‚è”»’è‚Ì•A”¼Œa
     height = 1.0f;//“–‚½‚è”»’è‚Ì‚‚³
-
+    health = 3;
     attack_range = 5.0f;
     this->category = category;
     //ChangeColor(color, category);

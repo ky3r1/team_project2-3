@@ -525,29 +525,27 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         if (projectile_category == RICOCHET)
                         {
                             //if(invincible==true){}
-                            if (invincible == false)
+                            for (int i = 0; i < enemyCount; i++)
                             {
-                                projectile->Destroy();
-                                for (int i = 0; i < enemyCount; i++)
+                                if (invincible == false)
                                 {
+                                    projectile->Destroy();
+
                                     Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
                                     if (enemy->isHit)
                                     {
                                         enemy->isHit = false;
                                     }
                                 }
-                            }
-                            for (int i = 0; i < enemyCount; i++)
-                            {
+
                                 Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
                                 Enemy* ne = EnemyManager::Instance().NearEnemy(enemy->GetPosition());
-                                
                                 if (invincible == true)break;
                                 invincible = true;
                                 if (enemy->isHit)break;
                                 enemy->isHit = true;
-                                //ricochet_count++;
                                 ProjectileRicochetShotting(character->GetPosition(), PLAYERCATEGORY, 0.0f, FRONT);
+
                             }
                         }
                     }
@@ -576,6 +574,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         impulse.y = power * 0.5f;
                         impulse.z = power * vec.z;
                         penetration_count--;
+                        ricochet_count--;
 
                         character->AddImpulse(impulse);
                     }
