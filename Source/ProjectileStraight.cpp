@@ -1,36 +1,24 @@
 #include "ProjectileStraight.h"
 
-ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category, DirectX::XMFLOAT4 color)
+ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category, const DirectX::XMFLOAT3& direction,const DirectX::XMFLOAT3& position, int pcolor)
     : Projectile(manager)
 {
     //model = new Model("Data/Model/SpikeBall/SpikeBall.mdl");
     model = new Model("Data/Model/Bullet/Bullet.mdl");
 
-    color = { color.x, color.y, color.z, color.w };
-
-    //表示サイズを調整
-    scale.x = scale.y = scale.z = 1.0f;
-    radius = 0.5f;
-    this->category = category;
-}
-
-ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category)
-    : Projectile(manager)
-{
-    //model = new Model("Data/Model/SpikeBall/SpikeBall.mdl");
-    model = new Model("Data/Model/Bullet/Bullet.mdl");
-
-    color = { 0,1,0,1 };
     switch (category)
     {
     case PLAYERCATEGORY:
-        color = { 1,1,1,1};
+        this->color = { 1,1,1,1};
         break;
     case ENEMYCATEGORY:
-        color = { 0,0,1,1 };
+        this->color = { 0,0,1,1 };
         break;
     }
-
+    color.w = 0;
+    projectile_category = pcolor;
+    this->direction = direction;
+    this->position = position;
     //表示サイズを調整
     scale.x = scale.y = scale.z = 0.25f;
     radius = 0.5f;
@@ -44,7 +32,7 @@ ProjectileStraight::~ProjectileStraight()
 
 void ProjectileStraight::Update(float elapsedTime)
 {
-    ChangeColor(color, category);
+    ChangeColor(color, category, projectile_category);
     //寿命処理
     lifeTimer -= elapsedTime;
     if (lifeTimer <= 0)

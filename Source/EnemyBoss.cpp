@@ -36,11 +36,11 @@ EnemyBoss::EnemyBoss(int category)
     stateMachine->RegisterState(new SearchState(this));
     stateMachine->RegisterState(new BattleState(this));
     // 各親ステートにサブステートを登録
-    stateMachine->RegisterSubState(static_cast<int>(EnemyBoss::State::Search), new DeathState(this));
     stateMachine->RegisterSubState(static_cast<int>(EnemyBoss::State::Search), new IdleState(this));
     stateMachine->RegisterSubState(static_cast<int>(EnemyBoss::State::Battle), new PursuitState(this));
     stateMachine->RegisterSubState(static_cast<int>(EnemyBoss::State::Battle), new AttackState(this));
     stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new BattleIdleState(this));
+    stateMachine->RegisterSubState(static_cast<int>(Enemy01::State::Battle), new HitDamageState(this));
     // デフォルトステートをセット
     stateMachine->SetState(static_cast<int>(State::Search));
 #endif // ENEMYSTATEMACHINE
@@ -83,6 +83,7 @@ void EnemyBoss::InputProjectile()
 //描画処理
 void EnemyBoss::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
+    Enemy::Render(dc, shader);
     shader->Draw(dc, model, color);
 }
 

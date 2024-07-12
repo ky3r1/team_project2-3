@@ -159,7 +159,7 @@ bool EnemyManager::IsAllEnemyAlrealyHit()
 {
     for (Enemy* enemy : enemies)
     {
-        if (!enemy->isAlreadyHit)return false;
+        if (!enemy->isHit)return false;
     }
     return true;
 }

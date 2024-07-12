@@ -6,12 +6,8 @@
 class ProjectileStraight : public Projectile
 {
 public:
-    //ProjectileStraight();
-    ProjectileStraight(ProjectileManager* manager,int category, DirectX::XMFLOAT4 color);
-    ProjectileStraight(ProjectileManager* manager, int category);
+    ProjectileStraight(ProjectileManager* manager, int categoryconst, const DirectX::XMFLOAT3& direction, const DirectX::XMFLOAT3& position,int color);
     ~ProjectileStraight() override;
-
-
 
     //çXêVèàóù
     virtual void Update(float elapsedTime) override;

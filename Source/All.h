@@ -29,6 +29,7 @@
 // 弾の種類
 #define PENETRATION 0
 #define RICOCHET 1
+#define NORMAL 2
 //Player->Enemy 弾のダメージ
 #define PROJECTILEDAMAGE
 //Player->Enemy 踏みつけダメージ
@@ -41,19 +42,19 @@
 //エネミー
 #define ALLENEMY
 //スポーン
-//#define SPOWNENEMY
+#define SPOWNENEMY
 
 ////01
-#define ENEMY01 
-//02
-#define ENEMY02
-//03
-#define ENEMY03 
+//#define ENEMY01 
+////02
+//#define ENEMY02
+////03
+//#define ENEMY03 
 //BOSS
 //#define ENEMYBOSS 
 
 // 攻撃
-//#define ENEMYATTACK
+#define ENEMYATTACK
 
 //ステートマシン
 #define ENEMYSTATEMACHINE
@@ -62,8 +63,8 @@
 
 ///////////////////UI////////////////////////
 
-//HPゲージ
-#define HPGAUGE
+////HPゲージ
+//#define HPGAUGE
 //EnemyAdd
 //#define ENEMYADD
 

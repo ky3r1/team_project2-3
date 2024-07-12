@@ -19,6 +19,7 @@ public:
 private:
     DirectX::XMFLOAT3       target = { 0,0,0 };
     DirectX::XMFLOAT3       angle = { /*1.59f*/0.981f,0,0 };
+    DirectX::XMFLOAT3       eye = { 0,0,0 };
     float                   rollSpeed = DirectX::XMConvertToRadians(90);
     float                   range = 10.0f;
 };

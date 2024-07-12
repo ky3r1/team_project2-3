@@ -19,6 +19,7 @@ public:
 	//EnemySlime* GetOwner(){ return owner; }
 protected:
 	Enemy* owner;
+	int health = 0;
 };
 
 class HierarchicalState :public State

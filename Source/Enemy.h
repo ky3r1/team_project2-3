@@ -6,12 +6,10 @@
 
 enum class EnemySlimeAnimation
 {
-	Idle,
+	Hit,
 	Walk,
 	Attack01,
 	Death,
-	Attack02,
-	Attack03,
 };
 
 enum
@@ -33,7 +31,7 @@ public:
     virtual void Update(float elapsedTime);
 
     //•`‰æˆ—
-    virtual void Render(ID3D11DeviceContext* dc, Shader* shader) = 0;
+	virtual void Render(ID3D11DeviceContext* dc, Shader* shader);
 
 	//debugƒIƒuƒWƒFƒNƒg•`‰æ
     virtual void DrewDebugPrimitive();
@@ -64,8 +62,6 @@ public:
 	//’eVSPlayer
 	void CollisionProjectileVsPlayer();
 
-	//bool IsHitCheck() { return isHit; }
-
 	//s“®State
 	enum class State
 	{
@@ -75,7 +71,6 @@ public:
 	//’TõState
 	enum class Search
 	{
-		Death,
 		Idle,
 	};
 	//í“¬State
@@ -84,6 +79,7 @@ public:
 		Pursuit,
 		Attack,
 		Idle,
+		Hit,
 	};
 
 public:
@@ -114,11 +110,13 @@ public:
     std::string GetName() { return name; }
     void SetName(std::string name) { this->name = name; }
 	//int GetEnemyCategory() { return enemy_categry; }
-
 public:
 	bool isAlreadyHit = false;
 	bool isHit = false;
 protected:
+	std::unique_ptr<Model> HPbar_model = nullptr;
+	DirectX::XMFLOAT3 HPbar_scale = {};
+	std::unique_ptr<Effect> death_effect = nullptr;
 	State				state = State::Search;
 	DirectX::XMFLOAT3	targetPosition = { 0.0f,0.0f,0.0f };
 	float				moveSpeed = 3.0f;

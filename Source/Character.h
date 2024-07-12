@@ -56,9 +56,7 @@ protected:
     virtual void ProjectileStraightShotting(int category, float angle,int vector);
     virtual void ProjectileStraightShotting(float angle, int vector);
 
-    virtual void ProjectileRicochetShotting(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2,int category, float angle, int vector);
-
-    void Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2,int vector);
+    virtual void ProjectileRicochetShotting(DirectX::XMFLOAT3 ne,int category, float angle, int vector);
 
 public:
     //旋回処理
@@ -140,12 +138,13 @@ public:
 
     //lineEffectのゲッター/セッター
     void SetLineEffect(Effect* e) { lineEffect.reset(e);}
-    Effect* GetLineEffect() { return lineEffect.get(); }
+    Effect* GetLineEffect() { return lineEffect.get(); } 
 protected:
     Model* model = nullptr;
     //Effect* hitEffect = nullptr;
     std::unique_ptr<Effect>hitEffect=nullptr;
     std::unique_ptr<Effect>lineEffect = nullptr;
+
     DirectX::XMFLOAT3   position = { 0,0,0 };
     DirectX::XMFLOAT3   screen_pos = { 0,0,0 };
     DirectX::XMFLOAT3   angle = { 0,0,0 };
@@ -183,14 +182,19 @@ protected:
     float       slopeRate = 1.0f;
     int         category = 0;
     float       turnSpeed = DirectX::XMConvertToRadians(360);
-    int penetration_count = 0;
-    int ricochet_count = 1;
-    bool projectile_category = 0;
-    float       projectile_invincible_timer = 1.0f;
-    bool invincible_check = false;
+    int         penetration_count = 0;
+    int         ricochet_count = 0;
+    int         projectile_category = 0;
+    int         projectile_type = 0;
+    int         pro_type = NORMAL;
 
-    bool enemy_rico_check = false;
+    float       invincible_timer = 0.1f;
+    bool        invincible = false;
+    int         count = 0;
+    bool        enemy__check = false;
 
     //攻撃範囲
-    float				attack_range = 1.5f;
+    float		attack_range = 1.5f;
+    float       sub_attack_range = 5.0f;
+
 };

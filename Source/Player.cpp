@@ -34,6 +34,8 @@ Player::Player()
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
     model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
+    area = new Model("Data/Model/Player/Area.mdl");
+    area_scale = { 0.1f,1.0f,0.1f };
     //scale.x = scale.y = scale.z = 0.1f;
     scale.x = scale.y = scale.z = 1.0f;
     turnSpeed = DirectX::XMConvertToRadians(720);
@@ -47,30 +49,33 @@ Player::Player()
 
     position = { 0.0001f,2,0 };
     attack_range = 9.0f;
-
-    projectile_category = RICOCHET;
+    sub_attack_range = 5.0f;
+    enemy__check = false;
+    projectile_category = 0;;
     state = State::Idle;
 
     // エフェクト
-    AT_Field = new Effect("Data/Effect/AT_field.efk");
+    //AT_Field = new Effect("Data/Effect/AT_field.efk");
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/PlayerLine.efkefc"));
     //hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/GP3_sample.efk"));
     category = PLAYERCATEGORY;
-    turnSpeed = DirectX::XMConvertToRadians(720);
+    turnSpeed = DirectX::XMConvertToRadians(900);
     ProjectileManager& projectile_manager = ProjectileManager::Instance();
 }
 
 Player::~Player()
 {
-    delete AT_Field;
+    //delete AT_Field;
 
     delete hitEffect;
     hitEffect = nullptr;
     delete model;
     model = nullptr;
+    delete area;
+    area = nullptr;
 }
 
 
@@ -104,8 +109,41 @@ void Player::Update(float elapsedTime)
         break;
     }
 
+    if (invincible == true)
+    {        
+        invincible_timer -= elapsedTime;
+
+        if (invincible_timer <= 0.0f)
+        {
+            invincible = false;
+            invincible_timer = 0.1f;
+        }
+    }
+    Mouse& mouse = Input::Instance().GetMouse();
+
+    if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
+    {
+        projectile_type++;
+    }
+    if (projectile_type == 0)
+    {
+        projectile_category = PENETRATION;
+    }
+    if (projectile_type == 1)
+    {
+        projectile_category = RICOCHET;
+    }
+    if (projectile_type >= 2)
+    {
+        projectile_type = 0;
+    }
+    //GamePad gamePad=
+
     //速力処理更新
     UpdateVelocity(elapsedTime);
+
+    //無敵時間更新
+    UpdateInvincibleTime(elapsedTime);
 
     //弾丸更新処理
     ProjectileManager::Instance().Update(elapsedTime);
@@ -121,20 +159,10 @@ void Player::Update(float elapsedTime)
 
     //モデル行列更新
     model->UpdateTransform(transform);
-
     //モデルアニメーション更新
     model->UpdateAnimation(elapsedTime);
 
-    AT_Field->Play(position, 10.0f);
-
-    if(invincible_check == true)
-    {
-        projectile_invincible_timer--;
-    }
-    if (projectile_invincible_timer <= 0)
-    {
-        invincible_check = false;
-    }
+    //AT_Field->Play(position, 10.0f);
 
     //当たり判定のdelay
     UpdateDelayTime(hit_delay.checker, hit_delay.time, DELAYPLAYERVSENEMY);
@@ -145,6 +173,18 @@ void Player::Update(float elapsedTime)
 void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
     shader->Draw(dc, model, color);
+
+    ////攻撃範囲行列を更新01
+    //area_scale = { 0.1f,1.0f,0.1f };
+    //AreaTransform();
+    //area->UpdateTransform(transform);
+    //shader->Draw(dc, area, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f));
+
+    ////攻撃範囲行列を更新02
+    //area_scale = { 0.5f,0.9f,0.5f };
+    //AreaTransform();
+    //area->UpdateTransform(transform);
+    //shader->Draw(dc, area, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.5f));
 
     //弾丸描画処理
     ProjectileManager::Instance().Render(dc, shader);
@@ -173,11 +213,33 @@ void Player::DrawDebugGUI()
     ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
+    // デバッグ文字列表示の変更
+    std::string str = "";
+    // 現在のステート番号に合わせてデバッグ文字列をstrに格納
+    switch (state)
+    {
+    case State::Idle:
+        str="Idle";
+        break;
+    case State::Move:
+        str = "Move";
+        break;
+    case State::Attack:
+        str = "Attack";
+        break;
+    case State::Damage:
+        str = "Damage";
+        break;
+    case State::Death:
+        str = "Death";
+        break;
+    }
     if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
     {
         Character::DrawDebugGUI();
         if (ImGui::TreeNode("Transform"))
         {
+            ImGui::Text(u8"State:%s", str.c_str());
             ImGui::SliderFloat3("position", &position.x, -5, 5);
             ImGui::SliderFloat3("scale", &scale.x, 0.01f, 4.0f);
             ImGui::SliderFloat3("angle", &angle.x, -3.14f, 3.14f);
@@ -322,25 +384,52 @@ void Player::InputProjectile()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
-
-    //前方弾丸発射
-    if (projectile_auto.checker)
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    int enemyCount = enemyManager.GetEnemyCount();
+    for (int i = 0; i < enemyCount; i++)
     {
-        if (projectile_category == PENETRATION)
+        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+        //前方弾丸発射
+        if (projectile_auto.checker)
         {
-            penetration_count = 30;
-            ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
-            projectile_auto.checker = false;
-        }
-        if (projectile_category == RICOCHET)
-        {
-            penetration_count = 0;
-            ricochet_count = 1;
-            //projectile_invincible_timer = 10.0f;
-            ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
-            projectile_auto.checker = false;
+            if (Collision::PointInsideCircle(enemy->GetPosition(), position, sub_attack_range))
+            {
+                enemy__check = true;
+                if(projectile_category==PENETRATION)
+                {
+                    penetration_count = 60;
+                    ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                }
+                if(projectile_category==RICOCHET)
+                {
+                    ricochet_count = 0;
+                    ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                }
+                projectile_auto.checker = false;
+            }
+            else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+            {
+                enemy__check = false;
+                ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
+                projectile_auto.checker = false;
+            }
         }
     }
+}
+
+void Player::AreaTransform()
+{
+    //スケール行列を作成
+    DirectX::XMMATRIX S = DirectX::XMMatrixScaling(area_scale.x, area_scale.y, area_scale.z);
+    //DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.1, 0.1, 0.1);
+    //回転行列を作成
+    DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
+    //位置行列を作成
+    DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+    //3つの行列を組み合わせ、ワールド行列を作成
+    DirectX::XMMATRIX W = S * R * T;
+    //計算したワールド行列を取り出す
+    DirectX::XMStoreFloat4x4(&transform, W);
 }
 
 //待機ステート
@@ -355,26 +444,42 @@ void Player::TransitionIdleState()
 
 void Player::UpdateIdleState(float elapsedTime)
 {
+    static float Yangle = 0;
+    static DirectX::XMFLOAT3 e_pos = {};
     //移動入力処理
     if (InputMove(elapsedTime))
     {
         TransitionMoveState();
     }
     //攻撃処理
-    else if (state != State::Attack)
+    //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
+    Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
+    if (enemy == nullptr)e_pos=position;
+    else
     {
-
-        //すべての敵を検索し、敵が攻撃範囲内に入ったら攻撃ステートに遷移
-        Enemy* enemy = EnemyManager::Instance().NearEnemy(position);
-        if (enemy == nullptr);
-        else if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
+        e_pos=enemy->GetPosition();
+        if (Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
         {
             if (projectile_auto.checker)
             {
-                TransitionAttackState();
+                if (Yangle < angle.y + 0.006f && Yangle > angle.y - 0.006f)
+                {
+                    TransitionAttackState();
+                }
+                else
+                {
+                    Yangle = angle.y;
+                }
             }
         }
     }
+    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+    DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&e_pos);
+    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+    DirectX::XMFLOAT3 ND;
+    DirectX::XMStoreFloat3(&ND, Vec);
+    //旋回処理
+    Turn(elapsedTime, ND.x, ND.z, turnSpeed);
 }
 
 //移動ステート
@@ -425,41 +530,36 @@ void Player::TransitionAttackState()
 }
 void Player::UpdateAttackState(float elapsedTime)
 {
-    static float Yangle = 0;
     //最も近い敵を総当たりで探索
     Enemy* ne = EnemyManager::Instance().NearEnemy(position);
-    if(ne == nullptr)return;
-    DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-    DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
-    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
-    DirectX::XMFLOAT3 ND;
-    DirectX::XMStoreFloat3(&ND, Vec);
-
-    //旋回処理
-    Turn(elapsedTime, ND.x, ND.z, turnSpeed);
-
-    //任意のアニメーション区間でのみ衝突処理
-    float animationTime = 0.138;
-    //attackCollisionFlag = animationTime ? true : false;
-    //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
-#ifdef PLAYERATTACK
-    if (Yangle < angle.y + 0.001f && Yangle > angle.y - 0.001f)
-    {
-        InputProjectile();
-    }
+    if (ne == nullptr)TransitionIdleState();
     else
     {
-        Yangle = angle.y;
-    }
+        DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+        DirectX::XMVECTOR NE = DirectX::XMLoadFloat3(&ne->GetPosition());
+        DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(NE, Pos));
+        DirectX::XMFLOAT3 ND;
+        DirectX::XMStoreFloat3(&ND, Vec);
+
+        //旋回処理
+        Turn(elapsedTime, ND.x, ND.z, turnSpeed);
+
+        //任意のアニメーション区間でのみ衝突処理
+        float animationTime = 0.138;
+        //attackCollisionFlag = animationTime ? true : false;
+        //if (attackCollisionFlag)    CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
+#ifdef PLAYERATTACK
+        InputProjectile();
 #endif // PLAYERATTACK
-    //攻撃モーションが終わったら待機モーションに移動
-    if (InputMove(elapsedTime))
-    {
-        TransitionMoveState();
-    }
-    if (!model->IsPlayAnimation() && !projectile_auto.checker)
-    {
-        TransitionIdleState();
+        //攻撃モーションが終わったら待機モーションに移動
+        if (InputMove(elapsedTime))
+        {
+            TransitionMoveState();
+        }
+        if (!model->IsPlayAnimation())
+        {
+            TransitionIdleState();
+        }
     }
 }
 

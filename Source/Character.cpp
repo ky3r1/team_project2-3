@@ -503,41 +503,56 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
             if (category == projectile->GetCategory())
             {
                 //弾丸破棄
-                if (projectile_category == PENETRATION)
+                if (category == ENEMYCATEGORY)
                 {
-
-                    if (category == PLAYERCATEGORY && penetration_count == 0)
-                    {
-                        projectile->Destroy();
-                    }
+                    projectile->Destroy();
                 }
-                if(projectile_category == RICOCHET)
+                if (category == PLAYERCATEGORY)
                 {
-
-                    for (int i = 0; i < enemyCount; i++)
-                    {
-                        Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-                        if (enemy->isHit)break;
-                        /*if (!Collision::PointInsideCircle(enemy->GetPosition(), position, attack_range))
-                        {
-                        }*/
-                        enemy->isHit = true;
-                        ProjectileRicochetShotting(character->GetPosition(), enemy->GetPosition(), PLAYERCATEGORY, 0.0f, FRONT);
-                    }
-                    if (ricochet_count == 0 || penetration_count == 0)
+                    if (!enemy__check)
                     {
                         projectile->Destroy();
-                        for (int i = 0; i < enemyCount; i++)
+                    }
+                    if (enemy__check)
+                    {
+                        if (projectile_category == PENETRATION)
                         {
-                            Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-                            if (enemy->isHit)
+                            if (penetration_count == 0)
                             {
-                                enemy->isHit = false;
+                                projectile->Destroy();
+                            }
+                        }
+                        if (projectile_category == RICOCHET)
+                        {
+                            //if(invincible==true){}
+                            if (invincible == false)
+                            {
+                                projectile->Destroy();
+                                for (int i = 0; i < enemyCount; i++)
+                                {
+                                    Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                                    if (enemy->isHit)
+                                    {
+                                        enemy->isHit = false;
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < enemyCount; i++)
+                            {
+                                Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+                                Enemy* ne = EnemyManager::Instance().NearEnemy(enemy->GetPosition());
+                                
+                                if (invincible == true)break;
+                                invincible = true;
+                                if (enemy->isHit)break;
+                                enemy->isHit = true;
+                                //ricochet_count++;
+                                ProjectileRicochetShotting(character->GetPosition(), PLAYERCATEGORY, 0.0f, FRONT);
                             }
                         }
                     }
                 }
-                if (character->ApplyDamage(1, 0.5f),true)
+                if (character->ApplyDamage(1, 0.5f))
                 {
                     //吹き飛ばす
                     {
@@ -561,8 +576,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         impulse.y = power * 0.5f;
                         impulse.z = power * vec.z;
                         penetration_count--;
-                        ricochet_count--;
-                        
+
                         character->AddImpulse(impulse);
                     }
                     //ヒットエフェクト再生
@@ -620,17 +634,25 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     dir.y = 0.0f;
     dir.z = ep.z;
     //projectile = new ProjectileStraight(&ProjectileManager::Instance(), category,lineEffect.get());
-    projectile = new ProjectileStraight(&ProjectileManager::Instance(), category);
+    if (category == ENEMYCATEGORY)
+    {
+        projectile = new ProjectileStraight(&ProjectileManager::Instance(), category, dir, pos, NORMAL);
+    }
+    else
+    {
+        if(projectile_category == PENETRATION)
+        {
+            projectile = new ProjectileStraight(&ProjectileManager::Instance(), category, dir, pos, PENETRATION);
+        }
+        if(projectile_category == RICOCHET)
+        {
+            projectile = new ProjectileStraight(&ProjectileManager::Instance(), category, dir, pos, RICOCHET);
+        }
+    }
     projectile->Launch(dir, pos);
 }
 
-void Character::ProjectileRicochetShotting(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2,int category, float angle, int vector)
-{
-    Ricochet(ne, pos2, vector);
-}
-
-
-void Character::Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2, int vector)
+void Character::ProjectileRicochetShotting(DirectX::XMFLOAT3 ne, int category, float angle, int vector)
 {
     //発射
     ProjectileStraight* projectile{};
@@ -643,8 +665,9 @@ void Character::Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2, int vecto
 
 
     Enemy* ne1 = EnemyManager::Instance().NearEnemy(position);
-    
+
     Enemy* ne2 = EnemyManager::Instance().NearEnemy(ne);
+
     if (ne2 == nullptr)return;
     DirectX::XMVECTOR NE1 = DirectX::XMLoadFloat3(&ne);
     DirectX::XMVECTOR NE2 = DirectX::XMLoadFloat3(&ne2->GetPosition());
@@ -677,7 +700,8 @@ void Character::Ricochet(DirectX::XMFLOAT3 ne, DirectX::XMFLOAT3 pos2, int vecto
     dir.x = ep.x;
     dir.y = 0.0f;
     dir.z = ep.z;
-    projectile = new ProjectileStraight(&ProjectileManager::Instance(), category);
+    if (category == ENEMYCATEGORY)return;
+    projectile = new ProjectileStraight(&ProjectileManager::Instance(), category, dir, pos, RICOCHET);
     projectile->Launch(dir, pos);
 
 }

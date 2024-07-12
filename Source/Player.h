@@ -41,6 +41,9 @@ private:
 
     //弾丸入力処理
     void InputProjectile();
+
+    //攻撃範囲用の座標変換
+    void AreaTransform();
 private:
     //待機ステートへ遷移
     void TransitionIdleState();
@@ -84,8 +87,14 @@ public:
     {
         return sub_attack_range;
     }
+
+    int GetProjectileType()
+    {
+        return projectile_type;
+    }
 private:
-    Model* model = nullptr;
+    Model* area = nullptr;
+    DirectX::XMFLOAT3 area_scale = {};
     float       moveSpeed = 7.0f;
     float       jumpSpeed = 20.0f;
     int projectile_shot;
@@ -106,8 +115,6 @@ private:
     Effect* AT_Field = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
-
-    float sub_attack_range = 3.0f;
 
     ////アニメーション:Jammo
     //enum Animation

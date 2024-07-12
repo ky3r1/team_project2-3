@@ -83,7 +83,7 @@ void SceneTitle::Update(float elapsedTime)
     //cameraController->Update(elapsedTime);
 
     GamePad& gamePad = Input::Instance().GetGamePad();
-
+    Mouse& mouse = Input::Instance().GetMouse();
     GamePadButton anyButton =
           GamePad::BTN_A
         | GamePad::BTN_B
