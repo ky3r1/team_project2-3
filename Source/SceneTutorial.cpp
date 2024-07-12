@@ -64,7 +64,9 @@ void SceneTutorial::Initialize()
 	//カメラコントローラー初期化
 	cameraController = std::unique_ptr<CameraController>(new CameraController());
 
-	state = enemy_facade;
+	sprite_frame = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/frame.png"));
+
+	state = move_check;
 	substate = 0;
 	timer = 0;
 }
@@ -169,6 +171,7 @@ void SceneTutorial::Render()
 	// 2Dスプライト描画
 	{
 		Ui::Instance().game(dc);
+		TextRender(dc);
 	}
 
 #ifdef DEBUGIMGUI
@@ -184,72 +187,139 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	Mouse& mouse = Input::Instance().GetMouse();
+	static bool first_in = true;
+	if (first_in)
+	{
+		if (state == enemy_facade)	e = new Enemy01(ENEMYCATEGORY);
+		first_in = false;
+	}
 
-	static Enemy01* e = new Enemy01(ENEMYCATEGORY);
+	if (nextstate_checker)EasingTexture(elapsedTime);
+	else
+	{
+		switch (state)
+		{
+		case move_check:
+			switch (substate)
+			{
+			case 0:
+				checker[0] = false;
+				checker[1] = false;
+				substate++;
+				break;
+			case 1:
+				//上下左右の移動
+				if (gamePad.GetButton() & gamePad.BTN_UP ||
+					gamePad.GetButton() & gamePad.BTN_DOWN ||
+					gamePad.GetButton() & gamePad.BTN_LEFT ||
+					gamePad.GetButton() & gamePad.BTN_RIGHT)
+				{
+					checker[0] = true;
+					player.get()->SetScale(DirectX::XMFLOAT3(10, 10, 10));
+				}
+				static DirectX::XMINT2 camera_pos = { mouse.GetPositionX(),mouse.GetPositionY() };
+				//カメラの移動
+				if (mouse.GetPositionX() != camera_pos.x || mouse.GetPositionY() != camera_pos.y)
+				{
+					checker[1] = true;
+					player.get()->SetScale(DirectX::XMFLOAT3(5, 5, 5));
+				}
+				if (checker[0] && checker[1])
+				{
+					//右クリック
+					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
+					{
+						first_in = true;
+						nextstate_checker = true;
+					}
+				}
+				break;
+			}
+			break;
+		case enemy_facade:
+			switch (substate)
+			{
+			case 0:
+				e->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 20));
+				EnemyManager::Instance().Register(e);
 
+				checker[0] = false;
+				checker[1] = false;
+				substate++;
+				break;
+			case 1:
+				if (e->GetHealth() != e->GetMaxHealth())
+				{
+					checker[0] = true;
+				}
+				if (EnemyManager::Instance().GetEnemyCount() == 0)
+				{
+					checker[1] = true;
+					player.get()->SetScale(DirectX::XMFLOAT3(10, 10, 10));
+				}
+				if (checker[0] && checker[1])
+				{
+					//右クリック
+					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
+					{
+						first_in = true;
+						nextstate_checker = true;
+					}
+				}
+				break;
+			}
+		}
+	}
+	timer++;
+}
+
+void SceneTutorial::EasingTexture(float elapsedTime)
+{
+	static bool first_in = true;
 	switch (state)
 	{
 	case move_check:
+		if (first_in)
+		{
+			texture_pos[0] = {};
+			texture_pos[0] = {};
+		}
 		switch (substate)
 		{
 		case 0:
-			checker[0] = false;
-			checker[1] = false;
-			substate++;
+			nextstate_checker = false;
 			break;
 		case 1:
-			//上下左右の移動
-			if (gamePad.GetButton() & gamePad.BTN_UP ||
-				gamePad.GetButton() & gamePad.BTN_DOWN ||
-				gamePad.GetButton() & gamePad.BTN_LEFT ||
-				gamePad.GetButton() & gamePad.BTN_RIGHT)
-			{
-				checker[0] = true;
-				player.get()->SetScale(DirectX::XMFLOAT3(10, 10, 10));
-			}
-			static DirectX::XMINT2 camera_pos = { mouse.GetPositionX(),mouse.GetPositionY() };
-			//カメラの移動
-			if (mouse.GetPositionX() != camera_pos.x || mouse.GetPositionY() != camera_pos.y)
-			{
-				checker[1] = true;
-				player.get()->SetScale(DirectX::XMFLOAT3(5, 5, 5));
-			}
-			if (checker[0] && checker[1])
-			{
-				//右クリック
-				if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
-				{
-					substate = 0;
-					state = enemy_facade;
-				}
-			}
+			state = enemy_facade;
+			substate = 0;
+			first_in = false;
 			break;
 		}
 		break;
 	case enemy_facade:
-		switch (substate)
-		{
-		case 0:
-			e->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 20));
-			EnemyManager::Instance().Register(e);
 
-			checker[0] = false;
-			checker[1] = false;
-			substate++;
-			break;
-		case 1:
-			if (e->GetHealth() != e->GetMaxHealth())
-			{
-				checker[0] = true;
-			}
-			if (EnemyManager::Instance().GetEnemyCount()==0)
-			{
-				checker[1] = true;
-				player.get()->SetScale(DirectX::XMFLOAT3(10, 10, 10));
-			}
-			break;
-		}
-		timer++;
+		break;
 	}
-	//if (e != nullptr)delete e;
+}
+
+void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
+{
+	static bool first_in = 0;
+	sprite_frame.get()->Render(dc,
+		DirectX::XMFLOAT2(-40, 10),
+		DirectX::XMFLOAT2(300, 500),
+		DirectX::XMFLOAT2(0, 0),
+		DirectX::XMFLOAT2(100, 100),
+		0,
+		DirectX::XMFLOAT4(0, 0, 0, 1)
+	);
+	switch (state)
+	{
+	case move_check:
+		if (first_in)
+			break;
+	case enemy_facade:
+
+		break;
+	}
 }

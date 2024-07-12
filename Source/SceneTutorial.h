@@ -6,6 +6,7 @@
 #include "CameraController.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
+#include "Enemy01.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class SceneTutorial : public Scene
@@ -27,6 +28,9 @@ public:
 	void Render() override;
 private:
 	void UpdateTutorial(float elapsedTime);
+	void EasingTexture(float elapsedTime);
+	void TextRender(ID3D11DeviceContext* dc);
+
 	float timer=0.0f;
 	enum
 	{
@@ -37,9 +41,17 @@ private:
 	int substate = 0;
 private:
 	bool checker[10] = {true, true, true, true, true, true, true, true, true, true};
-
+	bool nextstate_checker = false;
+	DirectX::XMFLOAT2 texture_pos[2] = { };
 private:
 	std::unique_ptr<Player> player = nullptr;
 	std::unique_ptr<CameraController> cameraController = nullptr;
 	std::unique_ptr<Sprite> gauge = nullptr;
+
+	Enemy01* e = nullptr;
+
+	std::unique_ptr<Sprite> sprite_frame = nullptr;
+	std::unique_ptr<Sprite> sprite01 = nullptr;
+	std::unique_ptr<Sprite> sprite02 = nullptr;
+	std::unique_ptr<Sprite> sprite03 = nullptr;
 };
