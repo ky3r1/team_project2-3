@@ -30,6 +30,7 @@ private:
 	void UpdateTutorial(float elapsedTime);
 	void EasingTexture(float elapsedTime);
 	void TextRender(ID3D11DeviceContext* dc);
+	void CheckBoxRender(ID3D11DeviceContext* dc, DirectX::XMFLOAT2 pos,bool flg);
 
 	float timer=0.0f;
 	enum
@@ -42,7 +43,7 @@ private:
 private:
 	bool checker[10] = {true, true, true, true, true, true, true, true, true, true};
 	bool nextstate_checker = false;
-	DirectX::XMFLOAT2 texture_pos[2] = { };
+	DirectX::XMFLOAT2 texture_pos[3] = { };
 private:
 	std::unique_ptr<Player> player = nullptr;
 	std::unique_ptr<CameraController> cameraController = nullptr;
@@ -51,6 +52,8 @@ private:
 	Enemy01* e = nullptr;
 
 	std::unique_ptr<Sprite> sprite_frame = nullptr;
+	std::unique_ptr<Sprite> sprite_checkmark = nullptr;
+	std::unique_ptr<Sprite> sprite_rightclick = nullptr;
 	std::unique_ptr<Sprite> sprite01 = nullptr;
 	std::unique_ptr<Sprite> sprite02 = nullptr;
 	std::unique_ptr<Sprite> sprite03 = nullptr;
