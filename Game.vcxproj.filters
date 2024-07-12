@@ -269,6 +269,15 @@
     <ClInclude Include="Source\Graphics\Font.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\GeometricPrimitive.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\framebuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\fullscreen_quad.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -454,6 +463,15 @@
     <ClCompile Include="Source\Graphics\Font.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\GeometricPrimitive.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\framebuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\fullscreen_quad.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">
@@ -490,6 +508,15 @@
       <Filter>HLSL</Filter>
     </None>
     <None Include="Data\Shader\Font.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\fullscreen_quad.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\luminance_extract.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\filter_functions.hlsli">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
@@ -534,6 +561,21 @@
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="Data\Shader\Font_VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\fullscreen_quad_ps.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\fullscreen_quad_vs.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\blur_ps.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\luminance_extract_ps.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\luminance_extraction_ps.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>

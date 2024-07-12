@@ -5,30 +5,19 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-class DebugRenderer
+class GeometricPrimitive
 {
 public:
-	DebugRenderer(ID3D11Device* device);
-	~DebugRenderer() {}
+	GeometricPrimitive(ID3D11Device* device);
+	~GeometricPrimitive() {}
 
 public:
 	// ï`âÊé¿çs
 	void Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
 
-	// ãÖï`âÊ
-	void DrawSphere(const DirectX::XMFLOAT3& center, float radius, const DirectX::XMFLOAT4& color);
-
-	// â~íåï`âÊ
-	void DrawCylinder(const DirectX::XMFLOAT3& position, float radius, float height, const DirectX::XMFLOAT4& color);
-
 	void DrawCube(const DirectX::XMFLOAT3& start_position, const DirectX::XMFLOAT3& end_position, DirectX::XMFLOAT3 rotation, const DirectX::XMFLOAT4& color);
 
 private:
-	// ãÖÉÅÉbÉVÉÖçÏê¨
-	void CreateSphereMesh(ID3D11Device* device, float radius, int slices, int stacks);
-
-	// â~íåÉÅÉbÉVÉÖçÏê¨
-	void CreateCylinderMesh(ID3D11Device* device, float radius1, float radius2, float start, float height, int slices, int stacks);
 
 	void CreateCubeMesh(ID3D11Device* device);
 
@@ -39,20 +28,6 @@ private:
 		DirectX::XMFLOAT4	color;
 	};
 
-	struct Sphere
-	{
-		DirectX::XMFLOAT4	color;
-		DirectX::XMFLOAT3	center;
-		float				radius;
-	};
-
-	struct Cylinder
-	{
-		DirectX::XMFLOAT4	color;
-		DirectX::XMFLOAT3	position;
-		float				radius;
-		float				height;
-	};
 
 	struct Cube
 	{
@@ -62,8 +37,6 @@ private:
 		DirectX::XMFLOAT3 rotation;
 	};
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer>			sphereVertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer>			cylinderVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>			cubeVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>			cubeIndexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>			constantBuffer;
@@ -76,8 +49,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>	rasterizerState;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	depthStencilState;
 
-	std::vector<Sphere>		spheres;
-	std::vector<Cylinder>	cylinders;
 	std::vector<Cube>		cubes;
 
 	UINT	sphereVertexCount = 0;
