@@ -37,12 +37,12 @@ void Projectile::ChangeColor(DirectX::XMFLOAT4& color, int category, int project
     case PLAYERCATEGORY:
         //color = { 1,0,0,1 };
         if(projectile_category == PENETRATION)
-            color = { 1,0,0,1 };
+            color = { 0,1,0,1 };
         else if(projectile_category == RICOCHET)
             color = { 0,0,1,1 };
         break;
     case ENEMYCATEGORY:
-        color = { 0,1,0,1 };
+        color = { 1,0,0,1 };
         break;
     }
 }

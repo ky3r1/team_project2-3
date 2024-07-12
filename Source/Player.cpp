@@ -48,14 +48,14 @@ Player::Player()
     moveSpeed = 15.0f;
 
     position = { 0.0001f,2,0 };
-    attack_range = 10.0f;
+    attack_range = 9.0f;
     sub_attack_range = 5.0f;
     enemy__check = false;
     projectile_category = 0;;
     state = State::Idle;
 
     // エフェクト
-    AT_Field = new Effect("Data/Effect/AT_field.efk");
+    //AT_Field = new Effect("Data/Effect/AT_field.efk");
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
@@ -68,7 +68,7 @@ Player::Player()
 
 Player::~Player()
 {
-    delete AT_Field;
+    //delete AT_Field;
 
     delete hitEffect;
     hitEffect = nullptr;
@@ -142,6 +142,9 @@ void Player::Update(float elapsedTime)
     //速力処理更新
     UpdateVelocity(elapsedTime);
 
+    //無敵時間更新
+    UpdateInvincibleTime(elapsedTime);
+
     //弾丸更新処理
     ProjectileManager::Instance().Update(elapsedTime);
 
@@ -159,7 +162,7 @@ void Player::Update(float elapsedTime)
     //モデルアニメーション更新
     model->UpdateAnimation(elapsedTime);
 
-    AT_Field->Play(position, 10.0f);
+    //AT_Field->Play(position, 10.0f);
 
     //当たり判定のdelay
     UpdateDelayTime(hit_delay.checker, hit_delay.time, DELAYPLAYERVSENEMY);
@@ -390,16 +393,16 @@ void Player::InputProjectile()
         {
             if (Collision::PointInsideCircle(enemy->GetPosition(), position, sub_attack_range))
             {
-                penetration_count = 30;
-                ricochet_count = 1;
                 enemy__check = true;
                 if(projectile_category==PENETRATION)
                 {
+                    penetration_count = 60;
                     ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
                 }
                 if(projectile_category==RICOCHET)
                 {
-                    ProjectileRicochetShotting(position, PLAYERCATEGORY, 0.0f, FRONT);
+                    ricochet_count = 0;
+                    ProjectileStraightShotting(PLAYERCATEGORY, 0.0f, FRONT);
                 }
                 projectile_auto.checker = false;
             }

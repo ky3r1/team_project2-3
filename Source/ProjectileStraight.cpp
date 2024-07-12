@@ -1,6 +1,6 @@
 #include "ProjectileStraight.h"
 
-ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int categoryconst, const DirectX::XMFLOAT3& direction,const DirectX::XMFLOAT3& position, int color)
+ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int category, const DirectX::XMFLOAT3& direction,const DirectX::XMFLOAT3& position, int pcolor)
     : Projectile(manager)
 {
     //model = new Model("Data/Model/SpikeBall/SpikeBall.mdl");
@@ -15,7 +15,8 @@ ProjectileStraight::ProjectileStraight(ProjectileManager* manager, int categoryc
         this->color = { 0,0,1,1 };
         break;
     }
-    projectile_category = color;
+    color.w = 0;
+    projectile_category = pcolor;
     this->direction = direction;
     this->position = position;
     //表示サイズを調整

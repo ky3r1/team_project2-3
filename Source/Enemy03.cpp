@@ -92,13 +92,13 @@ void Enemy03::InputProjectile()
 {
     if (projectile_auto.checker)
     {
-        /*ProjectileStraightShotting(ENEMYCATEGORY, -1.0f, FRONT);
+        ProjectileStraightShotting(ENEMYCATEGORY, -1.0f, FRONT);
         ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
         ProjectileStraightShotting(ENEMYCATEGORY, 1.0f, FRONT);
 
         ProjectileStraightShotting(ENEMYCATEGORY, -1.0f, BACK);
         ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, BACK);
-        ProjectileStraightShotting(ENEMYCATEGORY, 1.0f, BACK);*/
+        ProjectileStraightShotting(ENEMYCATEGORY, 1.0f, BACK);
 
         projectile_auto.checker = false;
     }

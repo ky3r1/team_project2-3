@@ -1,5 +1,5 @@
 #include "Ui.h"
-
+#include "Player.h"
 void Ui::title(ID3D11DeviceContext* dc)
 {    
     static int check = 0;
@@ -28,8 +28,15 @@ void Ui::game(ID3D11DeviceContext* dc)
         check = 1;
         break;
     case 1:
-        
-        sprite01->Render(dc,DirectX::XMFLOAT2(0,500), DirectX::XMFLOAT2(150, 150), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(200, 200), 0, DirectX::XMFLOAT4(1, 1, 1, 1));
+        if(Player::Instance().GetProjectileType() == PENETRATION)
+        {
+            sprite01->Render(dc, DirectX::XMFLOAT2(0, 500), DirectX::XMFLOAT2(150, 150), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(200, 200), 0, DirectX::XMFLOAT4(1, 1, 1, 1));
+        }
+        if (Player::Instance().GetProjectileType() == RICOCHET)
+        {
+            sprite02->Render(dc, DirectX::XMFLOAT2(0, 500), DirectX::XMFLOAT2(150, 150), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(200, 200), 0, DirectX::XMFLOAT4(1, 1, 1, 1));
+
+        }
         //sprite03->textout(dc, "abcdefghijklmnopqrstuvwxyz", 100, 200, 50, 50, { 1,1,1,1 });
         break;
     }

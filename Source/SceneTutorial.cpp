@@ -166,21 +166,21 @@ void SceneTutorial::Update(float elapsedTime)
 	}
 	if (game_timer == 1)
 	{
-		//if (enemyAdd == true)
-		//{
-		//	EnemyManager& enemyManager = EnemyManager::Instance();
-		//	slime = new Enemy01(RED);
-		//	slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
-		//	enemyManager.Register(slime);
-		//	slime = new Enemy01(BLUE);
-		//	slime->SetPosition(DirectX::XMFLOAT3(0, 1, 2));
-		//	enemyManager.Register(slime);
-		//}
-		//enemyAdd = false;
-		//if (Player::Instance().GetCategory() != WHITE)
-		//{
-		//	clear_check = true;
-		//}
+		if (enemyAdd == true)
+		{
+			EnemyManager& enemyManager = EnemyManager::Instance();
+			slime = new Enemy01(ENEMYCATEGORY);
+			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
+			enemyManager.Register(slime);
+			slime = new Enemy01(ENEMYCATEGORY);
+			slime->SetPosition(DirectX::XMFLOAT3(0, 1, 2));
+			enemyManager.Register(slime);
+		}
+		enemyAdd = false;
+		if (slime->GetHealth() <= 0)
+		{
+			clear_check = true;
+		}
 	}
 	if (game_timer == 2)
 	{
