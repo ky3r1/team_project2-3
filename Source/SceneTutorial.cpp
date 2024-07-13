@@ -68,6 +68,10 @@ void SceneTutorial::Initialize()
 	sprite_checkmark = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/checkmark.png"));
 	sprite_rightclick = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightClick-removebg-preview.png"));
 
+	//move_check,//0
+	//enemy_facade,
+	//enemy_attack,
+
 	state = enemy_facade;
 	substate = 0;
 	timer = 0;
@@ -189,7 +193,9 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	Mouse& mouse = Input::Instance().GetMouse();
+
 	static bool first_in = true;
+	static float type = 100;
 
 
 	if (nextstate_checker)EasingTexture(elapsedTime);
@@ -197,8 +203,15 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 	{
 		if (first_in)
 		{
-			if (state == enemy_facade)	e = new Enemy01(ENEMYCATEGORY);
-			first_in = false;
+				if (state == enemy_facade)	e = new Enemy01(ENEMYCATEGORY);
+				if (state == enemy_attack)
+				{
+					for (int i = 0; i < 3; ++i)
+					{
+						e2[i] = new Enemy01(ENEMYCATEGORY);
+					}
+				}
+				first_in = false;	
 		}
 		switch (state)
 		{
@@ -233,6 +246,7 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
 					{
 						first_in = true;
+						first_texture = true;
 						nextstate_checker = true;
 					}
 				}
@@ -266,11 +280,67 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
 					{
 						first_in = true;
+						first_texture = true;
 						nextstate_checker = true;
 					}
 				}
 				break;
 			}
+			break;
+		case enemy_attack:
+			switch (substate)
+			{
+			case 0:
+				for(int i=0;i<3;++i)
+                {
+                    e2[i]->SetPosition(DirectX::XMFLOAT3(-10.0f + 10.0f * i, 0, 20));
+                    EnemyManager::Instance().Register(e2[i]);
+                }
+
+				type = player.get()->GetProjectileType();
+				checker[0] = false;
+				checker[1] = false;
+				substate++;
+				break;
+			case 1:
+				static bool flg = false;
+				if (!flg)
+				{
+					for (int index = 0; index < EnemyManager::Instance().GetEnemyCount(); index++)
+					{
+						Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
+						if (enemy != nullptr)
+						{
+							if (player.get()->GetProjectileType() == PENETRATION&&checker[1])
+							{
+								checker[0] = true;
+								player.get()->SetScale(DirectX::XMFLOAT3(5, 5, 5));
+							}
+							if (player.get()->GetProjectileType() == RICOCHET)
+							{
+								checker[1] = true;
+								player.get()->SetScale(DirectX::XMFLOAT3(0.1, 0.1, 0.1));
+							}
+						}
+					}
+				}
+				if (EnemyManager::Instance().GetEnemyCount() == 0)
+				{
+				}
+				if (checker[0] && checker[1])
+				{
+					flg = true;
+					//右クリック
+					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
+					{
+						first_in = true;
+						first_texture = true;
+						nextstate_checker = true;
+					}
+				}
+				break;
+			}
+			break;
 		}
 	}
 	timer++;
@@ -311,6 +381,24 @@ void SceneTutorial::EasingTexture(float elapsedTime)
 			nextstate_checker = false;
 			break;
 		case 1:
+			state = enemy_attack;
+			substate = 0;
+			first_in = false;
+			break;
+		}
+		break;
+	case enemy_attack:
+		if (first_in)
+		{
+			texture_pos[0] = {};
+			texture_pos[0] = {};
+		}
+		switch (substate)
+		{
+		case 0:
+			nextstate_checker = false;
+			break;
+		case 1:
 			state = move_check;
 			substate = 0;
 			first_in = false;
@@ -322,7 +410,6 @@ void SceneTutorial::EasingTexture(float elapsedTime)
 
 void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 {
-	static bool first_in = true;
 	static DirectX::XMFLOAT2 size = {};
 	static float scale = 0.0f;
 	sprite_frame.get()->Render(dc,
@@ -333,37 +420,34 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 		0,
 		DirectX::XMFLOAT4(0, 0, 0, 1)
 	);
-	
+
 	switch (state)
 	{
 	case move_check:
-		if (first_in)
+		if (first_texture)
 		{
-			if (sprite01 != nullptr) sprite01.reset();
-			if (sprite02 != nullptr) sprite02.reset();
-			if (sprite03 != nullptr) sprite03.reset();
-			sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveWASD-removebg-preview.png"));
-			sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveCamera-removebg-preview.png"));
-			first_in=false;
+			sprite01_01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveWASD-removebg-preview.png"));
+			sprite01_02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveCamera-removebg-preview.png"));
+			first_texture = false;
 		}
 		//WASDで移動
 		scale = 0.55f;
-		size={ 497 , 141 };
+		size = { 497 , 141 };
 		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 40), checker[0]);
-		sprite01.get()->Render(dc,
-            DirectX::XMFLOAT2(36, 33),
-            DirectX::XMFLOAT2(size.x* scale, size.y* scale),
-            DirectX::XMFLOAT2(0, 0),
-            DirectX::XMFLOAT2(size.x, size.y),
-            0,
-            DirectX::XMFLOAT4(0, 0, 0, 1)
-        );
+		sprite01_01.get()->Render(dc,
+			DirectX::XMFLOAT2(36, 33),
+			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+			DirectX::XMFLOAT2(0, 0),
+			DirectX::XMFLOAT2(size.x, size.y),
+			0,
+			DirectX::XMFLOAT4(0, 0, 0, 1)
+		);
 		scale = 0.5f;
 		size = { 723, 129 };
 		//カメラの移動
-        CheckBoxRender(dc, DirectX::XMFLOAT2(10, 110), checker[1]);
-		sprite02.get()->Render(dc,
-			DirectX::XMFLOAT2(50, 33+70),
+		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 110), checker[1]);
+		sprite01_02.get()->Render(dc,
+			DirectX::XMFLOAT2(50, 33 + 70),
 			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 			DirectX::XMFLOAT2(0, 0),
 			DirectX::XMFLOAT2(size.x, size.y),
@@ -385,21 +469,21 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 		}
 		break;
 	case enemy_facade:
-		if (first_in)
+		if (first_texture)
 		{
-			if (sprite01 != nullptr) sprite01.reset();
-			if (sprite02 != nullptr) sprite02.reset();
-			if (sprite03 != nullptr) sprite03.reset();
-			sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AttackEnemy-removebg-preview.png"));
-			sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AddDamage-removebg-preview.png"));
-			sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/DeathEnemy-removebg-preview.png"));
-			
-			first_in = false;
+			{	
+				sprite02_01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AttackEnemy-removebg-preview.png"));
+				sprite02_02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AddDamage-removebg-preview.png"));
+				sprite02_03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/DeathEnemy-removebg-preview.png"));
+				sprite02_04 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/Rect-removebg-preview.png"));
+			}
+
+			first_texture = false;
 		}
 		//赤枠に入ると攻撃
 		scale = 0.55f;
 		size = { 608, 186 };
-		sprite01.get()->Render(dc,
+		sprite02_01.get()->Render(dc,
 			DirectX::XMFLOAT2(36, 33),
 			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 			DirectX::XMFLOAT2(0, 0),
@@ -412,7 +496,7 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 		scale = 0.5f;
 		size = { 780,137 };
 		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
-		sprite02.get()->Render(dc,
+		sprite02_02.get()->Render(dc,
 			DirectX::XMFLOAT2(40, 145),
 			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 			DirectX::XMFLOAT2(0, 0),
@@ -424,8 +508,81 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 		scale = 0.5f;
 		size = { 356,148 };
 		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
-		sprite03.get()->Render(dc,
+		sprite02_03.get()->Render(dc,
 			DirectX::XMFLOAT2(40, 195),
+			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+			DirectX::XMFLOAT2(0, 0),
+			DirectX::XMFLOAT2(size.x, size.y),
+			0,
+			DirectX::XMFLOAT4(0, 0, 0, 1)
+		);
+
+		//Rect
+		scale = 0.4f;
+		size = { 708, 353 };
+		sprite02_04.get()->Render(dc,
+			DirectX::XMFLOAT2(40, 270),
+			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+			DirectX::XMFLOAT2(0, 0),
+			DirectX::XMFLOAT2(size.x, size.y),
+			0,
+			DirectX::XMFLOAT4(0, 0, 0, 1)
+		);
+
+		if (checker[0] && checker[1])
+		{
+			scale = 0.5f;
+			size = { 637, 143 };
+			sprite_rightclick.get()->Render(dc,
+				DirectX::XMFLOAT2(50, 430),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		break;
+
+	case enemy_attack:
+		if (first_texture)
+		{
+			sprite03_01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightProjectile-removebg-preview.png"));
+			sprite03_02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/k2-removebg-preview.png"));
+			sprite03_03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/cd-removebg-preview.png"));
+
+			first_texture = false;
+		}
+		//赤枠に入ると攻撃
+		scale = 0.55f;
+		size = { 846, 194 };
+		sprite03_01.get()->Render(dc,
+			DirectX::XMFLOAT2(0, 33),
+			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+			DirectX::XMFLOAT2(0, 0),
+			DirectX::XMFLOAT2(size.x, size.y),
+			0,
+			DirectX::XMFLOAT4(0, 0, 0, 1)
+		);
+
+		//エネミーにダメージを与える
+		scale = 0.5f;
+		size = { 450,96 };
+		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
+		sprite03_02.get()->Render(dc,
+			DirectX::XMFLOAT2(50, 156),
+			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+			DirectX::XMFLOAT2(0, 0),
+			DirectX::XMFLOAT2(size.x, size.y),
+			0,
+			DirectX::XMFLOAT4(0, 0, 0, 1)
+		);
+		//エネミーを倒す
+		scale = 0.5f;
+		size = { 377,104 };
+		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
+		sprite03_03.get()->Render(dc,
+			DirectX::XMFLOAT2(50, 206),
 			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 			DirectX::XMFLOAT2(0, 0),
 			DirectX::XMFLOAT2(size.x, size.y),

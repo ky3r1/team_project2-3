@@ -36,7 +36,8 @@ private:
 	enum
 	{
 		move_check,//0
-		enemy_facade
+		enemy_facade,
+		enemy_attack,
 	};
 	int state = 0;
 	int substate = 0;
@@ -50,11 +51,23 @@ private:
 	std::unique_ptr<Sprite> gauge = nullptr;
 
 	Enemy01* e = nullptr;
+	Enemy01* e2[3] = {nullptr, nullptr, nullptr};
+
+	bool first_texture = true;
 
 	std::unique_ptr<Sprite> sprite_frame = nullptr;
 	std::unique_ptr<Sprite> sprite_checkmark = nullptr;
 	std::unique_ptr<Sprite> sprite_rightclick = nullptr;
-	std::unique_ptr<Sprite> sprite01 = nullptr;
-	std::unique_ptr<Sprite> sprite02 = nullptr;
-	std::unique_ptr<Sprite> sprite03 = nullptr;
+	
+	std::unique_ptr<Sprite> sprite01_01 = nullptr;
+	std::unique_ptr<Sprite> sprite01_02 = nullptr;
+
+	std::unique_ptr<Sprite> sprite02_01 = nullptr;
+	std::unique_ptr<Sprite> sprite02_02 = nullptr;
+	std::unique_ptr<Sprite> sprite02_03 = nullptr;
+	std::unique_ptr<Sprite> sprite02_04 = nullptr;
+
+	std::unique_ptr<Sprite> sprite03_01 = nullptr;
+	std::unique_ptr<Sprite> sprite03_02 = nullptr;
+	std::unique_ptr<Sprite> sprite03_03 = nullptr;
 };

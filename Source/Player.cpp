@@ -211,6 +211,7 @@ void Player::DrawDebugGUI()
 
     // デバッグ文字列表示の変更
     std::string str = "";
+    std::string p = "";
     // 現在のステート番号に合わせてデバッグ文字列をstrに格納
     switch (state)
     {
@@ -230,12 +231,25 @@ void Player::DrawDebugGUI()
         str = "Death";
         break;
     }
+    switch (projectile_type)
+    {
+    case PENETRATION:
+        p = "PENETRATION";
+        break;
+    case RICOCHET:
+        p = "RICOCHET";
+        break;
+    default:
+        p = "Normal";
+        break;
+    }
     if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
     {
         Character::DrawDebugGUI();
         if (ImGui::TreeNode("Transform"))
         {
             ImGui::Text(u8"State:%s", str.c_str());
+            ImGui::Text(u8"Projectile:%s", p.c_str());
             ImGui::SliderFloat3("position", &position.x, -5, 5);
             ImGui::SliderFloat3("scale", &scale.x, 0.01f, 4.0f);
             ImGui::SliderFloat3("angle", &angle.x, -3.14f, 3.14f);
