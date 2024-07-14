@@ -59,15 +59,20 @@ private:
 	std::unique_ptr<Sprite> sprite_checkmark = nullptr;
 	std::unique_ptr<Sprite> sprite_rightclick = nullptr;
 	
-	std::unique_ptr<Sprite> sprite01_01 = nullptr;
-	std::unique_ptr<Sprite> sprite01_02 = nullptr;
+	std::unique_ptr<Sprite> sprite01 = nullptr;
+	std::unique_ptr<Sprite> sprite02 = nullptr;
+	std::unique_ptr<Sprite> sprite03 = nullptr;
+	std::unique_ptr<Sprite> sprite04 = nullptr;
 
-	std::unique_ptr<Sprite> sprite02_01 = nullptr;
-	std::unique_ptr<Sprite> sprite02_02 = nullptr;
-	std::unique_ptr<Sprite> sprite02_03 = nullptr;
-	std::unique_ptr<Sprite> sprite02_04 = nullptr;
+	//std::unique_ptr<Sprite> sprite01_01 = nullptr;
+	//std::unique_ptr<Sprite> sprite01_02 = nullptr;
 
-	std::unique_ptr<Sprite> sprite03_01 = nullptr;
-	std::unique_ptr<Sprite> sprite03_02 = nullptr;
-	std::unique_ptr<Sprite> sprite03_03 = nullptr;
+	//std::unique_ptr<Sprite> sprite02_01 = nullptr;
+	//std::unique_ptr<Sprite> sprite02_02 = nullptr;
+	//std::unique_ptr<Sprite> sprite02_03 = nullptr;
+	//std::unique_ptr<Sprite> sprite02_04 = nullptr;
+
+	//std::unique_ptr<Sprite> sprite03_01 = nullptr;
+	//std::unique_ptr<Sprite> sprite03_02 = nullptr;
+	//std::unique_ptr<Sprite> sprite03_03 = nullptr;
 };

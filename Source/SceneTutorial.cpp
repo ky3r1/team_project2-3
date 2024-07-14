@@ -72,7 +72,7 @@ void SceneTutorial::Initialize()
 	//enemy_facade,
 	//enemy_attack,
 
-	state = enemy_facade;
+	state = move_check;
 	substate = 0;
 	timer = 0;
 }
@@ -246,7 +246,6 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
 					{
 						first_in = true;
-						first_texture = true;
 						nextstate_checker = true;
 					}
 				}
@@ -280,7 +279,6 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
 					{
 						first_in = true;
-						first_texture = true;
 						nextstate_checker = true;
 					}
 				}
@@ -334,7 +332,6 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
 					{
 						first_in = true;
-						first_texture = true;
 						nextstate_checker = true;
 					}
 				}
@@ -360,6 +357,7 @@ void SceneTutorial::EasingTexture(float elapsedTime)
 		switch (substate)
 		{
 		case 0:
+			first_texture = true;
 			nextstate_checker = false;
 			break;
 		case 1:
@@ -378,6 +376,7 @@ void SceneTutorial::EasingTexture(float elapsedTime)
 		switch (substate)
 		{
 		case 0:
+			first_texture = true;
 			nextstate_checker = false;
 			break;
 		case 1:
@@ -396,6 +395,7 @@ void SceneTutorial::EasingTexture(float elapsedTime)
 		switch (substate)
 		{
 		case 0:
+			first_texture = true;
 			nextstate_checker = false;
 			break;
 		case 1:
@@ -421,39 +421,53 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 		DirectX::XMFLOAT4(0, 0, 0, 1)
 	);
 
+	if (first_texture)
+	{
+		sprite01 = nullptr;
+		sprite02 = nullptr;
+		sprite03 = nullptr;
+		sprite04 = nullptr;
+	}
+
 	switch (state)
 	{
 	case move_check:
 		if (first_texture)
 		{
-			sprite01_01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveWASD-removebg-preview.png"));
-			sprite01_02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveCamera-removebg-preview.png"));
+			sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveWASD-removebg-preview.png"));
+			sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveCamera-removebg-preview.png"));
 			first_texture = false;
 		}
-		//WASDで移動
-		scale = 0.55f;
-		size = { 497 , 141 };
-		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 40), checker[0]);
-		sprite01_01.get()->Render(dc,
-			DirectX::XMFLOAT2(36, 33),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
-		scale = 0.5f;
-		size = { 723, 129 };
-		//カメラの移動
-		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 110), checker[1]);
-		sprite01_02.get()->Render(dc,
-			DirectX::XMFLOAT2(50, 33 + 70),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
+		if (sprite01 != nullptr)
+		{
+			//WASDで移動
+			scale = 0.55f;
+			size = { 497 , 141 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 40), checker[0]);
+			sprite01.get()->Render(dc,
+				DirectX::XMFLOAT2(36, 33),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite02 != nullptr)
+		{
+			scale = 0.5f;
+			size = { 723, 129 };
+			//カメラの移動
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 110), checker[1]);
+			sprite02.get()->Render(dc,
+				DirectX::XMFLOAT2(50, 33 + 70),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
 		if (checker[0] && checker[1])
 		{
 			scale = 0.5f;
@@ -472,63 +486,72 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 		if (first_texture)
 		{
 			{	
-				sprite02_01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AttackEnemy-removebg-preview.png"));
-				sprite02_02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AddDamage-removebg-preview.png"));
-				sprite02_03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/DeathEnemy-removebg-preview.png"));
-				sprite02_04 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/Rect-removebg-preview.png"));
+				sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AttackEnemy-removebg-preview.png"));
+				sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AddDamage-removebg-preview.png"));
+				sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/DeathEnemy-removebg-preview.png"));
+				sprite04 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/Rect-removebg-preview.png"));
 			}
 
 			first_texture = false;
 		}
-		//赤枠に入ると攻撃
-		scale = 0.55f;
-		size = { 608, 186 };
-		sprite02_01.get()->Render(dc,
-			DirectX::XMFLOAT2(36, 33),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
-
-		//エネミーにダメージを与える
-		scale = 0.5f;
-		size = { 780,137 };
-		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
-		sprite02_02.get()->Render(dc,
-			DirectX::XMFLOAT2(40, 145),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
-		//エネミーを倒す
-		scale = 0.5f;
-		size = { 356,148 };
-		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
-		sprite02_03.get()->Render(dc,
-			DirectX::XMFLOAT2(40, 195),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
-
-		//Rect
-		scale = 0.4f;
-		size = { 708, 353 };
-		sprite02_04.get()->Render(dc,
-			DirectX::XMFLOAT2(40, 270),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
-
+		if (sprite01 != nullptr)
+		{
+			//赤枠に入ると攻撃
+			scale = 0.55f;
+			size = { 608, 186 };
+			sprite01.get()->Render(dc,
+				DirectX::XMFLOAT2(36, 33),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite02 != nullptr)
+		{
+			//エネミーにダメージを与える
+			scale = 0.5f;
+			size = { 780,137 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
+			sprite02.get()->Render(dc,
+				DirectX::XMFLOAT2(40, 145),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite03 != nullptr)
+		{
+			//エネミーを倒す
+			scale = 0.5f;
+			size = { 356,148 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
+			sprite03.get()->Render(dc,
+				DirectX::XMFLOAT2(40, 195),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite04 != nullptr)
+		{
+			//Rect
+			scale = 0.4f;
+			size = { 708, 353 };
+			sprite04.get()->Render(dc,
+				DirectX::XMFLOAT2(40, 270),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
 		if (checker[0] && checker[1])
 		{
 			scale = 0.5f;
@@ -547,49 +570,56 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 	case enemy_attack:
 		if (first_texture)
 		{
-			sprite03_01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightProjectile-removebg-preview.png"));
-			sprite03_02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/k2-removebg-preview.png"));
-			sprite03_03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/cd-removebg-preview.png"));
+			sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightProjectile-removebg-preview.png"));
+			sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/k2-removebg-preview.png"));
+			sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/cd-removebg-preview.png"));
 
 			first_texture = false;
 		}
-		//赤枠に入ると攻撃
-		scale = 0.55f;
-		size = { 846, 194 };
-		sprite03_01.get()->Render(dc,
-			DirectX::XMFLOAT2(0, 33),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
-
-		//エネミーにダメージを与える
-		scale = 0.5f;
-		size = { 450,96 };
-		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
-		sprite03_02.get()->Render(dc,
-			DirectX::XMFLOAT2(50, 156),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
-		//エネミーを倒す
-		scale = 0.5f;
-		size = { 377,104 };
-		CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
-		sprite03_03.get()->Render(dc,
-			DirectX::XMFLOAT2(50, 206),
-			DirectX::XMFLOAT2(size.x * scale, size.y * scale),
-			DirectX::XMFLOAT2(0, 0),
-			DirectX::XMFLOAT2(size.x, size.y),
-			0,
-			DirectX::XMFLOAT4(0, 0, 0, 1)
-		);
-
+		if (sprite01 != nullptr)
+		{
+			//内枠の説明
+			scale = 0.55f;
+			size = { 846, 194 };
+			sprite01.get()->Render(dc,
+				DirectX::XMFLOAT2(0, 33),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite02 != nullptr)
+		{
+			//貫通
+			scale = 0.5f;
+			size = { 450,96 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
+			sprite02.get()->Render(dc,
+				DirectX::XMFLOAT2(50, 156),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite03 != nullptr)
+		{
+			//跳弾
+			scale = 0.5f;
+			size = { 377,104 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
+			sprite03.get()->Render(dc,
+				DirectX::XMFLOAT2(50, 206),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
 		if (checker[0] && checker[1])
 		{
 			scale = 0.5f;
