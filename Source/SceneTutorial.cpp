@@ -74,7 +74,8 @@ void SceneTutorial::Initialize()
 
 	state = move_check;
 	substate = 0;
-	timer = 0;
+	easing_flg_first = true;
+	nextstate_checker = true;
 }
 
 // 終了化
@@ -104,7 +105,7 @@ void SceneTutorial::Update(float elapsedTime)
 
 #ifdef  ALLPLAYER
 	Player::Instance().Update(elapsedTime);
-	if (Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame()));
+	if (Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTitle()));
 #endif //  ALLPLAYER
 	//エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
@@ -112,6 +113,7 @@ void SceneTutorial::Update(float elapsedTime)
 	EffectManager::Instance().Update(elapsedTime);
 	//tutorial更新
 	UpdateTutorial(elapsedTime);
+	if(state==next_scene)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTitle()));
 }
 
 // 描画処理
@@ -340,68 +342,115 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 			break;
 		}
 	}
-	timer++;
 }
 
 void SceneTutorial::EasingTexture(float elapsedTime)
 {
-	static bool first_in = true;
+	static bool easing_flg = true;
 	switch (state)
 	{
 	case move_check:
-		if (first_in)
+		if (easing_flg_first)
 		{
-			texture_pos[0] = {};
-			texture_pos[0] = {};
+			texture_pos01 = {-1000,33};//DirectX::XMFLOAT2(36, 33)
+			texture_pos02 = {-1000,103 };//DirectX::XMFLOAT2(50, 103)
+			easing_timer[0] = 0;
+			easing_timer[1] = 0;
+			easing_timer[2] = 0;
+			easing_timer[3] = 0;
+			easing_flg_first = false;
 		}
 		switch (substate)
 		{
 		case 0:
-			first_texture = true;
-			nextstate_checker = false;
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(36, -1000), easing_timer[0],true)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(50, -1000), easing_timer[1],true)
+				)
+			{
+				nextstate_checker = false;
+			}
 			break;
 		case 1:
-			state = enemy_facade;
-			substate = 0;
-			first_in = false;
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(-500, 36), easing_timer[2],false)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(-500, 50), easing_timer[3],false)
+				)
+			{
+				state = enemy_facade;
+				substate = 0;
+				easing_flg_first = true;
+			}
 			break;
 		}
 		break;
 	case enemy_facade:
-		if (first_in)
+		if (easing_flg_first)
 		{
-			texture_pos[0] = {};
-			texture_pos[0] = {};
+			texture_pos01 = { -1000,145 };//DirectX::XMFLOAT2(40, 145)
+			texture_pos02 = { -1000,195 };//DirectX::XMFLOAT2(40, 195)
+			easing_timer[0] = 0;
+			easing_timer[1] = 0;
+			easing_timer[2] = 0;
+			easing_timer[3] = 0;
+			easing_flg_first = false;
 		}
 		switch (substate)
 		{
 		case 0:
-			first_texture = true;
-			nextstate_checker = false;
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(40, -1000), easing_timer[0], true)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(40, -1000), easing_timer[1], true)
+				)
+			{
+				nextstate_checker = false;
+			}
 			break;
 		case 1:
-			state = enemy_attack;
-			substate = 0;
-			first_in = false;
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(-500, 40), easing_timer[2], false)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(-500, 40), easing_timer[3], false)
+				)
+			{
+				state = enemy_attack;
+				substate = 0;
+				easing_flg_first = true;
+			}
 			break;
 		}
 		break;
 	case enemy_attack:
-		if (first_in)
+		if (easing_flg_first)
 		{
-			texture_pos[0] = {};
-			texture_pos[0] = {};
+			texture_pos01 = { -1000,156 };//DirectX::XMFLOAT2(50, 156)
+			texture_pos02 = { -1000,206 };//DirectX::XMFLOAT2(50, 206)
+			easing_timer[0] = 0;
+			easing_timer[1] = 0;
+			easing_timer[2] = 0;
+			easing_timer[3] = 0;
+			easing_flg_first = false;
 		}
 		switch (substate)
 		{
 		case 0:
-			first_texture = true;
-			nextstate_checker = false;
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(50, -1000), easing_timer[0], true)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(50, -1000), easing_timer[1], true)
+				)
+			{
+				nextstate_checker = false;
+			}
 			break;
 		case 1:
-			state = move_check;
-			substate = 0;
-			first_in = false;
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(-500, 50), easing_timer[2], false)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(-500, 50), easing_timer[3], false)
+				)
+			{
+				state = next_scene;
+				substate = 0;
+				easing_flg_first = true;
+			}
 			break;
 		}
 		break;
@@ -434,8 +483,12 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 	case move_check:
 		if (first_texture)
 		{
-			sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveWASD-removebg-preview.png"));
-			sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveCamera-removebg-preview.png"));
+			{
+				sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveWASD-removebg-preview.png"));
+				sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveCamera-removebg-preview.png"));
+			}
+			checker[0] = false;
+			checker[1] = false;
 			first_texture = false;
 		}
 		if (sprite01 != nullptr)
@@ -445,7 +498,7 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 			size = { 497 , 141 };
 			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 40), checker[0]);
 			sprite01.get()->Render(dc,
-				DirectX::XMFLOAT2(36, 33),
+				texture_pos01,
 				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 				DirectX::XMFLOAT2(0, 0),
 				DirectX::XMFLOAT2(size.x, size.y),
@@ -460,7 +513,7 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 			//カメラの移動
 			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 110), checker[1]);
 			sprite02.get()->Render(dc,
-				DirectX::XMFLOAT2(50, 33 + 70),
+				texture_pos02,
 				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 				DirectX::XMFLOAT2(0, 0),
 				DirectX::XMFLOAT2(size.x, size.y),
@@ -491,7 +544,8 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 				sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/DeathEnemy-removebg-preview.png"));
 				sprite04 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/Rect-removebg-preview.png"));
 			}
-
+			checker[0] = false;
+			checker[1] = false;
 			first_texture = false;
 		}
 		if (sprite01 != nullptr)
@@ -515,7 +569,7 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 			size = { 780,137 };
 			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
 			sprite02.get()->Render(dc,
-				DirectX::XMFLOAT2(40, 145),
+				texture_pos01,
 				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 				DirectX::XMFLOAT2(0, 0),
 				DirectX::XMFLOAT2(size.x, size.y),
@@ -530,7 +584,7 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 			size = { 356,148 };
 			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
 			sprite03.get()->Render(dc,
-				DirectX::XMFLOAT2(40, 195),
+				texture_pos02,
 				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 				DirectX::XMFLOAT2(0, 0),
 				DirectX::XMFLOAT2(size.x, size.y),
@@ -570,10 +624,13 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 	case enemy_attack:
 		if (first_texture)
 		{
-			sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightProjectile-removebg-preview.png"));
-			sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/k2-removebg-preview.png"));
-			sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/cd-removebg-preview.png"));
-
+			{
+				sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightProjectile-removebg-preview.png"));
+				sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/k2-removebg-preview.png"));
+				sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/cd-removebg-preview.png"));
+			}
+			checker[0] = false;
+			checker[1] = false;
 			first_texture = false;
 		}
 		if (sprite01 != nullptr)
@@ -597,7 +654,7 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 			size = { 450,96 };
 			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
 			sprite02.get()->Render(dc,
-				DirectX::XMFLOAT2(50, 156),
+				texture_pos01,
 				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 				DirectX::XMFLOAT2(0, 0),
 				DirectX::XMFLOAT2(size.x, size.y),
@@ -612,7 +669,7 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 			size = { 377,104 };
 			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
 			sprite03.get()->Render(dc,
-				DirectX::XMFLOAT2(50, 206),
+				texture_pos02,
 				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 				DirectX::XMFLOAT2(0, 0),
 				DirectX::XMFLOAT2(size.x, size.y),
@@ -659,4 +716,29 @@ void SceneTutorial::CheckBoxRender(ID3D11DeviceContext* dc, DirectX::XMFLOAT2 po
 			DirectX::XMFLOAT4(1, 0, 0, 1)
 		);
 	}
+}
+
+bool SceneTutorial::EasingMove(DirectX::XMFLOAT2& pos, DirectX::XMFLOAT2 target,int& timer,bool flg)
+{
+	first_texture = true;
+	timer++;
+	pos = { Easing::OutBounce(timer / 60.0f, 100.0f / 60.0f, target.x, target.y),pos.y };
+	if (flg)
+	{
+		if (pos.x >= target.x)
+		{
+			pos.x = target.x;
+			return true;
+		}
+	}
+	else
+	{
+		if (pos.x <= target.x)
+		{
+			pos.x = target.x;
+			return true;
+		}
+	}
+
+	return false;
 }
