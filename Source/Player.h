@@ -136,13 +136,11 @@ private:
     //};
     ////アニメーション:UnityChan
     enum Animation
-    {
+    {        
+        Anim_GetHit,
+        Anim_Running,
         Anim_Attack,
         Anim_Death,
-        Anim_GetHit,
-        Anim_Idle,
-        Anim_IdleAnim,
-        Anim_Running,
     };
 
     //ステート

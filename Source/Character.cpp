@@ -604,8 +604,8 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     DirectX::XMFLOAT3 dir;
     //DirectX::XMFLOAT3 axis = { 0,1,0 };
     //DirectX::XMVECTOR Axis;
-    //DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
-    DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
+    DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
+    //DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
 
     dir.x = vector * transform._31 * 100.0f * s.x;
     dir.y = 0.0f;

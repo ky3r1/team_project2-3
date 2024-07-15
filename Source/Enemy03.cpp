@@ -10,7 +10,7 @@
 Enemy03::Enemy03(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Jammo/Jammo.mdl");
+    model = new Model("Data/Model/Enemy/enemy3/enemy3.mdl");
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
 
     static int id_enemy03= 0;
@@ -19,7 +19,7 @@ Enemy03::Enemy03(int category)
     enemy_categry = Enemy03_Num;
     name = std::string("Enemy03:") + std::to_string(category_id);
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.01f;
+    scale.x = scale.y = scale.z = 0.1f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ

@@ -33,11 +33,11 @@ Player::Player()
     //model = new Model("Data/Model/UnitychanSD/UnitychanSD.mdl");
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
-    model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
+    model = new Model("Data/Model/Player/player/player.mdl");
     area = new Model("Data/Model/Player/Area.mdl");
     area_scale = { 0.1f,1.0f,0.1f };
     //scale.x = scale.y = scale.z = 0.1f;
-    scale.x = scale.y = scale.z = 1.0f;
+    scale.x = scale.y = scale.z = 0.033f;
     turnSpeed = DirectX::XMConvertToRadians(720);
     weight = 100.0f;
     color = { 1,1,1,1 };
@@ -451,7 +451,7 @@ void Player::TransitionIdleState()
 #ifdef PLAYERANIMATION
     state = State::Idle;
     //待機アニメーション再生
-    model->PlayAnimation(Anim_Idle, true);
+    model->PlayAnimation(Anim_Attack, true);
 #endif // PLAYERANIMATION
 }
 

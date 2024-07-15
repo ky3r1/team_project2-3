@@ -10,7 +10,7 @@
 Enemy02::Enemy02(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Enemy/Enemy02/enemy2.mdl");
+    model = new Model("Data/Model/Enemy/enemy2/enemy2.mdl");
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
 
     static int id_enemy02 = 0;
