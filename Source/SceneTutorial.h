@@ -68,7 +68,4 @@ private:
 
 	DirectX::XMFLOAT2 texture_pos01 = { };
 	DirectX::XMFLOAT2 texture_pos02 = { };
-	DirectX::XMFLOAT2 texture_pos03 = { };
-	DirectX::XMFLOAT2 texture_pos04 = { };
-	DirectX::XMFLOAT2 texture_RCpos = { };
 };

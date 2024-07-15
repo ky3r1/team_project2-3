@@ -233,14 +233,12 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 					gamePad.GetButton() & gamePad.BTN_RIGHT)
 				{
 					checker[0] = true;
-					player.get()->SetScale(DirectX::XMFLOAT3(10, 10, 10));
 				}
 				static DirectX::XMINT2 camera_pos = { mouse.GetPositionX(),mouse.GetPositionY() };
 				//カメラの移動
 				if (mouse.GetPositionX() != camera_pos.x || mouse.GetPositionY() != camera_pos.y)
 				{
 					checker[1] = true;
-					player.get()->SetScale(DirectX::XMFLOAT3(5, 5, 5));
 				}
 				if (checker[0] && checker[1])
 				{
@@ -273,7 +271,6 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 				if (EnemyManager::Instance().GetEnemyCount() == 0)
 				{
 					checker[1] = true;
-					player.get()->SetScale(DirectX::XMFLOAT3(10, 10, 10));
 				}
 				if (checker[0] && checker[1])
 				{
@@ -314,12 +311,10 @@ void SceneTutorial::UpdateTutorial(float elapsedTime)
 							if (player.get()->GetProjectileType() == PENETRATION&&checker[1])
 							{
 								checker[0] = true;
-								player.get()->SetScale(DirectX::XMFLOAT3(5, 5, 5));
 							}
 							if (player.get()->GetProjectileType() == RICOCHET)
 							{
 								checker[1] = true;
-								player.get()->SetScale(DirectX::XMFLOAT3(0.1, 0.1, 0.1));
 							}
 						}
 					}
@@ -628,6 +623,7 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 				sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightProjectile-removebg-preview.png"));
 				sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/k2-removebg-preview.png"));
 				sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/cd-removebg-preview.png"));
+				sprite04 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/blue-removebg-preview.png"));
 			}
 			checker[0] = false;
 			checker[1] = false;
@@ -670,6 +666,20 @@ void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
 			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
 			sprite03.get()->Render(dc,
 				texture_pos02,
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite04 != nullptr)
+		{
+			//青枠
+			scale = 0.5f;
+			size = { 634,144 };
+			sprite04.get()->Render(dc,
+				DirectX::XMFLOAT2(0, 270),
 				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
 				DirectX::XMFLOAT2(0, 0),
 				DirectX::XMFLOAT2(size.x, size.y),

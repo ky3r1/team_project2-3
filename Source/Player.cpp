@@ -174,17 +174,17 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
     shader->Draw(dc, model, color);
 
-    ////攻撃範囲行列を更新01
-    //area_scale = { 0.1f,1.0f,0.1f };
-    //AreaTransform();
-    //area->UpdateTransform(transform);
-    //shader->Draw(dc, area, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f));
+    //攻撃範囲行列を更新01
+    area_scale = { 0.3f,0.5f,0.3f };
+    AreaTransform();
+    area->UpdateTransform(transform);
+    shader->Draw(dc, area, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.5f));
 
-    ////攻撃範囲行列を更新02
-    //area_scale = { 0.5f,0.9f,0.5f };
-    //AreaTransform();
-    //area->UpdateTransform(transform);
-    //shader->Draw(dc, area, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.5f));
+    //攻撃範囲行列を更新02
+    area_scale = { 0.5f,0.4f,0.5f };
+    AreaTransform();
+    area->UpdateTransform(transform);
+    shader->Draw(dc, area, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f));
 
     //弾丸描画処理
     ProjectileManager::Instance().Render(dc, shader);
