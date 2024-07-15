@@ -58,8 +58,6 @@ protected:
 
     virtual void ProjectileRicochetShotting(DirectX::XMFLOAT3 ne,int category, float angle, int vector);
 
-    void Ricochet(DirectX::XMFLOAT3 ne,int vector);
-
 public:
     //ù‰ñˆ—
     void Turn(float elapsedTime, float vx, float vz, float speed);

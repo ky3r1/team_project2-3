@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <memory>
 #include <d3d11.h>
@@ -8,51 +8,55 @@
 #include "Graphics/DebugRenderer.h"
 #include "Graphics/LineRenderer.h"
 #include "Graphics/ImGuiRenderer.h"
+#include "Graphics/GeometricPrimitive.h"
 
-// ƒOƒ‰ƒtƒBƒbƒNƒX
+// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹
 class Graphics
 {
 public:
 	Graphics(HWND hWnd);
 	~Graphics();
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒXæ“¾
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹å–å¾—
 	static Graphics& Instance() { return *instance; }
 
-	// ƒfƒoƒCƒXæ“¾
+	// ãƒ‡ãƒã‚¤ã‚¹å–å¾—
 	ID3D11Device* GetDevice() const { return device.Get(); }
 
-	// ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgæ“¾
+	// ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆå–å¾—
 	ID3D11DeviceContext* GetDeviceContext() const { return immediateContext.Get(); }
 
-	// ƒXƒƒbƒvƒ`ƒF[ƒ“æ“¾
+	// ã‚¹ãƒ¯ãƒƒãƒ—ãƒã‚§ãƒ¼ãƒ³å–å¾—
 	IDXGISwapChain* GetSwapChain() const { return swapchain.Get(); }
 
-	// ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[æ“¾
+	// ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼å–å¾—
 	ID3D11RenderTargetView* GetRenderTargetView() const { return renderTargetView.Get(); }
 
-	// ƒfƒvƒXƒXƒeƒ“ƒVƒ‹ƒrƒ…[æ“¾
+	// ãƒ‡ãƒ—ã‚¹ã‚¹ãƒ†ãƒ³ã‚·ãƒ«ãƒ“ãƒ¥ãƒ¼å–å¾—
 	ID3D11DepthStencilView* GetDepthStencilView() const { return depthStencilView.Get(); }
 
-	// ƒVƒF[ƒ_[æ“¾
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å–å¾—
 	Shader* GetShader() const { return shader.get(); }
 
-	// ƒXƒNƒŠ[ƒ“•æ“¾
+	// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³å¹…å–å¾—
 	float GetScreenWidth() const { return screenWidth; }
 
-	// ƒXƒNƒŠ[ƒ“‚‚³æ“¾
+	// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³é«˜ã•å–å¾—
 	float GetScreenHeight() const { return screenHeight; }
 
-	// ƒfƒoƒbƒOƒŒƒ“ƒ_ƒ‰æ“¾
+	// ãƒ‡ãƒãƒƒã‚°ãƒ¬ãƒ³ãƒ€ãƒ©å–å¾—
 	DebugRenderer* GetDebugRenderer() const { return debugRenderer.get(); }
 
-	// ƒ‰ƒCƒ“ƒŒƒ“ƒ_ƒ‰æ“¾
+    // 3Dæç”»ç”¨ãƒ•ã‚šãƒªãƒŸãƒ†ã‚£ãƒ•ã‚™å–å¾—
+    GeometricPrimitive* GetGeometricPrimitive() const { return geometric_primitive.get(); }
+
+	// ãƒ©ã‚¤ãƒ³ãƒ¬ãƒ³ãƒ€ãƒ©å–å¾—
 	LineRenderer* GetLineRenderer() const { return lineRenderer.get(); }
 
-	// ImGuiƒŒƒ“ƒ_ƒ‰æ“¾
+	// ImGuiãƒ¬ãƒ³ãƒ€ãƒ©å–å¾—
 	ImGuiRenderer* GetImGuiRenderer() const { return imguiRenderer.get(); }
 
-	//ƒ~ƒ…[ƒeƒbƒNƒXæ“¾
+	//ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹å–å¾—
 	std::mutex& GetMutex() { return mutex; }
 
 private:
@@ -67,6 +71,7 @@ private:
 
 	std::unique_ptr<Shader>							shader;
 	std::unique_ptr<DebugRenderer>					debugRenderer;
+	std::unique_ptr<GeometricPrimitive>				geometric_primitive;
 	std::unique_ptr<LineRenderer>					lineRenderer;
 	std::unique_ptr<ImGuiRenderer>					imguiRenderer;
 

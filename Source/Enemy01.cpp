@@ -22,7 +22,7 @@ Enemy01::Enemy01(int category)
 
     radius = 0.5f;//“–‚½‚è”»’è‚Ì•A”¼Œa
     height = 1.0f;//“–‚½‚è”»’è‚Ì‚‚³
-
+    health = 3;
     attack_range = 5.0f;
     this->category = category;
     //ChangeColor(color, category);
@@ -89,7 +89,8 @@ void Enemy01::InputProjectile()
 
     if (projectile_auto.checker)
     {
-        //ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
+        projectile_category = NORMAL;
+        ProjectileStraightShotting(ENEMYCATEGORY, 0.0f, FRONT);
         projectile_auto.checker = false;
     }
 }

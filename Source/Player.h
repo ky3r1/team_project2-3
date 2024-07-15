@@ -89,6 +89,11 @@ public:
     {
         return sub_attack_range;
     }
+
+    int GetProjectileType()
+    {
+        return projectile_type;
+    }
 private:
     Model* area = nullptr;
     DirectX::XMFLOAT3 area_scale = {};
