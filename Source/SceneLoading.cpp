@@ -7,7 +7,8 @@ void SceneLoading::Initialize()
 {
     //スプライト初期化
     //sprite = new Sprite("Data/Sprite/LoadingIcon.png");
-    sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/LoadingIcon.png"));
+    sprite = std::unique_ptr<Sprite>(new Sprite("Data/UI/loading.png"));
+    sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/UI/now_loading.png"));
 
     //スレッド開始
     thread = new std::thread(LoadingThread, this);
@@ -45,7 +46,7 @@ void SceneLoading::Render()
     ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
     //画面クリア＆レンダーターゲット設定
-    FLOAT color[] = { 0.0f,0.0f,0.5f,1.0f };    //RGBA(0.0~1.0)
+    FLOAT color[] = { 0.0f,0.0f,0.0f,1.0f };    //RGBA(0.0~1.0)
     dc->ClearRenderTargetView(rtv, color);
     dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     dc->OMSetRenderTargets(1, &rtv, dsv);
@@ -55,14 +56,16 @@ void SceneLoading::Render()
     float screenHeight = static_cast<float>(graphics.GetScreenHeight());
     float textureWidth = static_cast<float>(sprite->GetTextureWidth());
     float textureHeight = static_cast<float>(sprite->GetTextureHeight());
-    float positionX = screenWidth - textureWidth;
-    float positionY = screenHeight - textureHeight;
+    float positionX = 850;
+    float positionY = 250;
+
 
     sprite->Render(dc,
         positionX, positionY, textureWidth, textureHeight,
         0, 0, textureWidth, textureHeight,
         angle,
         1, 1, 1, 1);
+    sprite01->Render(dc, 300, 300, 534, 92, 0, 0, 534, 92, 0, 1, 1, 1, 1);
 }
 
 void SceneLoading::LoadingThread(SceneLoading* scene)
