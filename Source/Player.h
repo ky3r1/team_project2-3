@@ -117,26 +117,10 @@ private:
     Effect* AT_Field = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
-
-    ////アニメーション:Jammo
-    //enum Animation
-    //{
-    //    Anim_Attack,
-    //    Anim_Death,
-    //    Anim_Falling,
-    //    Anim_GetHit1,
-    //    Anim_GetHit2,
-    //    Anim_Idle,
-    //    Anim_Jump,
-    //    Anim_Jump_Flip,
-    //    Anim_Landing,
-    //    Anim_Revive,
-    //    Anim_Running,
-    //    Anim_Walking,
-    //};
-    ////アニメーション:UnityChan
+    //アニメーション:Player
     enum Animation
-    {        
+    {
+        Anim_Waiting,
         Anim_GetHit,
         Anim_Running,
         Anim_Attack,

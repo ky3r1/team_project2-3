@@ -451,7 +451,7 @@ void Player::TransitionIdleState()
 #ifdef PLAYERANIMATION
     state = State::Idle;
     //待機アニメーション再生
-    model->PlayAnimation(Anim_Attack, true);
+    model->PlayAnimation(Anim_Waiting, true);
 #endif // PLAYERANIMATION
 }
 
