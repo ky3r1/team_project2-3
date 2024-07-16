@@ -22,4 +22,11 @@ private:
     std::unique_ptr<Sprite> sprite01 = nullptr;
     std::unique_ptr<Sprite> sprite02 = nullptr;
     std::unique_ptr<Sprite> sprite03 = nullptr;
+    std::unique_ptr<Sprite> sprite04 = nullptr;
+    std::unique_ptr<Sprite> sprite05 = nullptr;
+    std::unique_ptr<Sprite> sprite06 = nullptr;
+    std::unique_ptr<Sprite> sprite07 = nullptr;
+
+    DirectX::XMFLOAT4 HPcolor = { 1,1,1,1 };
+    DirectX::XMFLOAT2 HPbar = { 0,0 };
 };

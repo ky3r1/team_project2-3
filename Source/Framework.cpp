@@ -119,7 +119,7 @@ int Framework::Run()
 			timer.Tick();
 			CalculateFrameStats();
 
-			float elapsedTime = syncInterval == 0
+			float elapsedTime = syncInterval == 1
 				? timer.TimeInterval()
 				: syncInterval / static_cast<float>(GetDeviceCaps(hDC, VREFRESH));
 			;

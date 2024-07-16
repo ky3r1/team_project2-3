@@ -525,27 +525,29 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         if (projectile_category == RICOCHET)
                         {
                             //if(invincible==true){}
-                            for (int i = 0; i < enemyCount; i++)
+                            if (invincible == false)
                             {
-                                if (invincible == false)
+                                projectile->Destroy();
+                                for (int i = 0; i < enemyCount; i++)
                                 {
-                                    projectile->Destroy();
-
                                     Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
                                     if (enemy->isHit)
                                     {
                                         enemy->isHit = false;
                                     }
                                 }
-
+                            }
+                            for (int i = 0; i < enemyCount; i++)
+                            {
                                 Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
                                 Enemy* ne = EnemyManager::Instance().NearEnemy(enemy->GetPosition());
+
                                 if (invincible == true)break;
                                 invincible = true;
                                 if (enemy->isHit)break;
                                 enemy->isHit = true;
+                                //ricochet_count++;
                                 ProjectileRicochetShotting(character->GetPosition(), PLAYERCATEGORY, 0.0f, FRONT);
-
                             }
                         }
                     }
@@ -659,8 +661,8 @@ void Character::ProjectileRicochetShotting(DirectX::XMFLOAT3 ne, int category, f
     DirectX::XMFLOAT3 dir;
     //DirectX::XMFLOAT3 axis = { 0,1,0 };
     //DirectX::XMVECTOR Axis;
-    //DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
-    DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
+    DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
+    //DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
 
 
     Enemy* ne1 = EnemyManager::Instance().NearEnemy(position);

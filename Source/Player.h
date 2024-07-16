@@ -6,6 +6,7 @@
 #include "ProjectileManager.h"
 #include "Effect.h"
 #include "Graphics/sprite.h"
+#include "Audio/Audio.h"
 
 
 class Player : public Character
@@ -117,6 +118,9 @@ private:
     Effect* AT_Field = nullptr;
 
     GamePad& gamePad = Input::Instance().GetGamePad();
+
+    std::unique_ptr<AudioSource> se;
+
 
     ////アニメーション:Jammo
     //enum Animation

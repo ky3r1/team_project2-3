@@ -60,6 +60,8 @@ Player::Player()
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/PlayerLine.efkefc"));
+
+    se= Audio::Instance().LoadAudioSource("Data/Audio/change2.wav");
     //hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/GP3_sample.efk"));
     category = PLAYERCATEGORY;
     turnSpeed = DirectX::XMConvertToRadians(900);
@@ -123,6 +125,7 @@ void Player::Update(float elapsedTime)
 
     if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
     {
+        se->Play(false);
         projectile_type++;
     }
     if (projectile_type == 0)
