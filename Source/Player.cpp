@@ -178,13 +178,13 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
     shader->Draw(dc, model, color);
 
     //攻撃範囲行列を更新01
-    area_scale = { 0.3f,0.5f,0.3f };
+    area_scale = { 0.3f,0.2f,0.3f };
     AreaTransform();
     area->UpdateTransform(transform);
     shader->Draw(dc, area, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.5f));
 
     //攻撃範囲行列を更新02
-    area_scale = { 0.5f,0.4f,0.5f };
+    area_scale = { 0.5f,0.1f,0.5f };
     AreaTransform();
     area->UpdateTransform(transform);
     shader->Draw(dc, area, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f));
@@ -454,7 +454,7 @@ void Player::TransitionIdleState()
 #ifdef PLAYERANIMATION
     state = State::Idle;
     //待機アニメーション再生
-    model->PlayAnimation(Anim_Attack, true);
+    model->PlayAnimation(Anim_Waiting, true);
 #endif // PLAYERANIMATION
 }
 

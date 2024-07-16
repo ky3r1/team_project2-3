@@ -4,7 +4,7 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 2*60
+#define DELAYAUTOTIME 6*60
 
 //コンストラクタ
 Enemy01::Enemy01(int category)
@@ -23,7 +23,7 @@ Enemy01::Enemy01(int category)
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
     health = 3;
-    attack_range = 5.0f;
+    attack_range = 8.0f;
     this->category = category;
     //ChangeColor(color, category);
 

@@ -162,9 +162,7 @@ void Enemy::OutMove()
 //”jŠü
 void Enemy::Destroy()
 {
-
-        death_effect.get()->Play(position, 1.0f);
-
+    death_effect.get()->Play(position, 1.0f);
     EnemyManager::Instance().Remove(this);
 }
 

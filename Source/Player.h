@@ -140,7 +140,8 @@ private:
     //};
     ////アニメーション:UnityChan
     enum Animation
-    {        
+    {
+        Anim_Waiting,
         Anim_GetHit,
         Anim_Running,
         Anim_Attack,
