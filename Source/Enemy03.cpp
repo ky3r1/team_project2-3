@@ -4,7 +4,7 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 10*60
+#define DELAYAUTOTIME 8*60
 
 //コンストラクタ
 Enemy03::Enemy03(int category)
