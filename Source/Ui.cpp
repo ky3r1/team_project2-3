@@ -45,17 +45,48 @@ void Ui::game(ID3D11DeviceContext* dc)
         sprite04->Render(dc, DirectX::XMFLOAT2(10, 600), DirectX::XMFLOAT2(131, 104), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(131, 104), 0, DirectX::XMFLOAT4(1, 1, 1, 1));
         sprite05->Render(dc, DirectX::XMFLOAT2(145, 660), DirectX::XMFLOAT2(150, 40), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(132, 29), 0, DirectX::XMFLOAT4(1, 1, 1, 1));
         sprite06->Render(dc, DirectX::XMFLOAT2(150, 664), HPbar, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(127, 23), 0, HPcolor);
-        if (Player::Instance().GetHealth() > 5)
+        if (Player::Instance().GetHealth() > 9)
         {
+            HPbar.x = 140;
             HPcolor = { 0.164f, 0.886f, 0.611f, 1 };
+
         }
-        
+        else if (Player::Instance().GetHealth() > 8)
+        {
+            HPbar.x = 126;
+        }
+        else if (Player::Instance().GetHealth() > 7)
+        {
+            HPbar.x = 112;
+        }
+        else if (Player::Instance().GetHealth() > 6)
+        {
+            HPbar.x = 98;
+        }
+        else if (Player::Instance().GetHealth() > 5)
+        {
+            HPbar.x = 84;
+        }
+        else if (Player::Instance().GetHealth() > 4)
+        {
+            HPbar.x = 70;
+            HPcolor = { 0.811f,0.65f,0.09f, 1 };
+        }
+        else if (Player::Instance().GetHealth() > 3)
+        {
+            HPbar.x = 56;
+        }
         else if (Player::Instance().GetHealth() > 2)
         {
-            HPcolor = { 0.811f,0.65f,0.09f, 1 };
+            HPbar.x = 42;
+        }
+        else if (Player::Instance().GetHealth() > 1)
+        {
+            HPbar.x = 28;
         }
         else if (Player::Instance().GetHealth() > 0)
         {
+            HPbar.x = 14;
             HPcolor = { 1,0.482f,0.533f, 1 };
         }
         //sprite03->textout(dc, "abcdefghijklmnopqrstuvwxyz", 100, 200, 50, 50, { 1,1,1,1 });

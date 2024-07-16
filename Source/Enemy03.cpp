@@ -6,6 +6,7 @@
 //TODO:弾のDelayTime
 #define DELAYAUTOTIME 8*60
 
+int enemy03_count;
 //コンストラクタ
 Enemy03::Enemy03(int category)
 {
@@ -26,6 +27,7 @@ Enemy03::Enemy03(int category)
 
     attack_range = 13.0f;
     this->category = category;
+    enemy03_count = 0;
     //ChangeColor(color, category);
     health = 5;
 #ifdef ENEMYSTATEMACHINE
@@ -48,6 +50,7 @@ Enemy03::Enemy03(int category)
 //デストラクタ
 Enemy03::~Enemy03()
 {
+    enemy03_count++;
     delete model;
 }
 
