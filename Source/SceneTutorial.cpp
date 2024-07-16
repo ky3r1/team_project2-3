@@ -1,4 +1,4 @@
-#include "SceneTutorial.h"
+Ôªø#include "SceneTutorial.h"
 
 //CameraInclude
 #include "Camera.h"
@@ -6,6 +6,9 @@
 //CharacterInclude
 #include "EnemyManager.h"
 #include "Enemy01.h"
+#include "Enemy02.h"
+#include "Enemy03.h"
+#include "EnemyBoss.h"
 #include "EffectManager.h"
 #include "MouseManager.h"
 
@@ -13,63 +16,42 @@
 #include "SceneManager.h"
 #include "SceneLoading.h"
 #include "SceneResult.h"
+#include "SceneTitle.h"
 #include "SceneGame.h"
 
 //StageIncldue
 #include "StageManager.h"
 #include "StageMain.h"
-//#include "StageMoveFloor.h"
-//#include "StageWall.h"
+//#include "StageMapChip.h"
+//#include "StageMapChip.h"
 
 #include "Input/Input.h"
+#include "Easing.h"
+#include "Ui.h"
 
 
-// èâä˙âª
+// ÂàùÊúüÂåñ
 void SceneTutorial::Initialize()
 {
-	//ÉXÉeÅ[ÉWèâä˙âª
+	//„Çπ„ÉÜ„Éº„Ç∏ÂàùÊúüÂåñ
 #ifdef ALLSTAGE
 	//Main
 	StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
 	stageManager.Register(stageMain);
-
-#ifdef STAGEMOVE
-	for (int index = 0; index < 1; ++index)
-	{
-		StageMoveFloor* stageMoveFloor = new StageMoveFloor(index);
-		stageManager.Register(stageMoveFloor);
-	}
-#endif // STAGEMOVE
-
-#ifdef STAGEWALL
-	for (int index = 0; index < 2; ++index)
-	{
-		StageWall* stageWall = new StageWall(index);
-		stageManager.Register(stageWall);
-	}
-#endif // STAGEWALL
-
 #endif // ALLSTAGE
 
-#ifdef HPGAUGE
-	gauge = new Sprite;
-	ui[0] = std::make_unique<sprite_batch>(L".\\Data\\Sprite\\Left_mouse.png", 1);
-	ui[1] = std::make_unique<sprite_batch>(L".\\Data\\Sprite\\Right_mouse.png", 1);
-	ui[2] = std::make_unique<sprite_batch>(L".\\Data\\Sprite\\telop_3.png", 1);
-	ui[3] = std::make_unique<sprite_batch>(L".\\Data\\Sprite\\telop_4.png", 1);
-	ui[4] = std::make_unique<sprite_batch>(L".\\Data\\Sprite\\telop_5.png", 1);
-	ui[5] = std::make_unique<sprite_batch>(L".\\Data\\Sprite\\telop_6.png", 1);
-#endif // HPGAUGE
+
+#ifdef ALLPLAYER
+	player = std::unique_ptr<Player>(new Player);
+#endif // PLAYER
 
 
-	game_timer = 0;
-
-	//ÉJÉÅÉâèâä˙ê›íË
+	//„Ç´„É°„É©ÂàùÊúüË®≠ÂÆö
 	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
-		DirectX::XMFLOAT3(0, 10, -10),
+		DirectX::XMFLOAT3(0, 3, 0),
 		DirectX::XMFLOAT3(0, 0, 0),
 		DirectX::XMFLOAT3(0, 1, 0)
 	);
@@ -77,151 +59,64 @@ void SceneTutorial::Initialize()
 		DirectX::XMConvertToRadians(90),
 		graphics.GetScreenWidth() / graphics.GetScreenHeight(),
 		0.1f,
-		1000.0f
+		100.0f
 	);
-	//ÉJÉÅÉâÉRÉìÉgÉçÅ[ÉâÅ[èâä˙âª
-	cameraController = new CameraController();
-#ifdef ALLENEMY
-#ifdef ENEMYSLIME
-	/*for (int index = 0; index < 2; index++)
-	{
-		EnemySlime* slime = new EnemySlime(RED, index);
-		EnemyManager::Instance().Register(slime);
-	}*/
-#endif // ENEMYSLIME
-	//slime = new Enemy01(RED);
+	//„Ç´„É°„É©„Ç≥„É≥„Éà„É≠„Éº„É©„ÉºÂàùÊúüÂåñ
+	cameraController = std::unique_ptr<CameraController>(new CameraController());
 
-#endif // ALLENEMY
+	sprite_frame = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/frame.png"));
+	sprite_checkmark = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/checkmark.png"));
+	sprite_rightclick = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightClick-removebg-preview.png"));
+
+	//move_check,//0
+	//enemy_facade,
+	//enemy_attack,
+
+	state = move_check;
+	substate = 0;
+	easing_flg_first = true;
+	nextstate_checker = true;
 }
 
-// èIóπâª
+// ÁµÇ‰∫ÜÂåñ
 void SceneTutorial::Finalize()
 {
-	//ÉGÉlÉ~Å[èIóπâª
+	Player::Instance().Clear();
+	//„Ç®„Éç„Éü„ÉºÁµÇ‰∫ÜÂåñ
 	EnemyManager::Instance().clear();
-
-	if (cameraController != nullptr)
-	{
-		delete cameraController;
-		cameraController = nullptr;
-	}
-
-	if (gauge != nullptr)
-	{
-		delete gauge;
-		gauge = nullptr;
-	}
-
+	//„Çπ„ÉÜ„Éº„Ç∏ÁµÇ‰∫ÜÂåñ
 	StageManager::Instance().Clear();
 }
 
-// çXêVèàóù
+// Êõ¥Êñ∞Âá¶ÁêÜ
 void SceneTutorial::Update(float elapsedTime)
 {
-	Mouse& mouse = Input::Instance().GetMouse();
-	GamePad& gamePad = Input::Instance().GetGamePad();
-
-	//ÉJÉÅÉâÉRÉìÉgÉçÅ[ÉâÅ[çXêVèàóù
-#ifdef  ALLPLAYER
+	//„Ç´„É°„É©„Ç≥„É≥„Éà„É≠„Éº„É©„ÉºÊõ¥Êñ∞Âá¶ÁêÜ
 	DirectX::XMFLOAT3 target = Player::Instance().GetPosition();
 	target.y += 0.5f;
 	cameraController->SetTarget(target);
-#endif //  ALLPLAYER
 	cameraController->Update(elapsedTime);
 
 	StageManager::Instance().Update(elapsedTime);
-
-#ifdef  ALLPLAYER
-	Player::Instance().Update(elapsedTime);
-	if (Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneResult(false)));
-#endif //  ALLPLAYER
 
 	Graphics& graphics = Graphics::Instance();
 	ID3D11DeviceContext* dc = graphics.GetDeviceContext();
 	MouseManager::GetInstance().MouseTransform(dc, Camera::Instance().GetView(), Camera::Instance().GetProjection());
 
-	//ÉGÉlÉ~Å[çXêVèàóù
+#ifdef  ALLPLAYER
+	Player::Instance().Update(elapsedTime);
+	if (Player::Instance().GetHealth() <= 0)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTitle()));
+#endif //  ALLPLAYER
+	//„Ç®„Éç„Éü„ÉºÊõ¥Êñ∞Âá¶ÁêÜ
 	EnemyManager::Instance().Update(elapsedTime);
-	//EnemyManager::Instance().EnemyMove(player);
-
-	//ÉGÉtÉFÉNÉgçXêVèàóù
+	//„Ç®„Éï„Çß„ÇØ„ÉàÊõ¥Êñ∞Âá¶ÁêÜ
 	EffectManager::Instance().Update(elapsedTime);
-
-	if (clear_check == true)
-	{
-		if (gamePad.GetButtonDown() & GamePad::BTN_B)
-		{
-			clear_check = false;
-			enemyAdd = true;
-			game_timer++;
-		}
-	}
-
-	if(game_timer==0)
-	{
-		if (gamePad.GetButtonDown() & (GamePad::BTN_UP | GamePad::BTN_RIGHT | GamePad::BTN_DOWN | GamePad::BTN_LEFT))
-		{
-			clear_check = true;
-		}
-	}
-	if (game_timer == 1)
-	{
-		if (enemyAdd == true)
-		{
-			EnemyManager& enemyManager = EnemyManager::Instance();
-			slime = new Enemy01(ENEMYCATEGORY);
-			slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
-			enemyManager.Register(slime);
-			slime = new Enemy01(ENEMYCATEGORY);
-			slime->SetPosition(DirectX::XMFLOAT3(0, 1, 2));
-			enemyManager.Register(slime);
-		}
-		enemyAdd = false;
-		if (slime->GetHealth() <= 0)
-		{
-			clear_check = true;
-		}
-	}
-	if (game_timer == 2)
-	{
-		//if (enemyAdd == true)
-		//{
-		//	EnemyManager& enemyManager = EnemyManager::Instance();
-		//    slime = new Enemy01(GREEN);
-		//	slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
-		//	enemyManager.Register(slime);
-		//}
-		//enemyAdd = false;
-		//if (slime->GetHealth() <= 0)
-		//{
-		//	clear_check = true;
-		//}
-	}
-	if(game_timer==3)
-	{
-		//if (enemyAdd == true)
-		//{
-		//	EnemyManager& enemyManager = EnemyManager::Instance();
-		//	slime = new Enemy01(BLUE);
-		//	slime->SetPosition(DirectX::XMFLOAT3(2, 1, 2));
-		//	enemyManager.Register(slime);
-		//}
-		//enemyAdd = false;
-		//if (slime->GetHealth() <= 0)
-		//{
-		//	
-		//}
-	}
-	if(game_timer==4)
-	{
-		if (gamePad.GetButtonDown() & GamePad::BTN_B)
-		{
-			SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
-		}
-	}
+	//tutorialÊõ¥Êñ∞
+	UpdateTutorial(elapsedTime);
+	if(state==next_scene)SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTitle()));
 }
 
-// ï`âÊèàóù
+// ÊèèÁîªÂá¶ÁêÜ
 void SceneTutorial::Render()
 {
 	Graphics& graphics = Graphics::Instance();
@@ -229,97 +124,66 @@ void SceneTutorial::Render()
 	ID3D11RenderTargetView* rtv = graphics.GetRenderTargetView();
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
-	// âÊñ ÉNÉäÉAÅïÉåÉìÉ_Å[É^Å[ÉQÉbÉgê›íË
-	FLOAT color[] = { 0.4f, 0.4f, 0.4f, 1.0f };	// RGBA(0.0Å`1.0)
+	// ÁîªÈù¢„ÇØ„É™„Ç¢ÔºÜ„É¨„É≥„ÉÄ„Éº„Çø„Éº„Ç≤„ÉÉ„ÉàË®≠ÂÆö
+	FLOAT color[] = { 0.4f, 0.4f, 0.4f, 1.0f };	// RGBA(0.0ÔΩû1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
 
-	// ï`âÊèàóù
+	// ÊèèÁîªÂá¶ÁêÜ
 	RenderContext rc;
-	rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };	// ÉâÉCÉgï˚å¸Åiâ∫ï˚å¸Åj
+	rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };	// „É©„Ç§„ÉàÊñπÂêëÔºà‰∏ãÊñπÂêëÔºâ
 
-	//ÉJÉÅÉâÉpÉâÉÅÅ[É^ê›íË
+	//„Ç´„É°„É©„Éë„É©„É°„Éº„ÇøË®≠ÂÆö
 	Camera& camera = Camera::Instance();
 	rc.view = camera.GetView();
 	rc.projection = camera.GetProjection();
 
-	// 3DÉÇÉfÉãï`âÊ
+
+	// 3D„É¢„Éá„É´ÊèèÁîª
 	{
 		Shader* shader = graphics.GetShader();
 		shader->Begin(dc, rc);
-		//ÉXÉeÅ[ÉWï`âÊ
+		//„Çπ„ÉÜ„Éº„Ç∏ÊèèÁîª
 		StageManager::Instance().Render(dc, shader);
 
-		//ÉGÉlÉ~Å[ï`âÊ
+		//„Ç®„Éç„Éü„ÉºÊèèÁîª
 		EnemyManager::Instance().Render(dc, shader);
 
-		//ÉvÉåÉCÉÑÅ[ï`âÊ
+		//„Éó„É¨„Ç§„É§„ÉºÊèèÁîª
 #ifdef  ALLPLAYER
 		Player::Instance().Render(dc, shader);
 #endif //  ALLPLAYER
 		shader->End(dc);
 	}
 
-	//3DÉGÉtÉFÉNÉgï`âÊ
+	//3D„Ç®„Éï„Çß„ÇØ„ÉàÊèèÁîª
 	{
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-	// 3DÉfÉoÉbÉOï`âÊ
+	// 3D„Éá„Éê„ÉÉ„Ç∞ÊèèÁîª
 	{
 #ifdef  DEBUGIMGUI
-		//ÉvÉåÉCÉÑÅ[ÉfÉoÉbÉOÉvÉäÉ~ÉeÉBÉuï`âÊ
+		//„Éó„É¨„Ç§„É§„Éº„Éá„Éê„ÉÉ„Ç∞„Éó„É™„Éü„ÉÜ„Ç£„ÉñÊèèÁîª
 		Player::Instance().DrawDebugPrimitive();
-		//ÉGÉlÉ~Å[ÉfÉoÉbÉOÉvÉäÉ~ÉeÉBÉuï`âÊ
+		//„Ç®„Éç„Éü„Éº„Éá„Éê„ÉÉ„Ç∞„Éó„É™„Éü„ÉÜ„Ç£„ÉñÊèèÁîª
 		EnemyManager::Instance().DrawDebugPrimitive();
-		// ÉâÉCÉìÉåÉìÉ_Éâï`âÊé¿çs
+		// „É©„Ç§„É≥„É¨„É≥„ÉÄ„É©ÊèèÁîªÂÆüË°å
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
-		// ÉfÉoÉbÉOÉåÉìÉ_Éâï`âÊé¿çs
+		// „Éá„Éê„ÉÉ„Ç∞„É¨„É≥„ÉÄ„É©ÊèèÁîªÂÆüË°å
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 #endif //DEBUGIMGUI
 	}
 
-	// 2DÉXÉvÉâÉCÉgï`âÊ
+	// 2D„Çπ„Éó„É©„Ç§„ÉàÊèèÁîª
 	{
-#ifdef HPGAUGE
-		RenderEnemyGauge(dc, rc.view, rc.projection);
-		RenderPlayerGauge(dc, rc.view, rc.projection);
-		if (game_timer == 0)
-		{
-			ui[2]->begin(graphics.GetDeviceContext(), 0);
-			ui[2]->render(graphics.GetDeviceContext(), 700, 200, 283, 67, 1, 1, 1, 1, 0, 0, 0, 283, 67);
-			ui[2]->end(graphics.GetDeviceContext());
-		}
-		if (game_timer == 1)
-		{
-			ui[1]->begin(graphics.GetDeviceContext(), 0);
-			ui[1]->render(graphics.GetDeviceContext(), 750, 300, 480, 360, 1, 1, 1, 1, 0, 0, 0, 480, 360);
-			ui[1]->end(graphics.GetDeviceContext());
-			ui[3]->begin(graphics.GetDeviceContext(), 0);
-			ui[3]->render(graphics.GetDeviceContext(), 700, 200, 375, 75, 1, 1, 1, 1, 0, 0, 0, 375, 75);
-			ui[3]->end(graphics.GetDeviceContext());
-			ui[4]->begin(graphics.GetDeviceContext(), 0);
-			ui[4]->render(graphics.GetDeviceContext(), 700, 300, 416, 47, 1, 1, 1, 1, 0, 0, 0, 416, 47);
-			ui[4]->end(graphics.GetDeviceContext());
-		}
-		if (game_timer == 2)
-		{
-			ui[0]->begin(graphics.GetDeviceContext(), 0);
-			ui[0]->render(graphics.GetDeviceContext(), 750, 300, 480, 360, 1, 1, 1, 1, 0, 0, 0, 480, 360);
-			ui[0]->end(graphics.GetDeviceContext());
-			ui[5]->begin(graphics.GetDeviceContext(), 0);
-			ui[5]->render(graphics.GetDeviceContext(), 700, 300, 272, 46, 1, 1, 1, 1, 0, 0, 0, 272, 46);
-			ui[5]->end(graphics.GetDeviceContext());
-		}
-#endif // HPGAUGE
-#ifdef ENEMYADD
-		CrickEnemyAdd(dc, rc.view, rc.projection);
-#endif // ENEMYADD
+		Ui::Instance().game(dc);
+		TextRender(dc);
 	}
 
 #ifdef DEBUGIMGUI
-    // ÉfÉoÉbÉOGUIï`âÊ
+	// „ÉÜ„Çô„Éê„ÉÉ„Ç∞GUIÊèèÁîª
 	Player::Instance().DrawDebugGUI();
 	cameraController->DrawDebugGUI();
 	EnemyManager::Instance().DrawDebugGUI();
@@ -327,153 +191,564 @@ void SceneTutorial::Render()
 #endif // DebugImGui
 }
 
-//ÉGÉlÉ~Å[HPÉQÅ[ÉWï`âÊ
-void SceneTutorial::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
+void SceneTutorial::UpdateTutorial(float elapsedTime)
 {
-	//Ç∑Ç◊ÇƒÇÃìGÇÃì™è„Ç…HPÉQÅ[ÉWÇï\é¶
-	EnemyManager& enemyManager = EnemyManager::Instance();
-	int enemyCount = enemyManager.GetEnemyCount();
-	DirectX::XMFLOAT4 color = { 1,0,1,1 }; //ÉQÅ[ÉWÇÃêF
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		Enemy* enemy = enemyManager.GetEnemy(i);
-		CharacterGauge(dc, view, projection, enemy->GetPosition(), enemy->GetHealth(), color);
-	}
-}
-
-//ÉvÉåÉCÉÑÅ[HPÉQÅ[ÉWï`âÊ
-void SceneTutorial::RenderPlayerGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
-{
-
-	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
-	player_position.y = 1.0f;
-	DirectX::XMVECTOR PlayerPosition = DirectX::XMLoadFloat3(&player_position);
-	DirectX::XMFLOAT4 color = { 1,0.5,0,1 };//ÉQÅ[ÉWÇÃêF
-	CharacterGauge(dc, view, projection, player_position, Player::Instance().GetHealth(), color);
-}
-
-void SceneTutorial::CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, DirectX::XMFLOAT3 position, float health, DirectX::XMFLOAT4 gaugecolor)
-{
-	//ÉrÉÖÅ[É|Å[Ég
-	D3D11_VIEWPORT viewport;
-	UINT numViewports = 1;
-	dc->RSGetViewports(&numViewports, &viewport);
-
-	//ïœä∑çsóÒ
-	DirectX::XMMATRIX View = DirectX::XMLoadFloat4x4(&view);
-	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
-	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
-
-	DirectX::XMFLOAT3 player_position = Player::Instance().GetPosition();
-	player_position.y = 1.0f;
-	DirectX::XMVECTOR PlayerPosition = DirectX::XMLoadFloat3(&player_position);
-	DirectX::XMVECTOR Position = DirectX::XMLoadFloat3(&position);
-
-	//ÉèÅ[ÉãÉhç¿ïWÇ©ÇÁÉXÉNÉäÅ[Éìç¿ïWÇ÷ïœä∑Ç∑ÇÈä÷êî
-	Position = DirectX::XMVector3Project(
-		Position,
-		viewport.TopLeftX,
-		viewport.TopLeftY,
-		viewport.Width,
-		viewport.Height,
-		viewport.MinDepth,
-		viewport.MaxDepth,
-		Projection,
-		View,
-		World
-	);
-	DirectX::XMStoreFloat3(&position, Position);
-
-	Player::Instance().SetPosition(position);
-
-	for (int i = 0; i < health; ++i)
-	{
-		gauge->Render(
-			dc,
-			position.x - 25 + i * 10, position.y - 70,
-			9, 10,
-			100, 100,
-			25, 10,
-			0,
-			gaugecolor.x, gaugecolor.y, gaugecolor.z, gaugecolor.w);
-		gauge->Render(
-			dc,
-			position.x - 25 + i * 10, position.y - 70,
-			1, 10,
-			100, 100,
-			25, 10,
-			0,
-			0, 0, 0, 1);
-	}
-}
-
-void SceneTutorial::CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
-{	//ÉrÉÖÅ[É|Å[Ég
-	D3D11_VIEWPORT viewport;
-	UINT numViewports = 1;
-	dc->RSGetViewports(&numViewports, &viewport);
-
-	//ïœä∑çsóÒ
-	DirectX::XMMATRIX View = DirectX::XMLoadFloat4x4(&view);
-	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
-	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
-
-
-	//ÉGÉlÉ~Å[îzíuèàóù
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	Mouse& mouse = Input::Instance().GetMouse();
-	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+
+	static bool first_in = true;
+	static float type = 100;
+
+
+	if (nextstate_checker)EasingTexture(elapsedTime);
+	else
 	{
-		//É}ÉEÉXÉJÅ[É\Éãç¿ïWéÊìæ
-		DirectX::XMFLOAT3 screenPosition;
-		screenPosition.x = static_cast<float>(mouse.GetPositionX());
-		screenPosition.y = static_cast<float>(mouse.GetPositionY());
-		screenPosition.z = 0;
+		if (first_in)
+		{
+				if (state == enemy_facade)	e = new Enemy01(ENEMYCATEGORY);
+				if (state == enemy_attack)
+				{
+					for (int i = 0; i < 3; ++i)
+					{
+						e2[i] = new Enemy01(ENEMYCATEGORY);
+					}
+				}
+				first_in = false;	
+		}
+		switch (state)
+		{
+		case move_check:
+			switch (substate)
+			{
+			case 0:
+				checker[0] = false;
+				checker[1] = false;
+				substate++;
+				break;
+			case 1:
+				//‰∏ä‰∏ãÂ∑¶Âè≥„ÅÆÁßªÂãï
+				if (gamePad.GetButton() & gamePad.BTN_UP ||
+					gamePad.GetButton() & gamePad.BTN_DOWN ||
+					gamePad.GetButton() & gamePad.BTN_LEFT ||
+					gamePad.GetButton() & gamePad.BTN_RIGHT)
+				{
+					checker[0] = true;
+				}
+				static DirectX::XMINT2 camera_pos = { mouse.GetPositionX(),mouse.GetPositionY() };
+				//„Ç´„É°„É©„ÅÆÁßªÂãï
+				if (mouse.GetPositionX() != camera_pos.x || mouse.GetPositionY() != camera_pos.y)
+				{
+					checker[1] = true;
+				}
+				if (checker[0] && checker[1])
+				{
+					//Âè≥„ÇØ„É™„ÉÉ„ÇØ
+					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
+					{
+						first_in = true;
+						nextstate_checker = true;
+					}
+				}
+				break;
+			}
+			break;
+		case enemy_facade:
+			switch (substate)
+			{
+			case 0:
+				e->SetPosition(DirectX::XMFLOAT3(0.0f, 0, 20));
+				EnemyManager::Instance().Register(e);
 
-		DirectX::XMVECTOR ScreenCursor = DirectX::XMLoadFloat3(&screenPosition);
+				checker[0] = false;
+				checker[1] = false;
+				substate++;
+				break;
+			case 1:
+				if (e->GetHealth() != e->GetMaxHealth())
+				{
+					checker[0] = true;
+				}
+				if (EnemyManager::Instance().GetEnemyCount() == 0)
+				{
+					checker[1] = true;
+				}
+				if (checker[0] && checker[1])
+				{
+					//Âè≥„ÇØ„É™„ÉÉ„ÇØ
+					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
+					{
+						first_in = true;
+						nextstate_checker = true;
+					}
+				}
+				break;
+			}
+			break;
+		case enemy_attack:
+			switch (substate)
+			{
+			case 0:
+				for(int i=0;i<3;++i)
+                {
+                    e2[i]->SetPosition(DirectX::XMFLOAT3(-10.0f + 10.0f * i, 0, 20));
+                    EnemyManager::Instance().Register(e2[i]);
+                }
 
-		DirectX::XMVECTOR WorldPosition = DirectX::XMVector3Unproject
-		(
-			ScreenCursor,
-			viewport.TopLeftX,
-			viewport.TopLeftY,
-			viewport.Width,
-			viewport.Height,
-			viewport.MinDepth,
-			viewport.MaxDepth,
-			Projection,
-			View,
-			World
-		);
-		DirectX::XMFLOAT3 world_position_start;
-		DirectX::XMStoreFloat3(&world_position_start, WorldPosition);
-
-		//screenPosition.z = 1;
-		//ScreenCursor = DirectX::XMLoadFloat3(&screenPosition);
-		//WorldPosition = DirectX::XMVector3Unproject
-		//(
-		//	ScreenCursor,
-		//	viewport.TopLeftX,
-		//	viewport.TopLeftY,
-		//	viewport.Width,
-		//	viewport.Height,
-		//	viewport.MinDepth,
-		//	viewport.MaxDepth,
-		//	Projection,
-		//	View,
-		//	World
-		//);
-		//DirectX::XMFLOAT3 world_position_end;
-		//DirectX::XMStoreFloat3(&world_position_end, WorldPosition);
-
-		//HitResult hit;
-		//StageMain stage_main;
-		//if (stage_main.RayCast(world_position_start, world_position_end, hit))
-		//{
-		//EnemyManager& enemyManager = EnemyManager::Instance();
-		//Enemy01* slime = new Enemy01(GREEN);
-		//slime->SetPosition(DirectX::XMFLOAT3(world_position_start.x, world_position_start.y, world_position_start.z));
-		//enemyManager.Register(slime);
-		//}
+				type = player.get()->GetProjectileType();
+				checker[0] = false;
+				checker[1] = false;
+				substate++;
+				break;
+			case 1:
+				static bool flg = false;
+				if (!flg)
+				{
+					for (int index = 0; index < EnemyManager::Instance().GetEnemyCount(); index++)
+					{
+						Enemy* enemy = EnemyManager::Instance().GetEnemy(index);
+						if (enemy != nullptr)
+						{
+							if (player.get()->GetProjectileType() == PENETRATION&&checker[1])
+							{
+								checker[0] = true;
+							}
+							if (player.get()->GetProjectileType() == RICOCHET)
+							{
+								checker[1] = true;
+							}
+						}
+					}
+				}
+				if (EnemyManager::Instance().GetEnemyCount() == 0)
+				{
+				}
+				if (checker[0] && checker[1])
+				{
+					flg = true;
+					//Âè≥„ÇØ„É™„ÉÉ„ÇØ
+					if (mouse.GetButtonDown() & Mouse::BTN_RIGHT)
+					{
+						first_in = true;
+						nextstate_checker = true;
+					}
+				}
+				break;
+			}
+			break;
+		}
 	}
+}
+
+void SceneTutorial::EasingTexture(float elapsedTime)
+{
+	static bool easing_flg = true;
+	switch (state)
+	{
+	case move_check:
+		if (easing_flg_first)
+		{
+			texture_pos01 = {-1000,33};//DirectX::XMFLOAT2(36, 33)
+			texture_pos02 = {-1000,103 };//DirectX::XMFLOAT2(50, 103)
+			easing_timer[0] = 0;
+			easing_timer[1] = 0;
+			easing_timer[2] = 0;
+			easing_timer[3] = 0;
+			easing_flg_first = false;
+		}
+		switch (substate)
+		{
+		case 0:
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(36, -1000), easing_timer[0],true)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(50, -1000), easing_timer[1],true)
+				)
+			{
+				nextstate_checker = false;
+			}
+			break;
+		case 1:
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(-500, 36), easing_timer[2],false)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(-500, 50), easing_timer[3],false)
+				)
+			{
+				state = enemy_facade;
+				substate = 0;
+				easing_flg_first = true;
+			}
+			break;
+		}
+		break;
+	case enemy_facade:
+		if (easing_flg_first)
+		{
+			texture_pos01 = { -1000,145 };//DirectX::XMFLOAT2(40, 145)
+			texture_pos02 = { -1000,195 };//DirectX::XMFLOAT2(40, 195)
+			easing_timer[0] = 0;
+			easing_timer[1] = 0;
+			easing_timer[2] = 0;
+			easing_timer[3] = 0;
+			easing_flg_first = false;
+		}
+		switch (substate)
+		{
+		case 0:
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(40, -1000), easing_timer[0], true)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(40, -1000), easing_timer[1], true)
+				)
+			{
+				nextstate_checker = false;
+			}
+			break;
+		case 1:
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(-500, 40), easing_timer[2], false)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(-500, 40), easing_timer[3], false)
+				)
+			{
+				state = enemy_attack;
+				substate = 0;
+				easing_flg_first = true;
+			}
+			break;
+		}
+		break;
+	case enemy_attack:
+		if (easing_flg_first)
+		{
+			texture_pos01 = { -1000,156 };//DirectX::XMFLOAT2(50, 156)
+			texture_pos02 = { -1000,206 };//DirectX::XMFLOAT2(50, 206)
+			easing_timer[0] = 0;
+			easing_timer[1] = 0;
+			easing_timer[2] = 0;
+			easing_timer[3] = 0;
+			easing_flg_first = false;
+		}
+		switch (substate)
+		{
+		case 0:
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(50, -1000), easing_timer[0], true)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(50, -1000), easing_timer[1], true)
+				)
+			{
+				nextstate_checker = false;
+			}
+			break;
+		case 1:
+			if (EasingMove(texture_pos01, DirectX::XMFLOAT2(-500, 50), easing_timer[2], false)
+				&&
+				EasingMove(texture_pos02, DirectX::XMFLOAT2(-500, 50), easing_timer[3], false)
+				)
+			{
+				state = next_scene;
+				substate = 0;
+				easing_flg_first = true;
+			}
+			break;
+		}
+		break;
+	}
+}
+
+void SceneTutorial::TextRender(ID3D11DeviceContext* dc)
+{
+	static DirectX::XMFLOAT2 size = {};
+	static float scale = 0.0f;
+	sprite_frame.get()->Render(dc,
+		DirectX::XMFLOAT2(-40, 10),
+		DirectX::XMFLOAT2(500, 500),
+		DirectX::XMFLOAT2(0, 0),
+		DirectX::XMFLOAT2(100, 100),
+		0,
+		DirectX::XMFLOAT4(0, 0, 0, 1)
+	);
+
+	if (first_texture)
+	{
+		sprite01 = nullptr;
+		sprite02 = nullptr;
+		sprite03 = nullptr;
+		sprite04 = nullptr;
+	}
+
+	switch (state)
+	{
+	case move_check:
+		if (first_texture)
+		{
+			{
+				sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveWASD-removebg-preview.png"));
+				sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/MoveCamera-removebg-preview.png"));
+			}
+			checker[0] = false;
+			checker[1] = false;
+			first_texture = false;
+		}
+		if (sprite01 != nullptr)
+		{
+			//WASD„ÅßÁßªÂãï
+			scale = 0.55f;
+			size = { 497 , 141 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 40), checker[0]);
+			sprite01.get()->Render(dc,
+				texture_pos01,
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite02 != nullptr)
+		{
+			scale = 0.5f;
+			size = { 723, 129 };
+			//„Ç´„É°„É©„ÅÆÁßªÂãï
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 110), checker[1]);
+			sprite02.get()->Render(dc,
+				texture_pos02,
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (checker[0] && checker[1])
+		{
+			scale = 0.5f;
+			size = { 637, 143 };
+			sprite_rightclick.get()->Render(dc,
+				DirectX::XMFLOAT2(50, 430),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		break;
+	case enemy_facade:
+		if (first_texture)
+		{
+			{	
+				sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AttackEnemy-removebg-preview.png"));
+				sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/AddDamage-removebg-preview.png"));
+				sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/DeathEnemy-removebg-preview.png"));
+				sprite04 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/Rect-removebg-preview.png"));
+			}
+			checker[0] = false;
+			checker[1] = false;
+			first_texture = false;
+		}
+		if (sprite01 != nullptr)
+		{
+			//Ëµ§Êû†„Å´ÂÖ•„Çã„Å®ÊîªÊíÉ
+			scale = 0.55f;
+			size = { 608, 186 };
+			sprite01.get()->Render(dc,
+				DirectX::XMFLOAT2(36, 33),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite02 != nullptr)
+		{
+			//„Ç®„Éç„Éü„Éº„Å´„ÉÄ„É°„Éº„Ç∏„Çí‰∏é„Åà„Çã
+			scale = 0.5f;
+			size = { 780,137 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
+			sprite02.get()->Render(dc,
+				texture_pos01,
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite03 != nullptr)
+		{
+			//„Ç®„Éç„Éü„Éº„ÇíÂÄí„Åô
+			scale = 0.5f;
+			size = { 356,148 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
+			sprite03.get()->Render(dc,
+				texture_pos02,
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite04 != nullptr)
+		{
+			//Rect
+			scale = 0.4f;
+			size = { 708, 353 };
+			sprite04.get()->Render(dc,
+				DirectX::XMFLOAT2(40, 270),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (checker[0] && checker[1])
+		{
+			scale = 0.5f;
+			size = { 637, 143 };
+			sprite_rightclick.get()->Render(dc,
+				DirectX::XMFLOAT2(50, 430),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		break;
+
+	case enemy_attack:
+		if (first_texture)
+		{
+			{
+				sprite01 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/RightProjectile-removebg-preview.png"));
+				sprite02 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/k2-removebg-preview.png"));
+				sprite03 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/cd-removebg-preview.png"));
+				sprite04 = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/turorial_texture/blue-removebg-preview.png"));
+			}
+			checker[0] = false;
+			checker[1] = false;
+			first_texture = false;
+		}
+		if (sprite01 != nullptr)
+		{
+			//ÂÜÖÊû†„ÅÆË™¨Êòé
+			scale = 0.55f;
+			size = { 846, 194 };
+			sprite01.get()->Render(dc,
+				DirectX::XMFLOAT2(0, 33),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite02 != nullptr)
+		{
+			//Ë≤´ÈÄö
+			scale = 0.5f;
+			size = { 450,96 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 160), checker[0]);
+			sprite02.get()->Render(dc,
+				texture_pos01,
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite03 != nullptr)
+		{
+			//Ë∑≥Âºæ
+			scale = 0.5f;
+			size = { 377,104 };
+			CheckBoxRender(dc, DirectX::XMFLOAT2(10, 210), checker[1]);
+			sprite03.get()->Render(dc,
+				texture_pos02,
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (sprite04 != nullptr)
+		{
+			//ÈùíÊû†
+			scale = 0.5f;
+			size = { 634,144 };
+			sprite04.get()->Render(dc,
+				DirectX::XMFLOAT2(0, 270),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		if (checker[0] && checker[1])
+		{
+			scale = 0.5f;
+			size = { 637, 143 };
+			sprite_rightclick.get()->Render(dc,
+				DirectX::XMFLOAT2(50, 430),
+				DirectX::XMFLOAT2(size.x * scale, size.y * scale),
+				DirectX::XMFLOAT2(0, 0),
+				DirectX::XMFLOAT2(size.x, size.y),
+				0,
+				DirectX::XMFLOAT4(0, 0, 0, 1)
+			);
+		}
+		break;
+	}
+}
+
+void SceneTutorial::CheckBoxRender(ID3D11DeviceContext* dc, DirectX::XMFLOAT2 pos,bool flg)
+{
+	//CheckBox
+	sprite_frame.get()->Render(dc,
+		DirectX::XMFLOAT2(pos.x, pos.y),
+		DirectX::XMFLOAT2(40, 40),
+		DirectX::XMFLOAT2(0, 0),
+		DirectX::XMFLOAT2(100, 100),
+		0,
+		DirectX::XMFLOAT4(1, 0, 0, 1)
+	);
+	if (flg)
+	{
+		sprite_checkmark.get()->Render(dc,
+			DirectX::XMFLOAT2(pos.x, pos.y),
+			DirectX::XMFLOAT2(40, 40),
+			DirectX::XMFLOAT2(0, 0),
+			DirectX::XMFLOAT2(100, 100),
+			0,
+			DirectX::XMFLOAT4(1, 0, 0, 1)
+		);
+	}
+}
+
+bool SceneTutorial::EasingMove(DirectX::XMFLOAT2& pos, DirectX::XMFLOAT2 target,int& timer,bool flg)
+{
+	first_texture = true;
+	timer++;
+	pos = { Easing::OutBounce(timer / 60.0f, 100.0f / 60.0f, target.x, target.y),pos.y };
+	if (flg)
+	{
+		if (pos.x >= target.x)
+		{
+			pos.x = target.x;
+			return true;
+		}
+	}
+	else
+	{
+		if (pos.x <= target.x)
+		{
+			pos.x = target.x;
+			return true;
+		}
+	}
+
+	return false;
 }

@@ -33,11 +33,11 @@ Player::Player()
     //model = new Model("Data/Model/UnitychanSD/UnitychanSD.mdl");
     //scale.x = scale.y = scale.z = 0.02f;
     //model = new Model("Data/Model/Dragon/dragon.mdl");
-    model = new Model("Data/Model/GP5_UnityChan/unitychan.mdl");
+    model = new Model("Data/Model/Player/player/player.mdl");
     area = new Model("Data/Model/Player/Area.mdl");
     area_scale = { 0.1f,1.0f,0.1f };
     //scale.x = scale.y = scale.z = 0.1f;
-    scale.x = scale.y = scale.z = 1.0f;
+    scale.x = scale.y = scale.z = 0.033f;
     turnSpeed = DirectX::XMConvertToRadians(720);
     weight = 100.0f;
     color = { 1,1,1,1 };
@@ -174,17 +174,17 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
     shader->Draw(dc, model, color);
 
-    ////攻撃範囲行列を更新01
-    //area_scale = { 0.1f,1.0f,0.1f };
-    //AreaTransform();
-    //area->UpdateTransform(transform);
-    //shader->Draw(dc, area, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f));
+    //攻撃範囲行列を更新01
+    area_scale = { 0.3f,0.5f,0.3f };
+    AreaTransform();
+    area->UpdateTransform(transform);
+    shader->Draw(dc, area, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.5f));
 
-    ////攻撃範囲行列を更新02
-    //area_scale = { 0.5f,0.9f,0.5f };
-    //AreaTransform();
-    //area->UpdateTransform(transform);
-    //shader->Draw(dc, area, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.5f));
+    //攻撃範囲行列を更新02
+    area_scale = { 0.5f,0.4f,0.5f };
+    AreaTransform();
+    area->UpdateTransform(transform);
+    shader->Draw(dc, area, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.5f));
 
     //弾丸描画処理
     ProjectileManager::Instance().Render(dc, shader);
@@ -215,6 +215,7 @@ void Player::DrawDebugGUI()
 
     // デバッグ文字列表示の変更
     std::string str = "";
+    std::string p = "";
     // 現在のステート番号に合わせてデバッグ文字列をstrに格納
     switch (state)
     {
@@ -234,12 +235,25 @@ void Player::DrawDebugGUI()
         str = "Death";
         break;
     }
+    switch (projectile_type)
+    {
+    case PENETRATION:
+        p = "PENETRATION";
+        break;
+    case RICOCHET:
+        p = "RICOCHET";
+        break;
+    default:
+        p = "Normal";
+        break;
+    }
     if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
     {
         Character::DrawDebugGUI();
         if (ImGui::TreeNode("Transform"))
         {
             ImGui::Text(u8"State:%s", str.c_str());
+            ImGui::Text(u8"Projectile:%s", p.c_str());
             ImGui::SliderFloat3("position", &position.x, -5, 5);
             ImGui::SliderFloat3("scale", &scale.x, 0.01f, 4.0f);
             ImGui::SliderFloat3("angle", &angle.x, -3.14f, 3.14f);
@@ -382,7 +396,6 @@ void Player::CollisionProjectilesVsEnemies()
 //弾入力処理
 void Player::InputProjectile()
 {
-    GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
     EnemyManager& enemyManager = EnemyManager::Instance();
     int enemyCount = enemyManager.GetEnemyCount();
@@ -438,7 +451,7 @@ void Player::TransitionIdleState()
 #ifdef PLAYERANIMATION
     state = State::Idle;
     //待機アニメーション再生
-    model->PlayAnimation(Anim_Idle, true);
+    model->PlayAnimation(Anim_Attack, true);
 #endif // PLAYERANIMATION
 }
 

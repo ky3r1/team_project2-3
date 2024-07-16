@@ -10,7 +10,7 @@
 Enemy01::Enemy01(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Enemy/enemy1_walk.mdl");
+    model = new Model("Data/Model/Enemy/enemy1/enemy1.mdl");
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
     static int id_enemy01 = 0;
     id_enemy01++;

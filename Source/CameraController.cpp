@@ -59,7 +59,7 @@ void CameraController::Update(float elapsedTime)
         angle.x = MINANGLE_X;
     }    
 
-#endif
+#endif //  MOUSECAMERA
 
     //ƒJƒƒ‰‰ñ“]’l‚ğ‰ñ“]s—ñ‚É•ÏŠ·
     DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);

@@ -139,6 +139,8 @@ public:
     //lineEffectのゲッター/セッター
     void SetLineEffect(Effect* e) { lineEffect.reset(e);}
     Effect* GetLineEffect() { return lineEffect.get(); } 
+
+    float GetProjectileType() { return projectile_type; }
 protected:
     Model* model = nullptr;
     //Effect* hitEffect = nullptr;
