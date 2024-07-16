@@ -556,7 +556,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                     {
                         DirectX::XMFLOAT3 impulse;
                         //‚«”ò‚Î‚·—Í
-                        const float power = 2.0f;
+                        const float power = 3.0f;
 
                         //“G‚ÌˆÊ’u
                         DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&character->GetPosition());
