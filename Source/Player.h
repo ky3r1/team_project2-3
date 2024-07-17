@@ -6,6 +6,7 @@
 #include "ProjectileManager.h"
 #include "Effect.h"
 #include "Graphics/sprite.h"
+#include "Audio/Audio.h"
 
 
 class Player : public Character
@@ -26,13 +27,15 @@ public:
     void DrawDebugPrimitive();
 
     //デバッグ用GUI
-    void DrawDebugGUI() override;
+    void DrawDebugGUI() override; 
+    
+    //スティック入力値から移動ベクトルを取得
+    DirectX::XMFLOAT3 GetMoveVec() const;
 private:
     //垂直移動更新処理
     void UpdateVerticalMove(float elapsedTime)override;
 
-    //スティック入力値から移動ベクトルを取得
-    DirectX::XMFLOAT3 GetMoveVec() const;
+
 
     //プレイヤーとエネミーとの衝突処理
     void CollisionPlayerVsEnemies();
@@ -116,6 +119,10 @@ private:
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 
+    std::unique_ptr<AudioSource> se;
+    std::unique_ptr<AudioSource> se2;
+
+
     ////アニメーション:Jammo
     //enum Animation
     //{
@@ -135,12 +142,11 @@ private:
     ////アニメーション:UnityChan
     enum Animation
     {
+        Anim_Waiting,
+        Anim_GetHit,
+        Anim_Running,
         Anim_Attack,
         Anim_Death,
-        Anim_GetHit,
-        Anim_Idle,
-        Anim_IdleAnim,
-        Anim_Running,
     };
 
     //ステート

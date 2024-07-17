@@ -4,13 +4,14 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 3*60
+#define DELAYAUTOTIME 8*60
 
+int enemy03_count;
 //コンストラクタ
 Enemy03::Enemy03(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Jammo/Jammo.mdl");
+    model = new Model("Data/Model/Enemy/enemy3/enemy3.mdl");
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
 
     static int id_enemy03= 0;
@@ -19,15 +20,16 @@ Enemy03::Enemy03(int category)
     enemy_categry = Enemy03_Num;
     name = std::string("Enemy03:") + std::to_string(category_id);
     //表示サイズを調整
-    scale.x = scale.y = scale.z = 0.01f;
+    scale.x = scale.y = scale.z = 0.1f;
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
 
-    attack_range = 5.0f;
+    attack_range = 13.0f;
     this->category = category;
+    enemy03_count = 0;
     //ChangeColor(color, category);
-
+    health = 5;
 #ifdef ENEMYSTATEMACHINE
     // StateMachineを生成し、階層型ステートマシンに対応するように登録ステートを変更していく。
     stateMachine = new StateMachine();
@@ -48,6 +50,7 @@ Enemy03::Enemy03(int category)
 //デストラクタ
 Enemy03::~Enemy03()
 {
+    enemy03_count++;
     delete model;
 }
 

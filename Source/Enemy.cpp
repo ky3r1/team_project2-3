@@ -20,7 +20,7 @@ Enemy::Enemy()
     //HPbar
     HPbar_model= std::unique_ptr<Model>(new Model("Data/Model/Cube/Cube.mdl"));
     HPbar_scale = { 1.0f,1.0f,1.0f };
-    health = 5;
+    health = 4;
 }
 
 void Enemy::Update(float elapsedTime)
@@ -162,9 +162,7 @@ void Enemy::OutMove()
 //”jŠü
 void Enemy::Destroy()
 {
-
-        death_effect.get()->Play(position, 1.0f);
-
+    death_effect.get()->Play(position, 1.0f);
     EnemyManager::Instance().Remove(this);
 }
 

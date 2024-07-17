@@ -6,6 +6,7 @@
 #include "CameraController.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Font.h"
+#include "Audio/Audio.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class SceneGame : public Scene
@@ -37,5 +38,6 @@ private:
 	std::unique_ptr<Sprite> gauge = nullptr;
 	std::unique_ptr<Font> font;
 
+	std::unique_ptr<AudioSource> bgm;
 	int mapcategory = 0;
 };

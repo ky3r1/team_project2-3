@@ -4,13 +4,15 @@
 #include "ProjectileManager.h"
 
 //TODO:弾のDelayTime
-#define DELAYAUTOTIME 1*60
+#define DELAYAUTOTIME 6*60
+
+static int enemy01_count;
 
 //コンストラクタ
 Enemy01::Enemy01(int category)
 {
     //TODO:エネミースライムのステータス設定
-    model = new Model("Data/Model/Enemy/enemy1_walk.mdl");
+    model = new Model("Data/Model/Enemy/enemy1/enemy1.mdl");
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/EnemyLine.efkefc"));
     static int id_enemy01 = 0;
     id_enemy01++;
@@ -22,9 +24,10 @@ Enemy01::Enemy01(int category)
 
     radius = 0.5f;//当たり判定の幅、半径
     height = 1.0f;//当たり判定の高さ
-
-    attack_range = 5.0f;
+    health = 3;
+    attack_range = 8.0f;
     this->category = category;
+    enemy01_count = 0;
     //ChangeColor(color, category);
 
 #ifdef ENEMYSTATEMACHINE
@@ -47,6 +50,7 @@ Enemy01::Enemy01(int category)
 //デストラクタ
 Enemy01::~Enemy01()
 {
+    enemy01_count++;
     delete model;
 }
 

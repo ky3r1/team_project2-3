@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "Graphics/sprite_bach.h"
 #include "Player.h"
 #include "CameraController.h"
@@ -26,19 +27,45 @@ public:
 	// ï`âÊèàóù
 	void Render() override;
 private:
-	void RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
-	void RenderPlayerGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
-	void CharacterGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection, DirectX::XMFLOAT3 position, float health, DirectX::XMFLOAT4 gaugecolor);
-	void CrickEnemyAdd(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection);
+	void UpdateTutorial(float elapsedTime);
+	void EasingTexture(float elapsedTime);
+	void TextRender(ID3D11DeviceContext* dc);
+	void CheckBoxRender(ID3D11DeviceContext* dc, DirectX::XMFLOAT2 pos,bool flg);
+	bool EasingMove(DirectX::XMFLOAT2& pos, DirectX::XMFLOAT2 target,int& timer,bool flg);
+	enum
+	{
+		move_check,//0
+		enemy_facade,
+		enemy_attack,
+		next_scene,
+	};
+	int state = 0;
+	int substate = 0;
 private:
-	CameraController* cameraController = nullptr;
-	Sprite* gauge = nullptr;
-	Sprite* sprite = nullptr;
-	Enemy01* slime = nullptr;
-	int game_timer = 0;
-	bool enemyAdd = false;
-	bool clear_check = false;
+	bool checker[10] = {true, true, true, true, true, true, true, true, true, true};
+	bool nextstate_checker = false;
+	bool easing_flg_first = false;
+	int easing_timer[6] = {};
+	//int timer = 0;
+private:
+	std::unique_ptr<Player> player = nullptr;
+	std::unique_ptr<CameraController> cameraController = nullptr;
+	std::unique_ptr<Sprite> gauge = nullptr;
 
-	std::unique_ptr<sprite_batch> ui[10];
+	Enemy01* e = nullptr;
+	Enemy01* e2[3] = {nullptr, nullptr, nullptr};
 
+	bool first_texture = true;
+
+	std::unique_ptr<Sprite> sprite_frame = nullptr;
+	std::unique_ptr<Sprite> sprite_checkmark = nullptr;
+	std::unique_ptr<Sprite> sprite_rightclick = nullptr;
+	
+	std::unique_ptr<Sprite> sprite01 = nullptr;
+	std::unique_ptr<Sprite> sprite02 = nullptr;
+	std::unique_ptr<Sprite> sprite03 = nullptr;
+	std::unique_ptr<Sprite> sprite04 = nullptr;
+
+	DirectX::XMFLOAT2 texture_pos01 = { };
+	DirectX::XMFLOAT2 texture_pos02 = { };
 };

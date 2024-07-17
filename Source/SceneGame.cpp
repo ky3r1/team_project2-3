@@ -152,11 +152,18 @@ void SceneGame::Initialize()
 	}
 #endif // ENEMYBOSS
 #endif // ALLENEMY
+
+
+	// Audio
+	bgm= Audio::Instance().LoadAudioSource("Data/Audio/battle2.wav");
+
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
+	bgm->Play(true);
+
 	Player::Instance().Clear();
 	//エネミー終了化
 	EnemyManager::Instance().clear();
@@ -202,6 +209,8 @@ void SceneGame::Update(float elapsedTime)
 	//	SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 	//}
 
+	//font = std::make_unique<Font>(graphics.GetDevice(), ".\\Data\\Font\\MS_Gothic.fnt", 1024);
+	bgm->Play(true);
 }
 
 // 描画処理

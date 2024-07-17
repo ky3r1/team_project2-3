@@ -300,7 +300,7 @@ void Framework::create_swap_chain(IDXGIFactory6* dxgi_factory6)
 int Framework::Run()
 {
 	MSG msg = {};
-
+	HDC hDC = GetDC(hWnd);
 	while (WM_QUIT != msg.message)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -315,12 +315,13 @@ int Framework::Run()
 
 			float elapsedTime = syncInterval == 1
 				? timer.TimeInterval()
-				: syncInterval / 60.0f
-				;
+				: syncInterval / static_cast<float>(GetDeviceCaps(hDC, VREFRESH));
+			;
 			Update(elapsedTime);
 			Render(elapsedTime);
 		}
 	}
+	ReleaseDC(hWnd, hDC);
 	return static_cast<int>(msg.wParam);
 }
 

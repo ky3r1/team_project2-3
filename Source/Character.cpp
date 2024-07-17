@@ -541,7 +541,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                             {
                                 Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
                                 Enemy* ne = EnemyManager::Instance().NearEnemy(enemy->GetPosition());
-                                
+
                                 if (invincible == true)break;
                                 invincible = true;
                                 if (enemy->isHit)break;
@@ -558,7 +558,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                     {
                         DirectX::XMFLOAT3 impulse;
                         //‚«”ò‚Î‚·—Í
-                        const float power = 2.0f;
+                        const float power = 3.0f;
 
                         //“G‚ÌˆÊ’u
                         DirectX::XMVECTOR eVec = DirectX::XMLoadFloat3(&character->GetPosition());
@@ -576,6 +576,7 @@ void Character::CollisionProjectileVsCharacter(Character* character, Effect hite
                         impulse.y = power * 0.5f;
                         impulse.z = power * vec.z;
                         penetration_count--;
+                        ricochet_count--;
 
                         character->AddImpulse(impulse);
                     }
@@ -605,8 +606,8 @@ void Character::ProjectileStraightShotting(int category, float angle, int vector
     DirectX::XMFLOAT3 dir;
     //DirectX::XMFLOAT3 axis = { 0,1,0 };
     //DirectX::XMVECTOR Axis;
-    //DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
-    DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
+    DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
+    //DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
 
     dir.x = vector * transform._31 * 100.0f * s.x;
     dir.y = 0.0f;
@@ -660,8 +661,8 @@ void Character::ProjectileRicochetShotting(DirectX::XMFLOAT3 ne, int category, f
     DirectX::XMFLOAT3 dir;
     //DirectX::XMFLOAT3 axis = { 0,1,0 };
     //DirectX::XMVECTOR Axis;
-    //DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
-    DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
+    DirectX::XMFLOAT3 s={ scale.x / 0.1f,scale.y / 0.1f ,scale.z / 0.1f };
+    //DirectX::XMFLOAT3 s = { 0.1f / scale.x,0.1f / scale.y ,0.1f / scale.z };
 
 
     Enemy* ne1 = EnemyManager::Instance().NearEnemy(position);

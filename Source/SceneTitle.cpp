@@ -81,6 +81,7 @@ void SceneTitle::Initialize()
     create_ps_from_cso(graphics.GetDevice(), "Data/Shader/blur_ps.cso", pixel_shaders[1].GetAddressOf());
 
     bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
+    audio = Audio::Instance().LoadAudioSource("Data/Audio/title2.wav");
 
     //スプライト初期化
     sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/Title.png"));
@@ -95,12 +96,14 @@ void SceneTitle::Initialize()
 
 void SceneTitle::Finalize()
 {
+    audio->Stop();
 }
 
 void SceneTitle::Update(float elapsedTime)
 {
     //cameraController->SetTarget({ 0,0,0 });
     //cameraController->Update(elapsedTime);
+    audio->Play(true);
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
