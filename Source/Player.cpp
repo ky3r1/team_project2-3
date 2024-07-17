@@ -62,6 +62,7 @@ Player::Player()
     lineEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/PlayerLine.efkefc"));
 
     se= Audio::Instance().LoadAudioSource("Data/Audio/change2.wav");
+    se2 = Audio::Instance().LoadAudioSource("Data/Audio/shot.wav");
     //hitEffect = std::unique_ptr<Effect>(new Effect("Data/Effect/GP3_sample.efk"));
     category = PLAYERCATEGORY;
     turnSpeed = DirectX::XMConvertToRadians(900);
@@ -408,6 +409,7 @@ void Player::InputProjectile()
         //前方弾丸発射
         if (projectile_auto.checker)
         {
+            se2->Play(false);
             if (Collision::PointInsideCircle(enemy->GetPosition(), position, sub_attack_range))
             {
                 enemy__check = true;

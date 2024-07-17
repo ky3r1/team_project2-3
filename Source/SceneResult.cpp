@@ -19,15 +19,19 @@ void SceneResult::Initialize()
 {
     //スプライト初期化
     sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/Title.png"));
+    audio = Audio::Instance().LoadAudioSource("Data/Audio/result.wav");
     //StageMapChip::Instance().SetStageNum(0);
 }
 
 void SceneResult::Finalize()
 {
+    audio->Stop();
 }
 
 void SceneResult::Update(float elapsedTime)
 {
+    audio->Play(true);
+
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     GamePadButton anyButton =

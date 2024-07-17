@@ -8,6 +8,7 @@
 #include "Graphics/framebuffer.h"
 #include "Ui.h"
 #include <Windows.h>
+#include "Audio/Audio.h"
 
 //タイトルシーン
 class SceneTitle : public Scene
@@ -64,6 +65,8 @@ private:
     std::unique_ptr<Ui> ui = nullptr;
     std::unique_ptr<fullscreen_quad> bit_block_transfer = nullptr;
     std::unique_ptr<framebuffer> framebuffers[2];
+    std::unique_ptr<AudioSource> audio;
+
     int current_title = 0;
     DirectX::XMFLOAT4 Box_color = { 0,0,0,1 };
 

@@ -120,6 +120,7 @@ private:
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     std::unique_ptr<AudioSource> se;
+    std::unique_ptr<AudioSource> se2;
 
 
     ////アニメーション:Jammo

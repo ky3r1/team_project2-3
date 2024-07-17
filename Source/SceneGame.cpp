@@ -154,6 +154,7 @@ void SceneGame::Initialize()
 
 	// Audio
 	bgm= Audio::Instance().LoadAudioSource("Data/Audio/battle2.wav");
+
 }
 
 // 終了化
