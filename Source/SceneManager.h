@@ -22,12 +22,16 @@ public:
     //描画処理
     void Render();
 
+    void Render(Scene* scene);
     //シーンクリア
     void Clear();
 
     //シーン切り替え
     void ChangeScene(Scene* scene);
 
+    void HoldChangeScene(Scene* scene);
+
+    Scene* destScene = nullptr;
 private:
     Scene* currentScene = nullptr;
     Scene* nextScene = nullptr;

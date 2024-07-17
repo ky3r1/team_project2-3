@@ -13,8 +13,10 @@ public:
 	~Font() {}
 
 	void Begin(ID3D11DeviceContext* context);
-	void Draw(float x, float y, const wchar_t* string);
+	void Draw(float x, float y, const wchar_t* string, float scale = 1.0f, DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 	void End(ID3D11DeviceContext* context);
+
+	bool HitText(DirectX::XMFLOAT2 mousePos);
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader>						vertexShader;
@@ -63,6 +65,13 @@ private:
 	int								characterCount;
 	std::vector<CharacterInfo>		characterInfos;
 	std::vector<WORD>				characterIndices;
+
+	struct TextInfo
+	{
+		DirectX::XMFLOAT2 pos;
+		DirectX::XMFLOAT2 size;
+	};
+	std::vector<TextInfo>			textInfos;
 
 	struct Subset
 	{

@@ -6,6 +6,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/fullscreen_quad.h"
 #include "Graphics/framebuffer.h"
+#include "Graphics/Font.h"
 #include "Ui.h"
 #include <Windows.h>
 
@@ -64,11 +65,20 @@ private:
     std::unique_ptr<Ui> ui = nullptr;
     std::unique_ptr<fullscreen_quad> bit_block_transfer = nullptr;
     std::unique_ptr<framebuffer> framebuffers[2];
+    std::unique_ptr<Font> text[10];
+    std::unique_ptr<Sprite> test_sprite = nullptr;
     int current_title = 0;
     DirectX::XMFLOAT4 Box_color = { 0,0,0,1 };
+    DirectX::XMFLOAT4 Text_color[3] = { { 1,1,1,0 },{ 1,1,1,0 },{ 1,1,1,0 } };
+    float text_timer = 0.0f;
+    DirectX::XMFLOAT2 Text_position[3] = { { 0,0 },{ 0,0 },{ 0,0 } };
+    DirectX::XMFLOAT2 Text_size[3] = { { 0,0 },{ 0,0 },{ 0,0 } };
+    bool text_light[3];
+
 
     DirectX::XMFLOAT3 angle = { 0,0,0 };
     DirectX::XMFLOAT3 position = { 0,0,0 };
+    DirectX::XMFLOAT3 screen_position = { 0,0,0 };
     DirectX::XMFLOAT4X4 transform = {
         1,0,0,0,
         0,1,0,0,

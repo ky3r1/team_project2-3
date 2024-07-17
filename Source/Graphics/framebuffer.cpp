@@ -80,6 +80,9 @@ void framebuffer::activate(ID3D11DeviceContext* immediate_context)
         cached_depth_stencil_view.ReleaseAndGetAddressOf());
 
     immediate_context->RSSetViewports(1, &viewport);
+    // シェーダーリソーススロットのアンバインド
+    ID3D11ShaderResourceView* nullSRV[2] = { nullptr,nullptr };
+    immediate_context->PSSetShaderResources(0, 2, nullSRV);
     immediate_context->OMSetRenderTargets(1, render_target_view.GetAddressOf(),
         depth_stencil_view.Get());
 }

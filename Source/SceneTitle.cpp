@@ -16,6 +16,21 @@
 #include "Input/Input.h"
 #include "SceneResult.h"
 
+int Text_timer;
+
+bool HitText(DirectX::XMFLOAT2 mousePos, DirectX::XMFLOAT2 textPos, DirectX::XMFLOAT2 textSize)
+{
+    if (mousePos.x > textPos.x &&
+        mousePos.y > textPos.y &&
+        mousePos.x < textPos.x + textSize.x &&
+        mousePos.y < textPos.y + textSize.y)
+    {
+        return true;
+    }
+    return false;
+}
+
+
 void SceneTitle::Initialize()
 {
     //カメラ初期設定
@@ -59,6 +74,8 @@ void SceneTitle::Initialize()
     framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), graphics.GetScreenWidth(), graphics.GetScreenHeight());
     framebuffers[1] = std::make_unique<framebuffer>(graphics.GetDevice(), graphics.GetScreenWidth() / 2, graphics.GetScreenHeight() / 2);
 
+
+
     // pixelShadersInitialize
     create_ps_from_cso(graphics.GetDevice(), "Data/Shader/luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
     create_ps_from_cso(graphics.GetDevice(), "Data/Shader/blur_ps.cso", pixel_shaders[1].GetAddressOf());
@@ -68,8 +85,11 @@ void SceneTitle::Initialize()
     //スプライト初期化
     sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/Title.png"));
     test=std::unique_ptr<Sprite>(new Sprite("Data/Sprite/check.png"));
-    model = std::unique_ptr<Model>(new Model("Data/Model/Cube/Cube_02.mdl"));
+    model = std::unique_ptr<Model>(new Model("Data/Model/Stage/stage01.mdl"));
+    //test_sprite = std::unique_ptr<Sprite>(new Sprite("Data/OP/op.png"));
     ui = std::unique_ptr<Ui>(new Ui);
+    text[0] = std::make_unique<Font>(graphics.GetDevice(), ".\\Data\\Font\\MS_Gothic.fnt", 1024);
+    text[1] = std::make_unique<Font>(graphics.GetDevice(), ".\\Data\\Font\\MS_Gothic.fnt", 1024);
     srand((unsigned int)time(NULL));
 }
 
@@ -84,18 +104,26 @@ void SceneTitle::Update(float elapsedTime)
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
+    DirectX::XMFLOAT2 Mouse_pos;
+    Mouse_pos.x = mouse.GetPositionX();
+    Mouse_pos.y = mouse.GetPositionY();
     GamePadButton anyButton =
           GamePad::BTN_A
         | GamePad::BTN_B
         | GamePad::BTN_X
         | GamePad::BTN_Y
         ;
+    for(int i = 0; i < 3; i++)
+    {
+        text_light[i] = false;
+    }
+
     switch (current_title)
     {
     case 0:
         position.y = (sinf(angle.y));
         angle.y += 0.01f;
-        if (gamePad.GetButtonDown() & anyButton)
+        if (gamePad.GetButtonDown() & anyButton|| mouse.GetButtonDown() & Mouse::BTN_LEFT)
         {
             current_title++;
         }
@@ -110,18 +138,13 @@ void SceneTitle::Update(float elapsedTime)
         break;
     case 1:
 
-        if (gamePad.GetButtonDown() & anyButton)
+        /*if (gamePad.GetButtonDown() & anyButton || mouse.GetButtonDown() & Mouse::BTN_LEFT)
         {
             current_title++;
-        }
-
-        DirectX::XMFLOAT3 ep = { 0.0f, 0.0f, -14.0f };
-        DirectX::XMFLOAT3 er = {0.0f,DirectX::XM_2PI * 2.0f,0.0f};
-        /*if (position.z > -12.0f)
-        {
-            angle.y += 1;
-            position.z -= 0.5;
         }*/
+
+        DirectX::XMFLOAT3 ep = { 0.0f, -1.0f, -14.0f };
+        DirectX::XMFLOAT3 er = {0.0f,DirectX::XM_2PI * 2.0f,0.0f};
         DirectX::XMVECTOR OP = DirectX::XMLoadFloat3(&position);
         DirectX::XMVECTOR EP = DirectX::XMLoadFloat3(&ep);
         DirectX::XMVECTOR OR = DirectX::XMLoadFloat3(&angle);
@@ -137,11 +160,68 @@ void SceneTitle::Update(float elapsedTime)
             current_title++;
         }
         break;
-    //case 2:
     case 2:
-        if (gamePad.GetButtonDown() & anyButton)
+        for (int i = 0; i < 3; i++)
         {
-            SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+            Text_color[i].w = -i * 0.5f + text_timer;
+        }
+        if (Text_color[2].w > 1.0f)
+        {
+            current_title++;
+        }
+        text_timer += 0.01f;
+    case 3:
+
+        static bool flag = false;
+        if (!flag)
+        {
+            if (HitText(Mouse_pos, Text_position[0], { 250,60 }))
+            {
+                text_light[0] = true;
+                if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
+                {
+                    SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+                }
+            }
+            if (HitText(Mouse_pos, Text_position[1], { 160,60 }))
+            {
+                text_light[1] = true;
+                if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
+                {
+                    SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+                }
+            }
+            if (HitText(Mouse_pos, Text_position[2], { 160,60 }))
+            {
+                text_light[2] = true;
+                if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
+                {
+                    flag = true;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Text_color[i].w = 0;
+                    }
+                    text_timer = 0.0f;
+                }
+            }
+        }
+        if (flag)
+        {
+            DirectX::XMFLOAT3 ep = { 0.0f, 0.0f, 0.0f };
+            DirectX::XMFLOAT3 er = { 0.0f,0.0f,0.0f };
+            DirectX::XMVECTOR OP = DirectX::XMLoadFloat3(&position);
+            DirectX::XMVECTOR EP = DirectX::XMLoadFloat3(&ep);
+            DirectX::XMVECTOR OR = DirectX::XMLoadFloat3(&angle);
+            DirectX::XMVECTOR ER = DirectX::XMLoadFloat3(&er);
+            OP = DirectX::XMVectorLerp(OP, EP, 0.01f);
+            DirectX::XMStoreFloat3(&position, OP);
+            OR = DirectX::XMVectorLerp(OR, ER, 0.01f);
+            DirectX::XMStoreFloat3(&angle, OR);
+            if (position.z >= ep.z - 0.3f)
+            {
+                current_title = 0;
+                flag = false;
+            }
         }
     }
 
@@ -152,9 +232,14 @@ void SceneTitle::Update(float elapsedTime)
 
     model->UpdateTransform(transform);
 
-    Box_color.x = 0;
+
+
+    Box_color.x = 1;
     Box_color.y = 1;
-    Box_color.z = 0;
+    Box_color.z = 1;
+
+    //DirectX::
+    Text_timer++;
 }
 
 void SceneTitle::Render()
@@ -191,6 +276,28 @@ void SceneTitle::Render()
     DirectX::XMMATRIX V{ DirectX::XMMatrixLookAtLH(eye,focus,up) };
     DirectX::XMStoreFloat4x4(&rc.view, V);
     DirectX::XMStoreFloat4x4(&rc.projection, P);
+    DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
+
+    DirectX::XMVECTOR ScreenPos;
+    screen_position = { position.x,0,position.z };
+    DirectX::XMVECTOR Position = DirectX::XMLoadFloat3(&screen_position);
+    ScreenPos = DirectX::XMVector3Project(
+        Position,
+        viewport.TopLeftX,
+        viewport.TopLeftY,
+        viewport.Width,
+        viewport.Height,
+        viewport.MinDepth,
+        viewport.MaxDepth,
+        P,
+        V,
+        World
+    );
+    DirectX::XMStoreFloat3(&screen_position, ScreenPos);
+    Text_position[0] = { screen_position.x - 120,screen_position.y - 70 };
+    Text_position[1] = { screen_position.x - 80,screen_position.y };
+    Text_position[2] = { screen_position.x - 80,screen_position.y + 70 };
+
    // Camera& camera = Camera::Instance();
     //rc.view = camera.GetView();
     //rc.projection = camera.GetProjection();
@@ -231,6 +338,17 @@ void SceneTitle::Render()
         shader->Draw(dc, model.get(), { Box_color});
         shader->End(dc);
 
+        if (text_light[0] || text_light[1] || text_light[2])
+        {
+            text[1]->Begin(dc);
+            if (text_light[0])
+                text[1]->Draw(Text_position[0].x, Text_position[0].y, L"tutorial", 2, Text_color[0]);
+            if (text_light[1])
+                text[1]->Draw(Text_position[1].x, Text_position[1].y, L"start", 2, Text_color[1]);
+            if (text_light[2])
+                text[1]->Draw(Text_position[2].x, Text_position[2].y, L"Exit", 2, Text_color[2]);
+            text[1]->End(dc);
+        }
 
         framebuffers[0]->deactivate(graphics.GetDeviceContext());
     }
@@ -242,7 +360,7 @@ void SceneTitle::Render()
         float textureWidth = static_cast<float>(sprite->GetTextureWidth());
         float textureHeight = static_cast<float>(sprite->GetTextureHeight());
         //タイトルスプライト描画
-        /*sprite->Render(dc,
+       /* sprite->Render(dc,
             0, 0, screenWidth, screenHeight,
             0, 0, textureWidth, textureHeight,
             0,
@@ -250,6 +368,22 @@ void SceneTitle::Render()
         ui.get()->title(dc);
 
     }
+    // textRender
+    {
+        //test_sprite->Render(dc, { 0,0 }, { 1920,1080 }, { /*static_cast<float>(Text_timer % 29 * 1920)*/0,/*static_cast<float>(Text_timer / 29 * 1080)*/0 }, { 960,540 }, 0, { 1,1,1,1 });
+
+        text[0]->Begin(dc);
+        if(!text_light[0])
+            text[0]->Draw(Text_position[0].x, Text_position[0].y, L"tutorial", 2, Text_color[0]);
+        if (!text_light[1])
+            text[0]->Draw(Text_position[1].x, Text_position[1].y, L"start", 2, Text_color[1]);
+        if (!text_light[2])
+            text[0]->Draw(Text_position[2].x, Text_position[2].y, L"Exit", 2, Text_color[2]);
+        text[0]->End(dc);
+
+
+    }
+
     RenderDebugImgui();
 }
 

@@ -149,7 +149,7 @@ LambertShader::LambertShader(ID3D11Device* device)
 		desc.ScissorEnable = false;
 		desc.MultisampleEnable = true;
 		desc.FillMode = D3D11_FILL_SOLID;
-		desc.CullMode = D3D11_CULL_BACK;
+		desc.CullMode = D3D11_CULL_NONE;
 		desc.AntialiasedLineEnable = false;
 
 		HRESULT hr = device->CreateRasterizerState(&desc, rasterizerState.GetAddressOf());

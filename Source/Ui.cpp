@@ -1,7 +1,7 @@
 #include "Ui.h"
 #include "Player.h"
 void Ui::title(ID3D11DeviceContext* dc)
-{    
+{
     static int check = 0;
     switch (check)
     {

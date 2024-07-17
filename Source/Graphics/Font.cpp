@@ -70,7 +70,7 @@ Font::Font(ID3D11Device* device, const char* filename, int maxSpriteCount)
 		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
@@ -415,7 +415,7 @@ void Font::Begin(ID3D11DeviceContext* context)
 	subsets.clear();
 }
 
-void Font::Draw(float x, float y, const wchar_t* string)
+void Font::Draw(float x, float y, const wchar_t* string, float scale, DirectX::XMFLOAT4 color)
 {
 	size_t length = ::wcslen(string);
 
@@ -454,9 +454,10 @@ void Font::Draw(float x, float y, const wchar_t* string)
 		// 文字情報を取得し、頂点データを編集
 		const CharacterInfo& info = characterInfos.at(code);
 
-		float positionX = x + info.xoffset;// + 0.5f;
-		float positionY = y + info.yoffset;// + 0.5f;
-
+		float positionX = x + info.xoffset * scale;// + 0.5f;
+		float positionY = y + info.yoffset * scale;// + 0.5f;
+		float width = info.width * scale;
+		float height = info.height * scale;
 		// 0---1
 		// |   |
 		// 2---3
@@ -465,40 +466,40 @@ void Font::Draw(float x, float y, const wchar_t* string)
 		currentVertex[0].position.z = 0.0f;
 		currentVertex[0].texcoord.x = info.left;
 		currentVertex[0].texcoord.y = info.top;
-		currentVertex[0].color.x = 1.0f;
-		currentVertex[0].color.y = 1.0f;
-		currentVertex[0].color.z = 1.0f;
-		currentVertex[0].color.w = 1.0f;
+		currentVertex[0].color.x = color.x;
+		currentVertex[0].color.y = color.y;
+		currentVertex[0].color.z = color.z;
+		currentVertex[0].color.w = color.w;
 
-		currentVertex[1].position.x = positionX + info.width;
+		currentVertex[1].position.x = positionX + width;
 		currentVertex[1].position.y = positionY;
 		currentVertex[1].position.z = 0.0f;
 		currentVertex[1].texcoord.x = info.right;
 		currentVertex[1].texcoord.y = info.top;
-		currentVertex[1].color.x = 1.0f;
-		currentVertex[1].color.y = 1.0f;
-		currentVertex[1].color.z = 1.0f;
-		currentVertex[1].color.w = 1.0f;
+		currentVertex[1].color.x = color.x;
+		currentVertex[1].color.y = color.y;
+		currentVertex[1].color.z = color.z;
+		currentVertex[1].color.w = color.w;
 
 		currentVertex[2].position.x = positionX;
-		currentVertex[2].position.y = positionY + info.height;
+		currentVertex[2].position.y = positionY + height;
 		currentVertex[2].position.z = 0.0f;
 		currentVertex[2].texcoord.x = info.left;
 		currentVertex[2].texcoord.y = info.bottom;
-		currentVertex[2].color.x = 1.0f;
-		currentVertex[2].color.y = 1.0f;
-		currentVertex[2].color.z = 1.0f;
-		currentVertex[2].color.w = 1.0f;
+		currentVertex[2].color.x = color.x;
+		currentVertex[2].color.y = color.y;
+		currentVertex[2].color.z = color.z;
+		currentVertex[2].color.w = color.w;
 
-		currentVertex[3].position.x = positionX + info.width;
-		currentVertex[3].position.y = positionY + info.height;
+		currentVertex[3].position.x = positionX + width;
+		currentVertex[3].position.y = positionY + height;
 		currentVertex[3].position.z = 0.0f;
 		currentVertex[3].texcoord.x = info.right;
 		currentVertex[3].texcoord.y = info.bottom;
-		currentVertex[3].color.x = 1.0f;
-		currentVertex[3].color.y = 1.0f;
-		currentVertex[3].color.z = 1.0f;
-		currentVertex[3].color.w = 1.0f;
+		currentVertex[3].color.x = color.x;
+		currentVertex[3].color.y = color.y;
+		currentVertex[3].color.z = color.z;
+		currentVertex[3].color.w = color.w;
 
 		// NDC座標変換
 		for (int j = 0; j < 4; ++j)
@@ -508,7 +509,7 @@ void Font::Draw(float x, float y, const wchar_t* string)
 		}
 		currentVertex += 4;
 
-		x += info.xadvance;
+		x += info.xadvance * scale;
 
 		// テクスチャが切り替わる度に描画する情報を設定
 		if (currentPage != info.page)
@@ -569,4 +570,16 @@ void Font::End(ID3D11DeviceContext* context)
 		context->PSSetShaderResources(0, 1, &subset.shaderResourceView);
 		context->DrawIndexed(subset.indexCount, subset.startIndex, 0);
 	}
+}
+
+bool Font::HitText(DirectX::XMFLOAT2 mousePos)
+{
+	if (mousePos.x > currentVertex[0].position.x &&
+		mousePos.y > currentVertex[0].position.y &&
+		mousePos.x < currentVertex[3].position.x &&
+		mousePos.y < currentVertex[3].position.y)
+	{
+		return true;
+	}
+	return false;
 }

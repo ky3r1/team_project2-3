@@ -14,11 +14,12 @@
 
 float enemy_score[5];
 float total_score;
+int result_timer = 0;
 
 void SceneResult::Initialize()
 {
     //スプライト初期化
-    sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/Title.png"));
+    sprite = std::unique_ptr<Sprite>(new Sprite("Data/Sprite/result.png"));
     //StageMapChip::Instance().SetStageNum(0);
 }
 
@@ -41,6 +42,11 @@ void SceneResult::Update(float elapsedTime)
     {
         SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTitle));
     }
+    result_timer++;
+    if(result_timer > 43)
+    {
+        result_timer = 43;
+    }
 }
 
 void SceneResult::Render()
@@ -51,10 +57,11 @@ void SceneResult::Render()
     ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
     //画面クリア＆レンダーターゲット設定
-    FLOAT color[] = { 0.0f,0.5f,0.0f,1.0f };    //RGBA(0.0~1.0)
+    FLOAT color[] = { 0.0f,0.0f,0.0f,0.5f };    //RGBA(0.0~1.0)
     dc->ClearRenderTargetView(rtv, color);
     dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     dc->OMSetRenderTargets(1, &rtv, dsv);
+
 
     //2Dスプライト描画
     {
@@ -63,12 +70,12 @@ void SceneResult::Render()
         float textureWidth = static_cast<float>(sprite->GetTextureWidth());
         float textureHeight = static_cast<float>(sprite->GetTextureHeight());
         DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-        if (outcome)color = DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f);
-        else color = DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f);
+        /*if (outcome)color = DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f);
+        else color = DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f);*/
         //タイトルスプライト描画
         sprite->Render(dc,
             0, 0, screenWidth, screenHeight,
-            0, 0, textureWidth, textureHeight,
+            result_timer % 5 * 1920, result_timer / 5 * 1080, 1920, 1080,
             0,
             color.x, color.y, color.z, color.w);
 

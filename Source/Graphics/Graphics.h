@@ -32,6 +32,7 @@ public:
 	// レンダーターゲットビュー取得
 	ID3D11RenderTargetView* GetRenderTargetView() const { return renderTargetView.Get(); }
 
+
 	// デプスステンシルビュー取得
 	ID3D11DepthStencilView* GetDepthStencilView() const { return depthStencilView.Get(); }
 
@@ -56,6 +57,10 @@ public:
 	// ImGuiレンダラ取得
 	ImGuiRenderer* GetImGuiRenderer() const { return imguiRenderer.get(); }
 
+	void ResetRenderTargetView() { renderTargetView.Reset(); }
+
+	void SetFullscreenMode(BOOL fullscreen_mode) { Fullscreen_mode = fullscreen_mode; }
+
 	//ミューテックス取得
 	std::mutex& GetMutex() { return mutex; }
 
@@ -77,6 +82,7 @@ private:
 
 	float	screenWidth;
 	float	screenHeight;
+	BOOL Fullscreen_mode = { FALSE };
 	std::mutex	mutex;
 };
 

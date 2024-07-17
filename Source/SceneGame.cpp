@@ -81,6 +81,8 @@ void SceneGame::Initialize()
 	);
 	//カメラコントローラー初期化
 	cameraController = std::unique_ptr<CameraController>(new CameraController());
+
+	font = std::make_unique<Font>(graphics.GetDevice(), ".\\Data\\Font\\MS_Gothic.fnt", 1024);
 #ifdef ALLENEMY
 	int index = 0;
 	spown = std::unique_ptr<Spown>(new Spown());
@@ -200,7 +202,6 @@ void SceneGame::Update(float elapsedTime)
 	//	SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 	//}
 
-	//font = std::make_unique<Font>(graphics.GetDevice(), ".\\Data\\Font\\MS_Gothic.fnt", 1024);
 }
 
 // 描画処理
@@ -276,6 +277,10 @@ void SceneGame::Render()
 #ifdef SPOWNENEMY
 		spown->render(dc);
 #endif // SPOWNENEMY
+
+		/*font->Begin(dc);
+		font->Draw(100, 100, L"game");
+		font->End(dc);*/
 	}
 
 #ifdef DEBUGIMGUI

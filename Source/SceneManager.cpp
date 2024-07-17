@@ -32,6 +32,11 @@ void SceneManager::Render()
     }
 }
 
+void SceneManager::Render(Scene* scene)
+{
+    scene->Render();
+}
+
 void SceneManager::Clear()
 {
     if (currentScene != nullptr)
@@ -46,4 +51,12 @@ void SceneManager::ChangeScene(Scene* scene)
 {
     //新しいシーンを設定
     nextScene = scene;
+}
+
+void SceneManager::HoldChangeScene(Scene* scene)
+{
+    //新しいシーンを設定
+    nextScene = scene;
+    // 現在のシーンの保持
+    destScene = currentScene;
 }
