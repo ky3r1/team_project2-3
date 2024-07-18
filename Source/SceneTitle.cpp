@@ -388,7 +388,7 @@ void SceneTitle::Render()
 
     }
 
-    RenderDebugImgui();
+    //RenderDebugImgui();
 }
 
 void SceneTitle::RenderDebugImgui()
