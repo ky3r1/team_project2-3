@@ -27,7 +27,7 @@ Enemy02::Enemy02(int category)
 
     attack_range = 10.0f;
     this->category = category;
-    enemy02_count = 0;
+    //enemy02_count = 0;
     //ChangeColor(color, category);
     health = 4;
 #ifdef ENEMYSTATEMACHINE
@@ -50,6 +50,7 @@ Enemy02::Enemy02(int category)
 //デストラクタ
 Enemy02::~Enemy02()
 {
+    if (health <= 0)
     enemy02_count++;
     delete model;
 }

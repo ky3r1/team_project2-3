@@ -3,6 +3,7 @@
 #include "Graphics/Sprite.h"
 #include "Scene.h"
 #include "Audio/Audio.h"
+#include "Graphics/Font.h"
 //#include "Player.h"
 
 //タイトルシーン
@@ -25,6 +26,7 @@ public:
     void Render() override;
 
 private:
+    std::unique_ptr<Font> font = nullptr;
     std::unique_ptr<Sprite> sprite = nullptr;
     std::unique_ptr<AudioSource> audio = nullptr;
     bool outcome = false;

@@ -26,6 +26,9 @@
 #include "Input/Input.h"
 #include "Ui.h"
 
+extern int enemy01_count;
+extern int enemy02_count;
+extern int enemy03_count;
 
 // 初期化
 void SceneGame::Initialize()
@@ -77,7 +80,7 @@ void SceneGame::Initialize()
 		DirectX::XMConvertToRadians(90),
 		graphics.GetScreenWidth() / graphics.GetScreenHeight(),
 		0.1f,
-		100.0f
+		1000.0f
 	);
 	//カメラコントローラー初期化
 	cameraController = std::unique_ptr<CameraController>(new CameraController());
@@ -153,6 +156,9 @@ void SceneGame::Initialize()
 #endif // ENEMYBOSS
 #endif // ALLENEMY
 
+	enemy01_count = 0;
+	enemy02_count = 0;
+	enemy03_count = 0;
 
 	// Audio
 	bgm= Audio::Instance().LoadAudioSource("Data/Audio/battle2.wav");

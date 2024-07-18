@@ -183,7 +183,7 @@ void SceneTitle::Update(float elapsedTime)
                 text_light[0] = true;
                 if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
                 {
-                    SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+                    SceneManager::Instance().ChangeScene(new SceneLoading(new SceneTutorial));
                 }
             }
             if (HitText(Mouse_pos, Text_position[1], { 160,60 }))
@@ -205,6 +205,7 @@ void SceneTitle::Update(float elapsedTime)
                         Text_color[i].w = 0;
                     }
                     text_timer = 0.0f;
+                    SceneManager::Instance().ChangeGameLoop();
                 }
             }
         }

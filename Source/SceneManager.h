@@ -31,8 +31,15 @@ public:
 
     void HoldChangeScene(Scene* scene);
 
+    bool GetGameLoop() {
+        return game_loop;
+    }
+
+    void ChangeGameLoop() { game_loop = !game_loop; }
+
     Scene* destScene = nullptr;
 private:
+    bool game_loop = true;
     Scene* currentScene = nullptr;
     Scene* nextScene = nullptr;
 };

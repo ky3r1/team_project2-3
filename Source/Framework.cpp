@@ -301,7 +301,7 @@ int Framework::Run()
 {
 	MSG msg = {};
 	HDC hDC = GetDC(hWnd);
-	while (WM_QUIT != msg.message)
+	while (WM_QUIT != msg.message && SceneManager::Instance().GetGameLoop())
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
@@ -313,7 +313,7 @@ int Framework::Run()
 			timer.Tick();
 			CalculateFrameStats();
 
-			float elapsedTime = syncInterval == 1
+			float elapsedTime = syncInterval == 0
 				? timer.TimeInterval()
 				: syncInterval / static_cast<float>(GetDeviceCaps(hDC, VREFRESH));
 			;
